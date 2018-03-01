@@ -15,6 +15,7 @@ class Signup extends Component {
             password:"",
             emailid:"",
             radioHireOrEmployer:""
+           
         }
     }
 
@@ -29,6 +30,7 @@ class Signup extends Component {
     
     createUser = (events) => {
         events.preventDefault();
+        
         console.log(this.state.username + " " + this.state.password);
         const userDetails = {
             username: this.state.username,
@@ -42,16 +44,18 @@ class Signup extends Component {
     render() {
         let authRedirect = null;
         if (this.props.signupSuccess === 'SIGNUP_SUCCESS') {
-            authRedirect = <Redirect to='/login'/>
+            authRedirect = <Redirect to='/userhome'/>
         }
         return(
             
-            <div className="Signup"> 
+            <div className="Signup">
             {authRedirect}
             <div id="mainDiv">
             <div className="center">
                     <div>
-                         <h1> Register </h1>
+                        <h1> Freelancer logo here </h1>
+                        <h3> SignUp for free today </h3>
+                        <hr />
                     </div>
                     <div id="divSignupForm">
                         <form onSubmit={this.createUser.bind(this)}>

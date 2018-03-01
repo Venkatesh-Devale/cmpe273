@@ -10,6 +10,7 @@ class Login extends Component {
         this.state = {
             username:"",
             password:"",
+            error:""
         }
     }
 
@@ -35,14 +36,8 @@ class Login extends Component {
    
     render() {
         let redirect = null;
-        let error = this.props.error;
         if(this.props.loginSuccess === 'LOGIN_SUCCESS') {
-            
             redirect = <Redirect to="/userhome" />
-        } 
-
-        if(this.props.error === 'ERROR') {
-            
         }
         
         return(
@@ -56,10 +51,10 @@ class Login extends Component {
                     <div id="divLoginForm">
                         <form onSubmit={this.handleLogin.bind(this)}>
                             <div className="form-group">
-                                <input type="text" onChange={this.handleChange} className="form-control" id="txtUserName" placeholder="Email or Username" ref="uname" name="username" />
+                                <input type="text" value={this.state.username} onChange={this.handleChange} className="form-control" id="txtUserName" placeholder="Email or Username" ref="uname" name="username" />
                             </div>
                             <div className="form-group">
-                                <input type="password" onChange={this.handleChange} className="form-control" id="txtPassword" placeholder="Enter Password" ref="pass" name="password" />
+                                <input type="password" value={this.state.password} onChange={this.handleChange} className="form-control" id="txtPassword" placeholder="Enter Password" ref="pass" name="password" />
                             </div>
                             <div className="form-group">
                                 <input type="submit" className="form-control btn btn-primary" id="btnSubmitSignUpForm" value="Login" />
@@ -79,8 +74,7 @@ function mapStateToProps(state) {
     return {
         username: state.username,
         password: state.password,
-        loginSuccess: state.success,
-        error: state.error
+        loginSuccess: state.success
     }
 }
 
@@ -93,7 +87,7 @@ function mapDispatchToProps(dispatch) {
              if(response.data === 'ERROR')
                 dispatch({type: 'ERROR',payload : response})
              else
-                dispatch({type: 'LOGIN_SUCCESS',payload : response})
+               dispatch({type: 'LOGIN_SUCCESS',payload : response})
          });
      }
     }
