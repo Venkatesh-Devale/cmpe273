@@ -1,5 +1,9 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+
+import axios from 'axios';
+
 import '../css/style.css';
 
 
@@ -22,8 +26,8 @@ class Signup extends Component {
             
             
     }
-
-    createUser(events) {
+    
+    createUser = (events) => {
         events.preventDefault();
         console.log(this.state.username + " " + this.state.password);
         const userDetails = {
@@ -36,8 +40,14 @@ class Signup extends Component {
     }
 
     render() {
+        let authRedirect = null;
+        if (this.props.signupSuccess === 'SIGNUP_SUCCESS') {
+            authRedirect = <Redirect to='/login'/>
+        }
         return(
+            
             <div className="Signup"> 
+            {authRedirect}
             <div id="mainDiv">
             <div className="center">
                     <div>
@@ -81,30 +91,27 @@ class Signup extends Component {
 
 
 
-function matchDispatchToProps(dispatch) {
+function mapStateToProps(state) {
     return {
-
-        insertUser: (user) => {
-            console.log(user.username);
-            fetch('http://localhost:3001/signup/',{
-                method: 'POST',
-                body: JSON.stringify(user),
-                  headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then((response) => response.json())
-            .then((result) => {
-                console.log(result);
-                dispatch({
-                    type: 'SUCCESS',
-                    payload: result
-                })
-            })
-        }
+        username: state.username,
+        password: state.password,
+        emailid: state.emailid,
+        radioHireOrEmployer: state.radioHireOrEmployer,
+        signupSuccess: state.success
     }
-    
 }
 
-export default connect(null, matchDispatchToProps)(Signup);
+function mapDispatchToProps(dispatch) {
+   return {
+    insertUser: (newUser) => {
+        console.log(newUser);
+        axios.post('http://localhost:3001/signup', newUser)
+            .then((response) => {
+            console.log(response);
+            dispatch({type: 'SIGNUP_SUCCESS',payload : response})
+        });
+    }
+   }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);
