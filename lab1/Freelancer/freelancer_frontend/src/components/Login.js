@@ -74,7 +74,7 @@ function mapStateToProps(state) {
     return {
         username: state.username,
         password: state.password,
-        loginSuccess: state.success
+        loginSuccess: state.login_success
     }
 }
 

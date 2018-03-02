@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import axios from 'axios';
 import '../css/style.css';
 
 class Userprofile extends Component {
     constructor() {
         super();
         this.state = {
-            username:'Venkatesh',
+            username:'venky345',
             email:'venkatesh@hotmail.com',
             phone:'XXX-XXX-XXXX',
             aboutme:'Hello',
@@ -50,7 +52,8 @@ class Userprofile extends Component {
         })
     }
 
-    saveUpdatedUser() {
+    saveUpdatedUser(e) {
+        e.preventDefault();
         this.disableAll();
         let newUser = {};
         this.setState({
@@ -65,6 +68,7 @@ class Userprofile extends Component {
             newUser.aboutme = this.state.aboutme;    
         })
         console.log(newUser);
+        this.props.saveUpdatedUser(newUser);
     }
 
     /*handleChange(event) {
@@ -136,4 +140,26 @@ class Userprofile extends Component {
     }
 }
 
-export default Userprofile;
+function mapStateToProps(state) {
+    return {
+        success: state.userprofileupdate_success
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        saveUpdatedUser: (user) => {
+            console.log("In saveUpdatedUser:",user);
+            axios.post('http://localhost:3001/updateprofile', user)
+            .then((response) => {
+                console.log(response);
+                dispatch({
+                    type:'UPDATE_PROFILE_SUCCESS',
+                    payload: response
+                })
+            })
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Userprofile);

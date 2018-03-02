@@ -101,7 +101,7 @@ function mapStateToProps(state) {
         password: state.password,
         emailid: state.emailid,
         radioHireOrEmployer: state.radioHireOrEmployer,
-        signupSuccess: state.success
+        signupSuccess: state.signup_success
     }
 }
 

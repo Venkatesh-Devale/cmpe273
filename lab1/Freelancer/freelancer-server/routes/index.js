@@ -77,5 +77,35 @@ router.post('/login', function(req, res, next) {
   })
 });
 
+router.post('/updateprofile', function(req, res, next) {
+  console.log(req.body);
+  const username = req.body.username;
+  const email = req.body.email;
+  const phone = req.body.phone;
+  const aboutme = req.body.aboutme;
+
+  connectionPool.getConnection((err, connection) => {
+    if(err) {
+      console.log('Cannot connect to DB..');
+    } else {
+      console.log('Connected to database with thread '+ connection.threadId);
+      var sql = 'UPDATE users SET email = ' + mysql.escape(email) + ', phone = ' + mysql.escape(phone) + ', aboutme = ' + mysql.escape(aboutme) +
+                  ' WHERE username = ' + mysql.escape(username);
+      console.log(sql);
+      connection.query(sql,(err, result) => {
+        if(err) {
+          console.log(err.name);
+          console.log(err.message);
+          //res.json('ERROR');
+        }
+        else {
+          console.log("user updated...");
+          res.json('UPDATE_SUCCESS');
+        }
+      });
+    }
+  })
+});
+
 
 module.exports = router;
