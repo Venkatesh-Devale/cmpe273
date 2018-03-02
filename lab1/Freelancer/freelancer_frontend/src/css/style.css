@@ -14,3 +14,39 @@
 .navbar-default {
     background: white;
 }
+
+.row > div{
+    float:left;
+    margin:10px;
+  }
+
+#profileImage {
+    background: white;
+    margin-top: 5%;
+    margin-bottom: 20%;
+    margin-left: 5%;
+    margin-bottom: 20%;
+    border: 1px solid;
+    padding: 10px;
+    box-shadow: 5px 5px #888888;
+    width: 200px;
+    height: 200px;
+    padding: 10px;
+    
+}
+
+#profileDescription {
+    background: white;
+    margin-top: 5%;
+    margin-bottom: 20%;
+    margin-left: 2%;
+    margin-bottom: 20%;
+    border: 1px solid;
+    box-shadow: 5px 5px #888888;
+    width: 500px;
+    height: auto;
+    padding: 10px;
+    
+}
+
+textarea { vertical-align: top; }

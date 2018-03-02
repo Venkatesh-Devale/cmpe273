@@ -5,6 +5,7 @@ import Login from './Login';
 import Home from './Home';
 import Userhome from './Userhome';
 import Dashboard from './Dashboard';
+import Userprofile from './Userprofile';
 
 const Main = () => (
     <div> 
@@ -15,6 +16,7 @@ const Main = () => (
             <Route path='/signup' component={Signup} />
             <Route path='/dashboard' component={Dashboard} />
             <Route path='/userhome' component={Userhome} />
+            <Route path='/userprofile' component={Userprofile} />
             
         </Switch>
     
