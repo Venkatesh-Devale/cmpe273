@@ -107,5 +107,31 @@ router.post('/updateprofile', function(req, res, next) {
   })
 });
 
+router.post('/getprofile', function(req, res, next) {
+  console.log(req.body);
+  connectionPool.getConnection((err, connection) => {
+    if(err) {
+      res.json({
+        code : 100,
+        status : "Error in connecting to database"
+      });
+      
+    } else {
+      console.log('Connected to database with thread '+ connection.threadId);
+      var sql = 'SELECT * from users WHERE username = ' + mysql.escape(req.body.username);
+      connection.query(sql, (err, result) => {
+        if(result.length == 0) {
+          res.json('ERROR');
+        }
+        else {
+          console.log(result);
+          res.json(result);
+        }
+      });
+      
+    }
+  })
+});
+
 
 module.exports = router;

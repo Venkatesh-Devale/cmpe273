@@ -22,7 +22,7 @@
 
 #profileImage {
     background: white;
-    margin-top: 5%;
+    margin-top: 30%;
     margin-bottom: 20%;
     margin-left: 5%;
     margin-bottom: 20%;
@@ -43,10 +43,33 @@
     margin-bottom: 20%;
     border: 1px solid;
     box-shadow: 5px 5px #888888;
-    width: 500px;
+    width: 600px;
     height: auto;
     padding: 10px;
     
 }
 
+#profileSkillsAndEditButton {
+    background: white;
+    margin-top: 5%;
+    margin-bottom: 20%;
+    margin-left: 2%;
+    margin-bottom: 20%;
+    border: 1px solid;
+    box-shadow: 5px 5px #888888;
+    width: 400px;
+    height: auto;
+    padding: 10px;
+}
+
+#imageUploader {
+    margin-top: 200px;
+}
+
 textarea { vertical-align: top; }
+
+img {
+    max-width:100%;
+    max-height:100%;
+    object-fit: contain;
+}

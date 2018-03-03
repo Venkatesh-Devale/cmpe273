@@ -20,7 +20,7 @@ class Navbar extends Component {
             changes = (
                 <ul className="nav navbar-nav navbar-right">
                     <li><Link to="/userprofile"><span className="glyphicon glyphicon-user"></span> My Profile</Link></li>
-                    <li><a href="/home"><span className="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    <li><a href="/"><span className="glyphicon glyphicon-log-out"></span> Logout</a></li>
                     <li className="mr-4"><button className=" navbar-btn btn btn-warning">Post a Project</button></li>
                 </ul>
             )

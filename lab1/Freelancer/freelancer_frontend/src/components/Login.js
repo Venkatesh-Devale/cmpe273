@@ -51,10 +51,10 @@ class Login extends Component {
                     <div id="divLoginForm">
                         <form onSubmit={this.handleLogin.bind(this)}>
                             <div className="form-group">
-                                <input type="text" value={this.state.username} onChange={this.handleChange} className="form-control" id="txtUserName" placeholder="Email or Username" ref="uname" name="username" />
+                                <input type="text" value={this.state.username} onChange={this.handleChange} className="form-control" id="txtUserName" placeholder="Email or Username" ref="uname" name="username" required />
                             </div>
                             <div className="form-group">
-                                <input type="password" value={this.state.password} onChange={this.handleChange} className="form-control" id="txtPassword" placeholder="Enter Password" ref="pass" name="password" />
+                                <input type="password" value={this.state.password} onChange={this.handleChange} className="form-control" id="txtPassword" placeholder="Enter Password" ref="pass" name="password" required/>
                             </div>
                             <div className="form-group">
                                 <input type="submit" className="form-control btn btn-primary" id="btnSubmitSignUpForm" value="Login" />
@@ -84,7 +84,7 @@ function mapDispatchToProps(dispatch) {
          console.log("In Login dispatch",userDetails);
          axios.post('http://localhost:3001/login', userDetails)
              .then((response) => {
-                 console.log(response.data[0]);
+                 console.log("After login dispatch", response.data[0]);
              if(response.data === 'ERROR')
                 dispatch({type: 'ERROR',payload : response})
              else

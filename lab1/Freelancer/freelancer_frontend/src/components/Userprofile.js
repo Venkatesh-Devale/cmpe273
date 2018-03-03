@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import Imageupload from './Imageupload';
 import '../css/style.css';
+import Navbar from './Navbar';
 
 class Userprofile extends Component {
     constructor() {
@@ -11,7 +13,10 @@ class Userprofile extends Component {
             email:'',
             phone:'',
             aboutme:'',
-            editing: false
+            editing: false,
+            file:'',
+            image:'',
+            skills:''
         }
     }
     
@@ -33,12 +38,15 @@ class Userprofile extends Component {
         document.getElementById('txtEmailId').disabled = false;
         document.getElementById('txtPhone').disabled = false;
         document.getElementById('txtaboutme').disabled = false;
+        document.getElementById('txtskills').disabled = false;
+
     }
 
     disableAll() {
         document.getElementById('txtEmailId').disabled = true;
         document.getElementById('txtPhone').disabled = true;
         document.getElementById('txtaboutme').disabled = true;
+        document.getElementById('txtskills').disabled = true;
     }
 
     edit() {
@@ -64,6 +72,7 @@ class Userprofile extends Component {
         this.disableAll();
         let newUser = {};
         this.setState({
+            username: this.props.logindata.username,
             email: document.getElementById('txtEmailId').value,
             phone: document.getElementById('txtPhone').value,
             aboutme: document.getElementById('txtaboutme').value,
@@ -77,6 +86,7 @@ class Userprofile extends Component {
         console.log(newUser);
         this.props.saveUpdatedUser(newUser);
     }
+
 
     /*handleChange(event) {
         this.setState({
@@ -117,33 +127,45 @@ class Userprofile extends Component {
                             </div> 
             )
         }
+
+       
+
         return (
+
             <div className = 'Userprofile'>
+                <Navbar />
                 <div className='container-fluid'>
                     <h1>Hello on Userprofile</h1>
                     <div className='row'>
-                        <div id='profileImage'>
-                            <img src='' alt='my profile pic'/>
-                        </div>
+                        <Imageupload />
                         <div id='profileDescription'>
                         <form >
                             <div className="form-group">
                                 <div id='name'><h1>{usernameindiv}</h1></div>
                             </div>
                             <div className="form-group">
-                                <label>Email: </label>    
+                                <label>About Me:  <span class="glyphicon glyphicon-edit"></span></label>
+                                <textarea id="txtaboutme"  className="form-control" rows="5" ></textarea>
+                            </div>
+                            <div className="form-group">
+                                <label>Email:  <span class="glyphicon glyphicon-edit"></span></label>    
                                 <input type="email"  ref="emailid" className="form-control" placeholder='Enter your email id'  id="txtEmailId" name="emailid" />
                             </div>
                             <div className="form-group">
-                                <label>Phone: </label>
+                                <label>Phone:  <span class="glyphicon glyphicon-edit"></span></label>
                                 <input type="text" ref="phone"  className="form-control" placeholder='Enter your phone number' id="txtPhone" name="phone" />
-                            </div>  
-                            <div className="form-group">
-                                <label for="comment">About Me:</label>
-                                <textarea id="txtaboutme"  className="form-control" rows="5" ></textarea>
-                            </div> 
-                            {buttons}
+                            </div>
+                            
                         </form>
+                        </div>
+                        <div id='profileSkillsAndEditButton'>
+                            {buttons}
+                            <div id = 'profileSkills'>
+                                <div className="form-group">
+                                    <label>Skills:  <span class="glyphicon glyphicon-edit"></span></label>
+                                    <textarea id="txtskills"  className="form-control" rows="5" ></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
