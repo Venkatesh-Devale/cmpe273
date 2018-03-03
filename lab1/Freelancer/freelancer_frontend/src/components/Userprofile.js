@@ -7,18 +7,25 @@ class Userprofile extends Component {
     constructor() {
         super();
         this.state = {
-            username:'venky345',
-            email:'venkatesh@hotmail.com',
-            phone:'XXX-XXX-XXXX',
-            aboutme:'Hello',
+            username:'Please login first',
+            email:'',
+            phone:'',
+            aboutme:'',
             editing: false
         }
     }
+    
     componentDidMount() {
-        document.getElementById('txtEmailId').value = this.state.email;
-        document.getElementById('txtPhone').value = this.state.phone;
-        document.getElementById('txtaboutme').value = this.state.aboutme;
-
+        if(this.props.logindata) {
+            document.getElementById('txtEmailId').value = this.props.logindata.email;
+            document.getElementById('txtPhone').value = this.props.logindata.phone;
+            document.getElementById('txtaboutme').value = this.props.logindata.aboutme;
+        } else {
+            document.getElementById('txtEmailId').value = this.state.email;
+            document.getElementById('txtPhone').value = this.state.phone;
+            document.getElementById('txtaboutme').value = this.state.aboutme;
+        }
+        
         this.disableAll()
     }
 
@@ -78,12 +85,17 @@ class Userprofile extends Component {
     }*/
 
     render() {
+        let usernameindiv = '';
+        if(this.props.logindata)
+            usernameindiv = this.props.logindata.username;
+        else 
+            usernameindiv = this.state.username;
         let buttons = null;
         if(this.state.editing === false) {
             buttons = (
                 <div className="form-group">
                                 <div className="btn-group btn-group-justified">
-                                    <div class="btn-group">
+                                    <div className="btn-group">
                                         <button type="button" onClick={this.edit.bind(this)} className="btn btn-primary form-control"><label> Edit your profile </label></button>
                                     </div>
                                 </div>
@@ -94,10 +106,10 @@ class Userprofile extends Component {
             buttons = (
                 <div className="form-group">
                                 <div className="btn-group btn-group-justified">
-                                    <div class="btn-group">
+                                    <div className="btn-group">
                                         <button type="button" onClick={this.saveUpdatedUser.bind(this)} className="btn btn-primary form-control"><label>Save</label></button>
                                     </div>
-                                    <div class="btn-group">
+                                    <div className="btn-group">
                                         <button type="button" onClick={this.cancel.bind(this)} className="btn btn-primary form-control"><label>Cancel</label></button>
                                     </div>
                                 </div>
@@ -111,12 +123,12 @@ class Userprofile extends Component {
                     <h1>Hello on Userprofile</h1>
                     <div className='row'>
                         <div id='profileImage'>
-                            <img src='' alt='profile image' />
+                            <img src='' alt='my profile pic'/>
                         </div>
                         <div id='profileDescription'>
                         <form >
                             <div className="form-group">
-                                <div id='name'><h1>{this.state.username}</h1></div>
+                                <div id='name'><h1>{usernameindiv}</h1></div>
                             </div>
                             <div className="form-group">
                                 <label>Email: </label>    
@@ -128,7 +140,7 @@ class Userprofile extends Component {
                             </div>  
                             <div className="form-group">
                                 <label for="comment">About Me:</label>
-                                <textarea id="txtaboutme"  class="form-control" rows="5" ></textarea>
+                                <textarea id="txtaboutme"  className="form-control" rows="5" ></textarea>
                             </div> 
                             {buttons}
                         </form>
@@ -142,7 +154,8 @@ class Userprofile extends Component {
 
 function mapStateToProps(state) {
     return {
-        success: state.userprofileupdate_success
+        success: state.userprofileupdate_success,
+        logindata: state.login_data
     }
 }
 

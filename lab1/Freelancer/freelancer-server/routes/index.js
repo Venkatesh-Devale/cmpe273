@@ -68,8 +68,8 @@ router.post('/login', function(req, res, next) {
           res.json('ERROR');
         }
         else {
-          console.log(result.length);
-          res.json('LOGIN_SUCCESS');
+          console.log(result);
+          res.json(result);
         }
       });
       

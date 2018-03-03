@@ -1,6 +1,6 @@
 const initialState = {
     token : null,
-    login_success : null,
+    login_data : null,
     signup_success: null,
     userprofileupdate_success: null,
     error : null
@@ -18,11 +18,10 @@ const reducer = (state = initialState, action) => {
     }
 
     if(action.type === 'LOGIN_SUCCESS'){
-
         return{
             ...state,
             token: 'new token value',
-            login_success : action.payload.data
+            login_data : action.payload.data[0]
         }
         
     }
@@ -38,6 +37,7 @@ const reducer = (state = initialState, action) => {
 
     if(action.type === 'ERROR'){
         return{
+            ...state,
             error : 'ERROR'
         }
     }

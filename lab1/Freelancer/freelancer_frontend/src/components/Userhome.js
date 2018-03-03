@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+
 import Navbar from './Navbar';
 import '../css/style.css';
 
@@ -12,5 +12,6 @@ class Userhome extends Component {
         );
     }
 }
+
 
 export default Userhome;

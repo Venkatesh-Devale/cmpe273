@@ -4,11 +4,7 @@ import { connect } from 'react-redux';
 import '../css/style.css';
 
 class Navbar extends Component {
-    constructor() {
-        super();
-        
-    }
-
+    
     render() {
         console.log(this.props.success);
         let changes = null;
@@ -46,7 +42,7 @@ class Navbar extends Component {
 
 function mapStateToProps(state) {
     return {
-       success: state.success
+       success: state.login_data
     }
 }
 

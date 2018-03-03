@@ -36,7 +36,7 @@ class Login extends Component {
    
     render() {
         let redirect = null;
-        if(this.props.loginSuccess === 'LOGIN_SUCCESS') {
+        if(this.props.loginData !== null) {
             redirect = <Redirect to="/userhome" />
         }
         
@@ -74,7 +74,7 @@ function mapStateToProps(state) {
     return {
         username: state.username,
         password: state.password,
-        loginSuccess: state.login_success
+        loginData: state.login_data
     }
 }
 
@@ -84,6 +84,7 @@ function mapDispatchToProps(dispatch) {
          console.log("In Login dispatch",userDetails);
          axios.post('http://localhost:3001/login', userDetails)
              .then((response) => {
+                 console.log(response.data[0]);
              if(response.data === 'ERROR')
                 dispatch({type: 'ERROR',payload : response})
              else

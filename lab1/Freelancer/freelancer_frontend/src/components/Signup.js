@@ -44,7 +44,7 @@ class Signup extends Component {
     render() {
         let authRedirect = null;
         if (this.props.signupSuccess === 'SIGNUP_SUCCESS') {
-            authRedirect = <Redirect to='/userhome'/>
+            authRedirect = <Redirect to='/login'/>
         }
         return(
             
