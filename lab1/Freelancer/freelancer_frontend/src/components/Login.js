@@ -87,8 +87,11 @@ function mapDispatchToProps(dispatch) {
                  console.log("After login dispatch", response.data[0]);
              if(response.data === 'ERROR')
                 dispatch({type: 'ERROR',payload : response})
-             else
-               dispatch({type: 'LOGIN_SUCCESS',payload : response})
+             else {
+                sessionStorage.setItem('username', response.data[0].username)
+                dispatch({type: 'LOGIN_SUCCESS',payload : response})
+             }
+               
          });
      }
     }

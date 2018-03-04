@@ -13,7 +13,7 @@ class Navbar extends Component {
                 <ul className="nav navbar-nav navbar-right">
                     <li className="mr-2"><Link to="/login">Log In</Link></li>
                     <li className="mr-2"><Link to="/signup">Signup</Link></li>
-                    <li className="mr-4"><button className=" navbar-btn btn btn-warning">Post a Project</button></li>
+                    <li className="mr-4"><button className=" navbar-btn btn btn-warning"><Link to="/postproject">Post a Project</Link></button></li>
                 </ul>
             )
         } else {
@@ -21,7 +21,7 @@ class Navbar extends Component {
                 <ul className="nav navbar-nav navbar-right">
                     <li><Link to="/userprofile"><span className="glyphicon glyphicon-user"></span> My Profile</Link></li>
                     <li><a href="/"><span className="glyphicon glyphicon-log-out"></span> Logout</a></li>
-                    <li className="mr-4"><button className=" navbar-btn btn btn-warning">Post a Project</button></li>
+                    <li className="mr-4"><button className=" navbar-btn btn btn-warning"><Link to="/postproject">Post a Project</Link></button></li>
                 </ul>
             )
         }

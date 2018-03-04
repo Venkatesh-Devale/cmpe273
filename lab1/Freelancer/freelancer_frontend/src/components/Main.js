@@ -6,6 +6,7 @@ import Home from './Home';
 import Userhome from './Userhome';
 import Dashboard from './Dashboard';
 import Userprofile from './Userprofile';
+import Postproject from './Postproject';
 
 const Main = () => (
     <div> 
@@ -17,6 +18,7 @@ const Main = () => (
             <Route path='/dashboard' component={Dashboard} />
             <Route path='/userhome' component={Userhome} />
             <Route path='/userprofile' component={Userprofile} />
+            <Route path='/postproject' component={Postproject} />
             
         </Switch>
     

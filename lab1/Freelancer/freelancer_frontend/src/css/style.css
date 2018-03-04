@@ -23,7 +23,7 @@
 #profileImage {
     background: white;
     margin-top: 30%;
-    margin-bottom: 20%;
+    
     margin-left: 5%;
     margin-bottom: 20%;
     border: 1px solid;
@@ -31,14 +31,14 @@
     box-shadow: 5px 5px #888888;
     width: 200px;
     height: 200px;
-    padding: 10px;
+    
     
 }
 
 #profileDescription {
     background: white;
     margin-top: 5%;
-    margin-bottom: 20%;
+    
     margin-left: 2%;
     margin-bottom: 20%;
     border: 1px solid;
@@ -52,7 +52,7 @@
 #profileSkillsAndEditButton {
     background: white;
     margin-top: 5%;
-    margin-bottom: 20%;
+    
     margin-left: 2%;
     margin-bottom: 20%;
     border: 1px solid;
@@ -72,4 +72,23 @@ img {
     max-width:100%;
     max-height:100%;
     object-fit: contain;
+}
+
+#logo {
+    width: 200px;
+    height: 100px;
+}
+
+.Postproject {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+}
+
+#holdPostProjectData {
+    width:auto;
+    height:auto;
+    margin-top: 5%;
+    margin-left: 10%;
+    margin-right: 20%;
 }

@@ -16,67 +16,55 @@ class Userprofile extends Component {
             editing: false,
             file:'',
             image:'',
-            skills:''
+            skills:'',
+            disabled: true
         }
     }
     
-    componentDidMount() {
-        if(this.props.logindata) {
-            document.getElementById('txtEmailId').value = this.props.logindata.email;
-            document.getElementById('txtPhone').value = this.props.logindata.phone;
-            document.getElementById('txtaboutme').value = this.props.logindata.aboutme;
-        } else {
-            document.getElementById('txtEmailId').value = this.state.email;
-            document.getElementById('txtPhone').value = this.state.phone;
-            document.getElementById('txtaboutme').value = this.state.aboutme;
+    componentWillMount() {
+        let usernameFromSession = sessionStorage.getItem('username');
+        console.log("Username from userprofile" + usernameFromSession);
+        const usernameJSON = {
+            username: usernameFromSession
         }
-        
-        this.disableAll()
-    }
-
-    enableAll() {
-        document.getElementById('txtEmailId').disabled = false;
-        document.getElementById('txtPhone').disabled = false;
-        document.getElementById('txtaboutme').disabled = false;
-        document.getElementById('txtskills').disabled = false;
-
-    }
-
-    disableAll() {
-        document.getElementById('txtEmailId').disabled = true;
-        document.getElementById('txtPhone').disabled = true;
-        document.getElementById('txtaboutme').disabled = true;
-        document.getElementById('txtskills').disabled = true;
-    }
-
-    edit() {
-        this.enableAll();
-        this.setState({
-            editing: true
+        axios.post('http://localhost:3001/getprofile', usernameJSON)
+        .then((response) => {
+            console.log('Userdetails retrieved from username in userprofile  ', response.data[0])
+            this.setState({
+                username: response.data[0].username,
+                email: response.data[0].email,
+                phone: response.data[0].phone,
+                aboutme: response.data[0].aboutme
+            })
         })
     }
 
-    cancel() {
-        document.getElementById('txtEmailId').value = this.state.email;
-        document.getElementById('txtPhone').value = this.state.phone;
-        document.getElementById('txtaboutme').value = this.state.aboutme;
 
-        this.disableAll();
+    edit() {
         this.setState({
-            editing: false
+            editing: true,
+            disabled: false
+        })
+    }
+
+    cancel() {  
+        this.setState({
+            editing: false,
+            disabled: true
         })
     }
 
     saveUpdatedUser(e) {
         e.preventDefault();
-        this.disableAll();
+        
         let newUser = {};
         this.setState({
-            username: this.props.logindata.username,
-            email: document.getElementById('txtEmailId').value,
-            phone: document.getElementById('txtPhone').value,
-            aboutme: document.getElementById('txtaboutme').value,
-            editing: false
+            username: this.state.username,
+            email: this.state.email,
+            phone: this.state.phone,
+            aboutme: this.state.aboutme,
+            editing: false,
+            disabled: true
         }, function() {
             newUser.username = this.state.username;
             newUser.email = this.state.email;
@@ -88,18 +76,15 @@ class Userprofile extends Component {
     }
 
 
-    /*handleChange(event) {
+    handleChange = (event) => {
         this.setState({
             [event.target.name] : [event.target.value]
         })
-    }*/
+    }
 
     render() {
         let usernameindiv = '';
-        if(this.props.logindata)
-            usernameindiv = this.props.logindata.username;
-        else 
-            usernameindiv = this.state.username;
+        usernameindiv = sessionStorage.getItem('username');
         let buttons = null;
         if(this.state.editing === false) {
             buttons = (
@@ -145,15 +130,15 @@ class Userprofile extends Component {
                             </div>
                             <div className="form-group">
                                 <label>About Me:  <span class="glyphicon glyphicon-edit"></span></label>
-                                <textarea id="txtaboutme"  className="form-control" rows="5" ></textarea>
+                                <textarea id="txtaboutme" value={this.state.aboutme} disabled={this.state.disabled} onChange={this.handleChange} className="form-control" rows="5" name="aboutme" ></textarea>
                             </div>
                             <div className="form-group">
                                 <label>Email:  <span class="glyphicon glyphicon-edit"></span></label>    
-                                <input type="email"  ref="emailid" className="form-control" placeholder='Enter your email id'  id="txtEmailId" name="emailid" />
+                                <input type="email"  ref="emailid"  value={this.state.email} disabled={this.state.disabled} onChange={this.handleChange} className="form-control" placeholder='Enter your email id'  id="txtEmailId" name="email" />
                             </div>
                             <div className="form-group">
                                 <label>Phone:  <span class="glyphicon glyphicon-edit"></span></label>
-                                <input type="text" ref="phone"  className="form-control" placeholder='Enter your phone number' id="txtPhone" name="phone" />
+                                <input type="text" ref="phone"  value={this.state.phone} disabled={this.state.disabled} onChange={this.handleChange} className="form-control" placeholder='Enter your phone number' id="txtPhone" name="phone" />
                             </div>
                             
                         </form>
@@ -163,7 +148,7 @@ class Userprofile extends Component {
                             <div id = 'profileSkills'>
                                 <div className="form-group">
                                     <label>Skills:  <span class="glyphicon glyphicon-edit"></span></label>
-                                    <textarea id="txtskills"  className="form-control" rows="5" ></textarea>
+                                    <textarea id="txtskills"  className="form-control" rows="5" name='skills' disabled={this.state.disabled}></textarea>
                                 </div>
                             </div>
                         </div>
