@@ -5,6 +5,12 @@ import '../css/style.css';
 
 class Navbar extends Component {
     
+    handleLogout() {
+        alert(sessionStorage.getItem('username'));
+        sessionStorage.removeItem('username');
+        this.props.history.push('/');
+    }
+
     render() {
         console.log(this.props.success);
         let changes = null;
@@ -20,7 +26,7 @@ class Navbar extends Component {
             changes = (
                 <ul className="nav navbar-nav navbar-right">
                     <li><Link to="/userprofile"><span className="glyphicon glyphicon-user"></span> My Profile</Link></li>
-                    <li><a href="/"><span className="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    <li><Link onClick={this.handleLogout} to="/"><span className="glyphicon glyphicon-log-out"></span> Logout</Link></li>
                     <li className="mr-4"><button className=" navbar-btn btn btn-warning"><Link to="/postproject">Post a Project</Link></button></li>
                 </ul>
             )

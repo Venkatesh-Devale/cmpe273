@@ -3,6 +3,8 @@ import image from '../images/freelancerlogo.png';
 import { connect } from 'react-redux';
 import Login from './Login';
 import '../css/style.css';
+import uuid from 'uuid';
+import axios from 'axios';
 
 class Postproject extends Component {
     constructor() {
@@ -15,6 +17,14 @@ class Postproject extends Component {
         }
     }
 
+    componentWillMount() {
+        if(sessionStorage.getItem('username') === null) {
+            alert('Please login first');
+            this.props.history.push('/');
+        }
+            
+    }
+
     handleChange = (e) => {
         this.setState({
             [e.target.name] : e.target.value
@@ -24,6 +34,7 @@ class Postproject extends Component {
     submitProject(e) {
         e.preventDefault();
         const project = {
+            id: uuid.v4(),
             owner: sessionStorage.getItem('username'),
             title: this.state.title,
             description: this.state.description,
@@ -32,6 +43,7 @@ class Postproject extends Component {
         }
         console.log('In submitProject of Postproject...', project);
         this.props.postProject(project);
+        this.props.history.push('/userhome');
     }
 
     render() {
@@ -123,6 +135,11 @@ function mapDispatchToProps() {
     return {
         postProject: (project) => {
             console.log('In postProjectDispatch of Postproject...', project);
+            axios.post('http://localhost:3001/postproject', project)
+            .then((response) => {
+                console.log(response);
+                alert('Project created successfully...');
+            })
         }
     }
     

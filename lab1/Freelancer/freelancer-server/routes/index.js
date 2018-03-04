@@ -134,4 +134,32 @@ router.post('/getprofile', function(req, res, next) {
 });
 
 
+router.post('/postproject', function(req, res, next) {
+  console.log('In server side...', req.body);
+  const employer = req.body.owner;
+  const title = req.body.title;
+  const description = req.body.description;
+  const skills_required = req.body.skillsRequired;
+  const budgetrange = req.body.budgetrange;
+  const id = req.body.id;
+
+  connectionPool.getConnection((err, connection) => {
+    if(err) {
+      res.json('DB Connection error');
+    } else {
+      var sql = 'INSERT INTO projects (id, title, description, skills_required, budgetrange, employer) VALUES (?, ?, ?, ?, ?, ?)';
+      connection.query(sql, [id, title, description, skills_required, budgetrange, employer], (err, result) => {
+          if(err) {
+            console.log(err);
+            res.json('ERROR');
+          } else {
+            console.log('Project inserted successfully...');
+            res.json('POSTED PROJECT SUCCESSFULLY...');
+          }
+        })
+    }
+  })
+  
+});
+
 module.exports = router;
