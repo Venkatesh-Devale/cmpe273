@@ -3,7 +3,9 @@ const initialState = {
     login_data : null,
     signup_success: null,
     userprofileupdate_success: null,
-    error : null
+    error : null,
+    projectInserted: null,
+    employerNameClicked: null
 }
 
 const reducer = (state = initialState, action) => {
@@ -34,6 +36,23 @@ const reducer = (state = initialState, action) => {
         }
     }
     
+    if(action.type === 'PROJECT_INSERTED_SUCCESS') {
+        return {
+            ...state,
+            token: 'new token value',
+            projectInserted : action.payload.data
+        }
+    }
+
+    if(action.type === 'EMPLOYER_NAME_CLICKED') {
+        //console.log('In reducer EMPLOYER_NAME_CLICKED '+ action.payload);
+        return {
+            ...state,
+            token: 'new token value',
+            employerNameClicked : action.payload
+        }
+    }
+    
 
     if(action.type === 'ERROR'){
         return{
@@ -41,6 +60,8 @@ const reducer = (state = initialState, action) => {
             error : 'ERROR'
         }
     }
+
+    
 
     return state;
 }

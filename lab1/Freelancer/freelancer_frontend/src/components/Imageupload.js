@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import '../css/style.css';
-import image from '../images/freelancerlogo.png';
+//import image from '../images/freelancerlogo.png';
 
 class Imageuploader extends Component {
     constructor() {
@@ -24,7 +24,7 @@ class Imageuploader extends Component {
         return(
             <div className="Imageuploader">
                 <div id='profileImage'>
-                            <img src= {this.state.fileSelected}/> 
+                            <img src= {this.state.fileSelected} alt='for users profile'/> 
                             <div id='imageUploader'> 
                                 <input type='file' className='fileInput' onChange={this.handleChange} />
                                 <button  className="btn btn-primary"><label>Upload</label></button>

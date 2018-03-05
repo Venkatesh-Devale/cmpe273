@@ -154,12 +154,66 @@ router.post('/postproject', function(req, res, next) {
             res.json('ERROR');
           } else {
             console.log('Project inserted successfully...');
-            res.json('POSTED PROJECT SUCCESSFULLY...');
+            res.json('PROJECT_INSERTED_SUCCESS');
           }
         })
     }
   })
   
 });
+
+
+router.post('/getallopenprojects', function(req, res, next) {
+  console.log('In getallopenprojects');
+  connectionPool.getConnection((err, connection) => {
+    if(err) {
+      res.json({
+        code : 100,
+        status : "Error in connecting to database"
+      });
+      
+    } else {
+      console.log('Connected to database with thread '+ connection.threadId);
+      var sql = 'SELECT * from projects WHERE open = ' + mysql.escape('open');
+      connection.query(sql, (err, result) => {
+        if(result.length == 0) {
+          res.json('ERROR');
+        }
+        else {
+          console.log(result);
+          res.json(result);
+        }
+      });
+      
+    }
+  })
+});
+
+router.post('/getmypublishedprojects', function(req, res, next) {
+  console.log('In getmypublishedprojects');
+  connectionPool.getConnection((err, connection) => {
+    if(err) {
+      res.json({
+        code : 100,
+        status : "Error in connecting to database"
+      });
+      
+    } else {
+      console.log('Connected to database with thread '+ connection.threadId);
+      var sql = 'SELECT * from projects WHERE employer = ' + mysql.escape(req.body.username);
+      connection.query(sql, (err, result) => {
+        if(result.length == 0) {
+          res.json('ERROR');
+        }
+        else {
+          console.log(result);
+          res.json(result);
+        }
+      });
+      
+    }
+  })
+});
+
 
 module.exports = router;

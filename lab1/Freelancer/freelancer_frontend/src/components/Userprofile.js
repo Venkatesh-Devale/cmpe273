@@ -17,7 +17,7 @@ class Userprofile extends Component {
             file:'',
             image:'',
             skills:'',
-            disabled: true
+            disabled: true,
         }
     }
     
@@ -83,8 +83,12 @@ class Userprofile extends Component {
     }
 
     render() {
-        let usernameindiv = '';
-        usernameindiv = sessionStorage.getItem('username');
+        /*let usernameindiv = '';    
+            //usernameindiv = sessionStorage.getItem('username');
+            if(this.props.employerNameClicked)
+                usernameindiv = this.props.employerNameClicked;
+            else 
+                usernameindiv = sessionStorage.getItem('username');*/
         let buttons = null;
         if(this.state.editing === false) {
             buttons = (
@@ -120,13 +124,12 @@ class Userprofile extends Component {
             <div className = 'Userprofile'>
                 <Navbar />
                 <div className='container-fluid'>
-                    <h1>Hello on Userprofile</h1>
                     <div className='row'>
                         <Imageupload />
                         <div id='profileDescription'>
                         <form >
                             <div className="form-group">
-                                <div id='name'><h1>{usernameindiv}</h1></div>
+                                <div id='name'><h1>{this.state.username}</h1></div>
                             </div>
                             <div className="form-group">
                                 <label>About Me:  <span class="glyphicon glyphicon-edit"></span></label>
@@ -162,7 +165,8 @@ class Userprofile extends Component {
 function mapStateToProps(state) {
     return {
         success: state.userprofileupdate_success,
-        logindata: state.login_data
+        logindata: state.login_data,
+        employerNameClicked: state.employerNameClicked
     }
 }
 

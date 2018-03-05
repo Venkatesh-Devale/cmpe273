@@ -11,9 +11,6 @@
     padding: 10px;
 }
 
-.navbar-default {
-    background: white;
-}
 
 .row > div{
     float:left;
@@ -91,4 +88,40 @@ img {
     margin-top: 5%;
     margin-left: 10%;
     margin-right: 20%;
+}
+
+.divProjectTable {
+    background: white;
+    margin-top: 3%;
+    margin-left: 4%;
+    margin-bottom: 20%;
+    width: 1300px;
+    height: auto;
+    
+}
+
+.divDashboardProjectTable {
+    background: white;
+    margin-top: 5%;
+    margin-left: 2%;
+    margin-bottom: 20%;
+    width: 1300px;
+    height: auto;
+    
+}
+
+#projectNameColomn {
+    width: 45%;
+}
+
+#employerColomn, #numberOfBidsColomn, #budgetRangeColomn, #bidNowColomn{
+    width: 17%;
+}
+
+.divBtnEmployerOrFreelancer {
+    float: right;
+    margin-top: 10px;
+    margin-left: 20px;
+    padding: 10px;
+
 }

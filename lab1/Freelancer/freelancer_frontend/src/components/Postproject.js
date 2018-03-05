@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import image from '../images/freelancerlogo.png';
 import { connect } from 'react-redux';
-import Login from './Login';
+//import Login from './Login';
 import '../css/style.css';
 import uuid from 'uuid';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 
 class Postproject extends Component {
     constructor() {
@@ -43,18 +44,22 @@ class Postproject extends Component {
         }
         console.log('In submitProject of Postproject...', project);
         this.props.postProject(project);
-        this.props.history.push('/userhome');
+    
+    
     }
 
     render() {
+        let redirect = null;
+        if(this.props.projectInserted === 'PROJECT_INSERTED_SUCCESS')
+            redirect = <Redirect to='/userhome'/>;
         return(
             <div className="Postproject">
+                {redirect}
                 <div className='container'>
-                    
                     <div id='holdPostProjectData'>
                         <form onSubmit={this.submitProject.bind(this)}>
                             <div className="form-group">
-                                <div id='logo'><img src={image} /></div>
+                                <div id='logo'><img src={image} alt='Freelancer logo' /></div>
                             </div>
                             <div className="form-group">
                                 <h1>Tell us what you need done</h1>
@@ -84,7 +89,7 @@ class Postproject extends Component {
                                 </p>
                             </div>
                             <div className="form-group">
-                                <textarea id="txtDesc" className="form-control" ref="description" onChange={this.handleChange} className="form-control" rows="5" name="description" placeholder="Describe your project here..." required></textarea>
+                                <textarea id="txtDesc" className="form-control" ref="description" onChange={this.handleChange} rows="5" name="description" placeholder="Describe your project here..." required></textarea>
                             </div>
                             <br/>
                             <div className="form-group">
@@ -103,7 +108,7 @@ class Postproject extends Component {
                                 <h3>What is your estimated budget range?</h3>
                             </div>
                             <div className="form-group">
-                                <select class="form-control" value={this.state.value} onChange={this.handleChange} name='budgetrange' id="budgetRange">
+                                <select className="form-control" value={this.state.value} onChange={this.handleChange} name='budgetrange' id="budgetRange">
                                     <option value='$10 - 30 USD'>Micro project($10-30 USD)</option>
                                     <option value='$30 - 250 USD'>Simple project($30-250 USD)</option>
                                     <option value='$250 - 750 USD'>Very small project($250-750 USD)</option>
@@ -127,11 +132,12 @@ class Postproject extends Component {
 
 function mapStateToProps(state) {
     return {
-        logindata: state.login_data
+        logindata: state.login_data,
+        projectInserted: state.projectInserted
     }
 }
 
-function mapDispatchToProps() {
+function mapDispatchToProps(dispatch) {
     return {
         postProject: (project) => {
             console.log('In postProjectDispatch of Postproject...', project);
@@ -139,6 +145,10 @@ function mapDispatchToProps() {
             .then((response) => {
                 console.log(response);
                 alert('Project created successfully...');
+                dispatch({
+                    type:'PROJECT_INSERTED_SUCCESS',
+                    payload: response
+                })
             })
         }
     }
