@@ -216,4 +216,62 @@ router.post('/getmypublishedprojects', function(req, res, next) {
 });
 
 
+router.post('/insertBidAndUpdateNumberOfBids', function(req, res, next) {
+  console.log(req.body);
+  const pid = req.body.project_id;
+  const bidAmount = req.body.bid;
+  const days = req.body.deliveryDays;
+  const freelancer = req.body.freelancer;
+  let bids = 0;
+  connectionPool.getConnection((err, connection) => {
+    if(err) {
+      res.json({
+        code : 100,
+        status : "Error in connecting to database"
+      });
+      
+    } else {
+      console.log('Connected to database with thread '+ connection.threadId);
+      var sqlInsert = 'INSERT INTO bids (projectid, freelancer, period, bidamount) VALUES (?, ?, ?, ?)';
+      connection.query(sqlInsert,[pid, freelancer, days, bidAmount], (err, result) => {
+        if(err) {
+          //console.log(err.name);
+          //console.log(err.message);
+          res.json('ERROR');
+        }
+        else {
+          console.log("Bid inserted Successfully...");
+          res.json('BID INSERTED SUCCESS');
+        }
+      });
+       
+      var getNumberOfBids = 'SELECT number_of_bids from projects WHERE id = ' + mysql.escape(pid);
+      connection.query(getNumberOfBids, (err, result) => {
+        if(err) 
+          console.log(err);
+        else {
+          bids = result[0].number_of_bids;
+        console.log('After getNumberOfBids...'+bids);
+        var ubids = bids + 1;
+        var updateBids = 'UPDATE projects SET number_of_bids = ' + ubids + ' WHERE id = ' + mysql.escape(pid);
+          connection.query(updateBids, (err, result) => {
+            if(err)
+              console.log(err);
+            else
+              console.log('After updateBids...',result);
+        
+        });
+        }
+        
+      });
+      
+      
+      
+      
+    }
+  })
+  
+});
+
+
 module.exports = router;

@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
+import Bidnow from './Bidnow';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import '../css/style.css';
 
 class Userhome extends Component {
@@ -18,7 +20,7 @@ class Userhome extends Component {
         axios.post('http://localhost:3001/getallopenprojects')
         .then((response) => {
             //console.log('In allopenprojects',response.data);
-            if(response.data == 'ERROR') {
+            if(response.data === 'ERROR') {
                 let emptyProject = [];
                 emptyProject.push('No projects to show');
                 this.setState({
@@ -39,15 +41,14 @@ class Userhome extends Component {
             this.props.history.push('/userprofile');
     }
 
-
-
+    
     render() {
         let projectsToShow = [];
             projectsToShow = this.state.projects.map(p => {
                 return (
                     <tr key={p.id}>
                     <td>
-                        <p><a href=''> {p.title} </a></p>
+                        <p><Link to={`/projectdetails/${ p.id }`}> {p.title} </Link></p>
                         <p> {p.description} </p>
                         <span> {p.skills_required} </span>
                     </td>
@@ -68,8 +69,9 @@ class Userhome extends Component {
                     </td>
                     <td>
                         <div>
-                            <button className=" navbar-btn btn btn-secondary">Bid Now</button>
+                            <Bidnow id={p.id}/>
                         </div>
+                        <div data-id = {p.id}></div>
                     </td>
                  </tr>
                 );

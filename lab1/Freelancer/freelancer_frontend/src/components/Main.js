@@ -7,6 +7,7 @@ import Userhome from './Userhome';
 import Dashboard from './Dashboard';
 import Userprofile from './Userprofile';
 import Postproject from './Postproject';
+import Projectdetailspage from './Projectdetailspage';
 
 const Main = () => (
     <div> 
@@ -19,7 +20,7 @@ const Main = () => (
             <Route path='/userhome' component={Userhome} />
             <Route path='/userprofile' component={Userprofile} />
             <Route path='/postproject' component={Postproject} />
-            
+            <Route path='/projectdetails/:value' component={Projectdetailspage} />
         </Switch>
     
     </div>

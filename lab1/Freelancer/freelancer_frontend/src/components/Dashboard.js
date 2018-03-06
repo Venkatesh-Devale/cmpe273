@@ -21,7 +21,7 @@ class Dashboard extends Component {
             axios.post('http://localhost:3001/getmypublishedprojects', userDetails)
             .then((response) => {
                 //console.log(response.data);
-                if(response.data == 'ERROR') {
+                if(response.data === 'ERROR') {
                     let emptyProject = [];
                     emptyProject.push('No projects to show');
                     this.setState({
@@ -81,9 +81,9 @@ class Dashboard extends Component {
                 <Navbar />
                 <UserNavbar />
                 <div className='divBtnEmployerOrFreelancer'>
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button onClick={() => this.componentWillMount()} type="button" class="btn btn-secondary">Employer</button>
-                        <button type="button" class="btn btn-secondary">Freelancer</button>
+                    <div className="btn-group" role="group" aria-label="Basic example">
+                        <button onClick={() => this.componentWillMount()} type="button" className="btn btn-secondary">Employer</button>
+                        <button type="button" className="btn btn-secondary">Freelancer</button>
                     </div>
                 </div>
                 <div className='divDashboardProjectTable'>
