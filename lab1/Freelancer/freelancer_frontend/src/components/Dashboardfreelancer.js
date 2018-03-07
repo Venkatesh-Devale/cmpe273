@@ -4,25 +4,25 @@ import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
 import axios from 'axios';
 
-class Dashboard extends Component {
+class Dashboardfreelancer extends Component {
 
     constructor() {
         super();
         this.state = {
             projects : [],
-            freelancerButtonClicked: false
+            employerButtonClicked: false
         }
     }
 
     componentWillMount() {
-            console.log('In my Dashboard');
+            console.log('In my Dashboardfreelancer...');
             const userDetails = {
                 username: sessionStorage.getItem('username')
             }
-            axios.post('http://localhost:3001/getmypublishedprojects', userDetails)
+            axios.post('http://localhost:3001/getmybiddedprojects', userDetails)
             .then((response) => {
-                //console.log(response.data);
-                if(response.data === 'ERROR') {
+                console.log(response.data);
+                /*if(response.data === 'ERROR') {
                     let emptyProject = [];
                     emptyProject.push('No projects to show');
                     this.setState({
@@ -32,20 +32,20 @@ class Dashboard extends Component {
                     this.setState({
                         projects: response.data
                     })
-                }
+                }*/
             })
     }
 
-    handleFreelancerClicked() {
+    handleEmployerClicked() {
         this.setState({
-            freelancerButtonClicked: true
+            employerButtonClicked: true
         })
     }
 
     render() {
-        if(this.state.freelancerButtonClicked === true)
-            this.props.history.push('/dashboardfreelancer');
-        let projectsToShow = [];
+        if(this.state.employerButtonClicked === true)
+            this.props.history.push('/dashboard');
+        /*let projectsToShow = [];
         projectsToShow = this.state.projects.map(p => {
             return (
                 
@@ -84,15 +84,15 @@ class Dashboard extends Component {
              </tr>
             );
             
-        });
+        });*/
         return(
-            <div className="Dashboard">
+            <div className="Dashboardfreelancer">
                 <Navbar />
                 <UserNavbar />
                 <div className='divBtnEmployerOrFreelancer'>
                     <div className="btn-group" role="group" aria-label="Basic example">
-                        <button onClick={() => this.componentWillMount()} type="button" className="btn btn-secondary">Employer</button>
-                        <button type="button" onClick = {()=> this.handleFreelancerClicked()} className="btn btn-secondary">Freelancer</button>
+                        <button onClick = {()=> this.handleEmployerClicked()} type="button" className="btn btn-secondary">Employer</button>
+                        <button type="button" className="btn btn-secondary">Freelancer</button>
                     </div>
                 </div>
                 <div className='divDashboardProjectTable'>
@@ -101,14 +101,13 @@ class Dashboard extends Component {
                         <tr className='table-secondary'>
                             <th id='projectNameColomn'>Project Name</th>
                             <th id='employerColomn'>Average Bid</th>
-                            <th id='numberOfBidsColomn'>Freelancer Name</th>
-                            <th id='numberOfBidsColomn'>Estimated Completion Date</th>
-                            <th id='numberOfBidsColomn'>Number of Bids</th>
+                            <th id='numberOfBidsColomn'>Employer Name</th>
+                            <th id='numberOfBidsColomn'>Your Bid</th>
                             <th id='budgetRangeColomn'>Status</th>     
                         </tr>
                        </thead>
                        <tbody>
-                            {projectsToShow}
+                            
                        </tbody>
                        
                     </table>
@@ -118,4 +117,4 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard;
+export default Dashboardfreelancer;

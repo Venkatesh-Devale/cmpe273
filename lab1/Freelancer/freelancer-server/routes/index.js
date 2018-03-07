@@ -274,4 +274,8 @@ router.post('/insertBidAndUpdateNumberOfBids', function(req, res, next) {
 });
 
 
+router.post('/getmybiddedprojects', function(req, res, next) {
+  console.log(req.body);
+});
+
 module.exports = router;
