@@ -307,4 +307,31 @@ router.post('/getmybiddedprojects', function(req, res, next) {
 
 });
 
+router.post('/getproject', function(req, res, next) {
+  console.log('In getproject', req.body);
+  const projectId = req.body.projectid;
+  connectionPool.getConnection((err, connection) => {
+    if(err) {
+      res.json({
+        code : 100,
+        status : "Error in connecting to database"
+      });
+      
+    } else {
+      var sql = 'SELECT * from projects WHERE id = ' + mysql.escape(projectId);
+      connection.query(sql, (err, result) => {
+        if(err) {
+          res.json({
+            code : 100,
+            status : "Error retreiving project..."
+          });
+        } else {
+          res.json(result);
+        }
+      })
+    }
+  })
+})
+
+
 module.exports = router;
