@@ -21,8 +21,8 @@ class Dashboardfreelancer extends Component {
             }
             axios.post('http://localhost:3001/getmybiddedprojects', userDetails)
             .then((response) => {
-                console.log(response.data);
-                /*if(response.data === 'ERROR') {
+                console.log('Showing all bidded projects',response.data);
+                if(response.data === 'ERROR') {
                     let emptyProject = [];
                     emptyProject.push('No projects to show');
                     this.setState({
@@ -31,8 +31,10 @@ class Dashboardfreelancer extends Component {
                 } else {
                     this.setState({
                         projects: response.data
+                    }, () => {
+                        console.log('All projects you have bidded on to:', this.state.projects);
                     })
-                }*/
+                }
             })
     }
 
@@ -45,10 +47,9 @@ class Dashboardfreelancer extends Component {
     render() {
         if(this.state.employerButtonClicked === true)
             this.props.history.push('/dashboard');
-        /*let projectsToShow = [];
+        let projectsToShow = [];
         projectsToShow = this.state.projects.map(p => {
             return (
-                
                 <tr key={p.id}>
                 <td>
                     <p><a href=''> {p.title} </a></p>
@@ -62,17 +63,12 @@ class Dashboardfreelancer extends Component {
                 </td>
                 <td>
                     <div>
-                        <p>{p.worker}</p>
+                        <p>{p.employer}</p>
                     </div>
                 </td>
                 <td>
                     <div>
-                    <p></p>
-                    </div>
-                </td>
-                <td>
-                    <div>
-                        <p>{p.number_of_bids}</p>
+                        <p>{p.bidamount}</p>
                     </div>
                 </td>
                 <td>
@@ -84,7 +80,7 @@ class Dashboardfreelancer extends Component {
              </tr>
             );
             
-        });*/
+        });
         return(
             <div className="Dashboardfreelancer">
                 <Navbar />
@@ -107,7 +103,7 @@ class Dashboardfreelancer extends Component {
                         </tr>
                        </thead>
                        <tbody>
-                            
+                        { projectsToShow }
                        </tbody>
                        
                     </table>

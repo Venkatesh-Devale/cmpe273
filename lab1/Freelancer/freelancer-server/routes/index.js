@@ -232,18 +232,26 @@ router.post('/insertBidAndUpdateNumberOfBids', function(req, res, next) {
       
     } else {
       console.log('Connected to database with thread '+ connection.threadId);
-      var sqlInsert = 'INSERT INTO bids (projectid, freelancer, period, bidamount) VALUES (?, ?, ?, ?)';
-      connection.query(sqlInsert,[pid, freelancer, days, bidAmount], (err, result) => {
-        if(err) {
-          //console.log(err.name);
-          //console.log(err.message);
+      var sqltemp = 'SELECT * FROM bids WHERE freelancer = ' + mysql.escape(freelancer) + ' AND projectid = ' + mysql.escape(pid);
+      connection.query(sqltemp, (err, result) => {
+        if(result.length == 0) {
+          var sqlInsert = 'INSERT INTO bids (projectid, freelancer, period, bidamount) VALUES (?, ?, ?, ?)';
+          connection.query(sqlInsert,[pid, freelancer, days, bidAmount], (err, result) => {
+            if(err) {
+              //console.log(err.name);
+              //console.log(err.message);
+              res.json('ERROR');
+            }
+            else {
+              console.log("Bid inserted Successfully...");
+              res.json('BID INSERTED SUCCESS');
+            }
+          });
+        } else {
           res.json('ERROR');
         }
-        else {
-          console.log("Bid inserted Successfully...");
-          res.json('BID INSERTED SUCCESS');
-        }
-      });
+      })
+      
        
       var getNumberOfBids = 'SELECT number_of_bids from projects WHERE id = ' + mysql.escape(pid);
       connection.query(getNumberOfBids, (err, result) => {
@@ -264,10 +272,6 @@ router.post('/insertBidAndUpdateNumberOfBids', function(req, res, next) {
         }
         
       });
-      
-      
-      
-      
     }
   })
   
@@ -275,7 +279,32 @@ router.post('/insertBidAndUpdateNumberOfBids', function(req, res, next) {
 
 
 router.post('/getmybiddedprojects', function(req, res, next) {
+  
   console.log(req.body);
+  connectionPool.getConnection((err, connection) => {
+    if(err) {
+      res.json({
+        code : 100,
+        status : 'Error in connecting to database'
+      })
+    } else {
+      let sql = 'SELECT p.id, p.title, p.employer, p.description, p.skills_required, b.bidamount, p.open  FROM projects AS p' +
+      ' INNER JOIN bids AS b' +
+      ' ON p.id = b.projectid' +
+      ' WHERE b.freelancer = ' + mysql.escape(req.body.username);
+      connection.query(sql, (err, result) => {
+        if(err)
+          console.log(err);
+        else {
+          console.log(result);
+          res.json(result);
+        }
+      })
+    }
+  })
+
+
+
 });
 
 module.exports = router;
