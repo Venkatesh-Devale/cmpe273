@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
 import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
 import Bidnow from './Bidnow';
@@ -34,13 +33,6 @@ class Userhome extends Component {
         })
     }
 
-    handleGoToUserProfile(employer) {
-        console.log('In handleGoToUserProfile', employer);
-        this.props.employerNameClicked(employer);
-        if(this.props.employerNameClicked)
-            this.props.history.push('/userprofile');
-    }
-
     
     render() {
         let projectsToShow = [];
@@ -54,7 +46,7 @@ class Userhome extends Component {
                     </td>
                     <td>
                         <div>
-                        <p><a id='goToUserProfile' onClick={() => this.handleGoToUserProfile(p.employer)} href=''> {p.employer} </a></p>
+                            <p><Link to={`/userprofile/${p.employer}`}> {p.employer} </Link></p>
                         </div>
                     </td>
                     <td>
@@ -104,22 +96,5 @@ class Userhome extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        employerNameClicked: state.employerNameClicked
-    }
-}
 
-function mapDispatchToProps(dispatch) {
-    return {
-        employerNameClicked: (employer) => {
-            console.log('In employer nameClicked...'+ employer);
-            dispatch({
-                type: 'EMPLOYER_NAME_CLICKED',
-                payload: employer
-            })
-        }
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Userhome);
+export default Userhome;

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import '../css/style.css';
 import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 class Dashboard extends Component {
@@ -51,13 +52,13 @@ class Dashboard extends Component {
                 
                 <tr key={p.id}>
                 <td>
-                    <p><a href=''> {p.title} </a></p>
+                    <p><Link to={`/projectdetails/${ p.id }`}> {p.title} </Link></p>
                     <p> {p.description} </p>
                     <span> {p.skills_required} </span>
                 </td>
                 <td>
                     <div>
-                        <p></p>
+                        <p> { p.average } </p>
                     </div>
                 </td>
                 <td>
@@ -67,7 +68,7 @@ class Dashboard extends Component {
                 </td>
                 <td>
                     <div>
-                    <p></p>
+                    <p>  </p>
                     </div>
                 </td>
                 <td>

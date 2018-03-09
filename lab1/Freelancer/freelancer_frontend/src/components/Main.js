@@ -19,9 +19,9 @@ const Main = () => (
             <Route path='/signup' component={Signup} />
             <Route path='/dashboard' component={Dashboard} />
             <Route path='/userhome' component={Userhome} />
-            <Route path='/userprofile' component={Userprofile} />
+            <Route path='/userprofile/:value' component={Userprofile} />
             <Route path='/postproject' component={Postproject} />
-            <Route path='/projectdetails/:value' component={Projectdetailspage} />
+            <Route path='/projectdetails/:value/' component={Projectdetailspage} />
             <Route path='/dashboardfreelancer' component={Dashboardfreelancer} />
         </Switch>
     

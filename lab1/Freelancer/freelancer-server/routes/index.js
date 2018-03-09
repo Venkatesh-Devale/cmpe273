@@ -65,6 +65,7 @@ router.post('/login', function(req, res, next) {
       var sql = 'SELECT * from users WHERE username = ' + mysql.escape(req.body.username) +' AND password = ' + mysql.escape(req.body.password);
       connection.query(sql, (err, result) => {
         if(result.length == 0) {
+          console.log(err);
           res.json('ERROR');
         }
         else {
@@ -200,7 +201,10 @@ router.post('/getmypublishedprojects', function(req, res, next) {
       
     } else {
       console.log('Connected to database with thread '+ connection.threadId);
-      var sql = 'SELECT * from projects WHERE employer = ' + mysql.escape(req.body.username);
+      var sql = 'select * from projects inner join (select projectid, sum(bidamount)/count(projectid) as average from bids group by projectid) as t' +
+                ' on projects.id = t.projectid where employer = ' +  mysql.escape(req.body.username);
+
+
       connection.query(sql, (err, result) => {
         if(result.length == 0) {
           res.json('ERROR');
@@ -288,10 +292,13 @@ router.post('/getmybiddedprojects', function(req, res, next) {
         status : 'Error in connecting to database'
       })
     } else {
-      let sql = 'SELECT p.id, p.title, p.employer, p.description, p.skills_required, b.bidamount, p.open  FROM projects AS p' +
-      ' INNER JOIN bids AS b' +
-      ' ON p.id = b.projectid' +
-      ' WHERE b.freelancer = ' + mysql.escape(req.body.username);
+      let sql = 'select * from projects as p ' +
+      'inner join ((select b.projectid, b.freelancer, b.bidamount, b.period, t1.average from bids as b ' +
+      'inner join (select projectid, sum(bidamount)/count(projectid) as average from bids ' +
+      'group by projectid) as t1 ' +
+      'on b.projectid = t1.projectid ' +
+      'where b.freelancer = ' + mysql.escape(req.body.username) + ') as t2 )' +
+      'on p.id = t2.projectid';
       connection.query(sql, (err, result) => {
         if(err)
           console.log(err);
@@ -318,12 +325,43 @@ router.post('/getproject', function(req, res, next) {
       });
       
     } else {
-      var sql = 'SELECT * from projects WHERE id = ' + mysql.escape(projectId);
+      var sql = 'select * from projects as p ' +
+      'inner join ((select projectid, sum(bidamount)/count(projectid) as average ' +
+      'from bids ' +
+      'group by projectid) as t) ' +
+      'on p.id = t.projectid ' +
+      'where p.id = ' + mysql.escape(projectId);
       connection.query(sql, (err, result) => {
         if(err) {
           res.json({
             code : 100,
             status : "Error retreiving project..."
+          });
+        } else {
+          res.json(result);
+        }
+      })
+    }
+  })
+})
+
+router.post('/getAllBidsForThisProject', (req, res, next) => {
+  console.log('In getAllBidsForThisProject', req.body.projectid);
+  const projectId = req.body.projectid;
+  connectionPool.getConnection((err, connection) => {
+    if(err) {
+      res.json({
+        code : 100,
+        status : "Error in connecting to database"
+      });
+      
+    } else {
+      var sql = 'SELECT * from bids WHERE projectid = ' + mysql.escape(projectId);
+      connection.query(sql, (err, result) => {
+        if(err) {
+          res.json({
+            code : 100,
+            status : "Error retreiving bids..."
           });
         } else {
           res.json(result);

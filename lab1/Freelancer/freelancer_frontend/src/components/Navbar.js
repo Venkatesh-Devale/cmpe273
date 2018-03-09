@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import '../css/style.css';
 
 class Navbar extends Component {
@@ -24,7 +25,7 @@ class Navbar extends Component {
         } else {
             changes = (
                 <ul className="nav navbar-nav navbar-right">
-                    <li className='nav-item mr-4'><a className='text-dark' href="/userprofile"><span className="glyphicon glyphicon-user"></span> My Profile</a></li>
+                    <li className='nav-item mr-4'><Link className='text-dark' to={`/userprofile/${ sessionStorage.getItem('username') }`}><span className="glyphicon glyphicon-user"></span> My Profile</Link></li>
                     <li className='nav-item mr-4'><a className='text-dark' onClick={this.handleLogout} href="/"><span className="glyphicon glyphicon-log-out"></span> Logout</a></li>
                     
                 </ul>

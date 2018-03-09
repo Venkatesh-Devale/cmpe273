@@ -44,14 +44,6 @@ const reducer = (state = initialState, action) => {
         }
     }
 
-    if(action.type === 'EMPLOYER_NAME_CLICKED') {
-        //console.log('In reducer EMPLOYER_NAME_CLICKED '+ action.payload);
-        return {
-            ...state,
-            token: 'new token value',
-            employerNameClicked : action.payload
-        }
-    }
     
 
     if(action.type === 'ERROR'){

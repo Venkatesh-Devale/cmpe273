@@ -4,6 +4,7 @@ import UserNavbar from './UserNavbar';
 import axios from 'axios';
 import '../css/style.css';
 import Bidnow from './Bidnow';
+import ListAllBids from './ListAllBids';
 
 class Projectdetailspage extends Component {
     constructor() {
@@ -16,7 +17,8 @@ class Projectdetailspage extends Component {
             employer: '',
             worker: '',
             budgetrange: '',
-            number_of_bids: ''
+            number_of_bids: '',
+            average : '',
         }
     }
 
@@ -31,7 +33,7 @@ class Projectdetailspage extends Component {
             }
             axios.post('http://localhost:3001/getproject', projectId)
             .then( (response) => {
-                console.log(response.data);
+                console.log('In projectdetails Component will mount', response.data);
                 this.setState({
                     title: response.data[0].title,
                     description: response.data[0].description,
@@ -39,15 +41,17 @@ class Projectdetailspage extends Component {
                     employer: response.data[0].employer,
                     worker: response.data[0].worker,
                     budgetrange: response.data[0].budgetrange,
-                    number_of_bids: response.data[0].number_of_bids
+                    number_of_bids: response.data[0].number_of_bids,
+                    average : response.data[0].average
                 }, () => {
-                    console.log(this.state);
+                    console.log('In projectdetails Component will mount showing state',this.state.employer);
                 })
             })
         })
     }
 
     render() {
+        
         return(
             <div className="Projectdetailspage">
             <Navbar />
@@ -57,6 +61,7 @@ class Projectdetailspage extends Component {
                     <div id='divProjectDetails'>
                         
                             <h2> { this.state.title } </h2>
+                            <hr />
                             <div id = 'div1' >
                                 <h4>Project Description</h4>
                                 <p>
@@ -82,9 +87,9 @@ class Projectdetailspage extends Component {
                                 </p>
                             </div>
                             <div id = 'div1' >
-                                <h4>Average Bids</h4>
+                                <h4>Average Bid</h4>
                                 <p>
-                                    Average bids to show 
+                                    {this.state.average}
                                 </p>
                             </div>
                             <div id = 'div1' >
@@ -92,6 +97,8 @@ class Projectdetailspage extends Component {
                             </div>
                         
                     </div>
+                    
+                    <ListAllBids id = { this.state.projectId } owner = { this.state.employer } />
                 </div>
                 
             </div>

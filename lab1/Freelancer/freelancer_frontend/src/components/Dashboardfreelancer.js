@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import '../css/style.css';
 import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 class Dashboardfreelancer extends Component {
@@ -52,18 +53,18 @@ class Dashboardfreelancer extends Component {
             return (
                 <tr key={p.id}>
                 <td>
-                    <p><a href=''> {p.title} </a></p>
+                    <p><Link to={`/projectdetails/${ p.id }`}> {p.title} </Link></p>
                     <p> {p.description} </p>
                     <span> {p.skills_required} </span>
                 </td>
                 <td>
                     <div>
-                        <p></p>
+                        <p> { p.average } </p>
                     </div>
                 </td>
                 <td>
                     <div>
-                        <p>{p.employer}</p>
+                        <p><Link to={`/userprofile/${p.employer}`}> {p.employer} </Link></p>
                     </div>
                 </td>
                 <td>
