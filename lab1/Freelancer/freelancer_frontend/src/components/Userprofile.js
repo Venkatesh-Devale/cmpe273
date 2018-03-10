@@ -4,6 +4,7 @@ import axios from 'axios';
 import Imageupload from './Imageupload';
 import '../css/style.css';
 import Navbar from './Navbar';
+import UserNavbar from './UserNavbar';
 
 class Userprofile extends Component {
     constructor() {
@@ -83,12 +84,7 @@ class Userprofile extends Component {
     }
 
     render() {
-        /*let usernameindiv = '';    
-            //usernameindiv = sessionStorage.getItem('username');
-            if(this.props.employerNameClicked)
-                usernameindiv = this.props.employerNameClicked;
-            else 
-                usernameindiv = sessionStorage.getItem('username');*/
+        
         let buttons = null;
         if(this.state.editing === false) {
             buttons = (
@@ -123,6 +119,7 @@ class Userprofile extends Component {
 
             <div className = 'Userprofile'>
                 <Navbar />
+                <UserNavbar />
                 <div className='container-fluid'>
                     <div className='row'>
                         <Imageupload />
@@ -132,15 +129,15 @@ class Userprofile extends Component {
                                 <div id='name'><h1>{this.state.username}</h1></div>
                             </div>
                             <div className="form-group">
-                                <label>About Me:  <span class="glyphicon glyphicon-edit"></span></label>
+                                <label>About Me:  <span className="glyphicon glyphicon-edit"></span></label>
                                 <textarea id="txtaboutme" value={this.state.aboutme} disabled={this.state.disabled} onChange={this.handleChange} className="form-control" rows="5" name="aboutme" ></textarea>
                             </div>
                             <div className="form-group">
-                                <label>Email:  <span class="glyphicon glyphicon-edit"></span></label>    
+                                <label>Email:  <span className="glyphicon glyphicon-edit"></span></label>    
                                 <input type="email"  ref="emailid"  value={this.state.email} disabled={this.state.disabled} onChange={this.handleChange} className="form-control" placeholder='Enter your email id'  id="txtEmailId" name="email" />
                             </div>
                             <div className="form-group">
-                                <label>Phone:  <span class="glyphicon glyphicon-edit"></span></label>
+                                <label>Phone:  <span className="glyphicon glyphicon-edit"></span></label>
                                 <input type="text" ref="phone"  value={this.state.phone} disabled={this.state.disabled} onChange={this.handleChange} className="form-control" placeholder='Enter your phone number' id="txtPhone" name="phone" />
                             </div>
                             
@@ -150,7 +147,7 @@ class Userprofile extends Component {
                             {buttons}
                             <div id = 'profileSkills'>
                                 <div className="form-group">
-                                    <label>Skills:  <span class="glyphicon glyphicon-edit"></span></label>
+                                    <label>Skills:  <span className="glyphicon glyphicon-edit"></span></label>
                                     <textarea id="txtskills"  className="form-control" rows="5" name='skills' disabled={this.state.disabled}></textarea>
                                 </div>
                             </div>

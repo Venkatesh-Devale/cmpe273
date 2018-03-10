@@ -22,7 +22,7 @@ class Dashboard extends Component {
             }
             axios.post('http://localhost:3001/getmypublishedprojects', userDetails)
             .then((response) => {
-                //console.log(response.data);
+                console.log(response.data);
                 if(response.data === 'ERROR') {
                     let emptyProject = [];
                     emptyProject.push('No projects to show');
@@ -48,8 +48,11 @@ class Dashboard extends Component {
             this.props.history.push('/dashboardfreelancer');
         let projectsToShow = [];
         projectsToShow = this.state.projects.map(p => {
+            var finalDate = null
+            if( p.estimated_completion_date !== null) {
+                finalDate = p.estimated_completion_date.slice(0,10);
+            }
             return (
-                
                 <tr key={p.id}>
                 <td>
                     <p><Link to={`/projectdetails/${ p.id }`}> {p.title} </Link></p>
@@ -63,12 +66,12 @@ class Dashboard extends Component {
                 </td>
                 <td>
                     <div>
-                        <p>{p.worker}</p>
+                        <p><Link to={`/userprofile/${ p.worker }`}>{p.worker}</Link></p>
                     </div>
                 </td>
                 <td>
                     <div>
-                    <p>  </p>
+                    <p> { finalDate } </p>
                     </div>
                 </td>
                 <td>

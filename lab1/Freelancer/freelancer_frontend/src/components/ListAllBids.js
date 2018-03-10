@@ -7,7 +7,8 @@ class ListAllBids extends Component {
     constructor() {
         super();
         this.state = {
-            bids : []
+            bids : [],
+            display : "none"
         }
     }
     componentWillMount() {
@@ -17,7 +18,7 @@ class ListAllBids extends Component {
         }
         axios.post('http://localhost:3001/getAllBidsForThisProject', pid)
         .then( (response) => {
-            //console.log('In getAllBidsForThis project:',response.data);
+            console.log('In getAllBidsForThis project:',response.data);
             if(response.data === 'ERROR') {
                 let tempBids = [];
                 tempBids.push('No projects to show');
@@ -25,17 +26,42 @@ class ListAllBids extends Component {
                     bids: tempBids
                 })
             } else {
+                if(response.data[0].employer === sessionStorage.getItem('username')) {
+                    this.setState({
+                        display : "block"
+                    })
+                }
                 this.setState({
                     bids: response.data
                 })
             }
         })
     }
+
+    handleClick( freelancer ) {
+        console.log("Hire button click and freelancer is :" + freelancer, this.props.id);  
+        const details = {
+            pid : this.props.id,
+            freelancer : freelancer
+        }
+        axios.post('http://localhost:3001/setworkerforproject', details)
+        .then( (response) => {
+            console.log("In hire button handle click", response.data);
+        })
+    }
+
+
     render() {
+        
         let bidsToShow = [];
+        var k = 0;
+        var displayStyle = this.state.display;
+        const divStyle = {
+            display : displayStyle
+        }
         bidsToShow = this.state.bids.map( (b) => {
             return (
-                <tr key={b.id}>
+                <tr key={k++}>
                 <td>
                     <p>Show Profile Image here</p>
                 </td>
@@ -52,6 +78,11 @@ class ListAllBids extends Component {
                 <td>
                     <div>
                         <p>{ b.bidamount }</p>
+                    </div>
+                </td>
+                <td>
+                    <div style = { divStyle }>
+                        <input type = "button" id = "btnHire" className = "btn btn-secondary" value = "Hire" onClick = {this.handleClick.bind(this, b.freelancer)}/>
                     </div>
                 </td>
                 
@@ -73,6 +104,7 @@ class ListAllBids extends Component {
                                     <th id='freelancerName'>Freelancer Name</th>
                                     <th id='bidPrice'>Bid Price</th>
                                     <th id='periodInDays'>Period(In Days)</th>
+                                    <th id='btnHire'></th>
                                 </tr>
                             </thead>
                             <tbody>

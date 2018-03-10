@@ -69,7 +69,9 @@ router.post('/login', function(req, res, next) {
           res.json('ERROR');
         }
         else {
-          console.log(result);
+          req.session.username = 'venky';
+          console.log("Session Initialized");
+          
           res.json(result);
         }
       });
@@ -356,7 +358,7 @@ router.post('/getAllBidsForThisProject', (req, res, next) => {
       });
       
     } else {
-      var sql = 'SELECT * from bids WHERE projectid = ' + mysql.escape(projectId);
+      var sql = 'SELECT * from bids inner join projects on bids.projectid = projects.id WHERE projectid = ' + mysql.escape(projectId);
       connection.query(sql, (err, result) => {
         if(err) {
           res.json({
@@ -367,6 +369,34 @@ router.post('/getAllBidsForThisProject', (req, res, next) => {
           res.json(result);
         }
       })
+    }
+  })
+})
+
+router.post('/setworkerforproject', (req, res, next) => {
+  console.log(req.body);
+  connectionPool.getConnection( (err, connection) => {
+    if(err) {
+      res.json('Error connecting to database...')
+    } else {
+      var sql = 'update projects set worker = ' + mysql.escape(req.body.freelancer) + ' where id = ' + mysql.escape(req.body.pid);
+      connection.query(sql, (err, result) => {
+        if(err) {
+          res.json('Error updating the worker for this project');
+        } else {
+          //res.json('Worker set successfully for this project');
+          var newQuery = 'update projects set estimated_completion_date = (SELECT DATE_ADD(CURDATE(), INTERVAL (select period from bids ' +
+          'where freelancer = '+ mysql.escape(req.body.freelancer) +' and projectid = '+ mysql.escape(req.body.pid) +' ) DAY)) ' + 'where id = ' + mysql.escape(req.body.pid);
+          connection.query(newQuery, (err, result) => {
+            if(err) {
+              console.log(err);
+            } else {
+              res.json('Updated the estimated completion date...');
+            }
+          })
+        }
+      });
+
     }
   })
 })

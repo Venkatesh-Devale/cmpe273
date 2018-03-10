@@ -4,11 +4,19 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var session = require('client-sessions');
 var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
+app.use( session ({
+    cookieName : 'session',
+    secret : "abhabclkjbiyvyyYEWGwevbldyeu",
+    duration : 30 * 60 * 1000,
+    activeDuration : 5 * 60 * 1000
+  })
+);
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
