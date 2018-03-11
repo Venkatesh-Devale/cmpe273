@@ -1,33 +1,57 @@
 import React, {Component} from 'react';
 import '../css/style.css';
+import { connect } from 'react-redux';
+import axios from 'axios';
 //import image from '../images/freelancerlogo.png';
 
 class Imageuploader extends Component {
     constructor() {
         super();
         this.state = {
-            fileSelected: ''
+            fileSelected: '',
+            imagePreview: '',
+            display: 'none'
         }
     }
 
-    handleChange = event => {
-        console.log(event.target.files[0]);
-        this.setState({
-            fileSelected: event.target.files[0]
-        })
+    handleChange = e => {
+        e.preventDefault();
+        
+        let rdr = new FileReader();
+        let fileSelected = e.target.files[0];
+        rdr.onloadend = () => {
+          this.setState({
+            fileSelected: fileSelected,
+            imagePreview: rdr.result,
+            display: 'block'
+          });
+        }
+    
+        rdr.readAsDataURL(fileSelected);
+    }
+
+    handleUplaod = () => {
+        console.log("In handle upload...")
+        
     }
 
 
-
     render() {
-        
+        let {imagePreview} = this.state;
+        let $imagePreviewFinal = null;
+        if (imagePreview) {
+            $imagePreviewFinal = (<img src = {imagePreview} alt = "This is user's display pic"/>);
+          }
+        const style ={
+            display : this.state.display
+        }
         return(
             <div className="Imageuploader">
                 <div id='profileImage'>
-                            <img src= {this.state.fileSelected} alt='for users profile'/> 
+                            {$imagePreviewFinal}
                             <div id='imageUploader'> 
                                 <input type='file' className='fileInput' onChange={this.handleChange} />
-                                <button  className="btn btn-primary"><label>Upload</label></button>
+                                <button style = {style} onClick = {this.handleUplaod} className="btn btn-primary"><label>Upload</label></button>
                             </div>
                         </div>
             </div>
@@ -35,4 +59,17 @@ class Imageuploader extends Component {
     }
 }
 
-export default Imageuploader;
+
+function mapDispatchToProps(dispatch) {
+    return {
+        saveImage : (image) => {
+            //console.log("In mapDispatch" + imageDetails + "......" + imageName);
+            axios.post('http://localhost:3001/saveImage', image)
+            .then( (response) => {
+                
+            })
+        }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Imageuploader);

@@ -10,6 +10,7 @@ var connectionPool = mysql.createPool({
   database : 'freelancer'
 })
 
+//var globalUsername = [];
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -70,9 +71,13 @@ router.post('/login', function(req, res, next) {
         }
         else {
           req.session.username = 'venky';
-          console.log("Session Initialized");
+          console.log("# Session value set "+ req.session.username);
+          //globalUsername[req.body.username] = req.session.username;
           
-          res.json(result);
+          console.log("Session Initialized");
+          console.log('In login node...' + req.session.username);
+          var jsonResponse = {"result" : result};
+          res.send(jsonResponse);
         }
       });
       
@@ -112,6 +117,7 @@ router.post('/updateprofile', function(req, res, next) {
 
 router.post('/getprofile', function(req, res, next) {
   console.log(req.body);
+  console.log("In /getprofile....the session stored username is: " + req.session.username);
   connectionPool.getConnection((err, connection) => {
     if(err) {
       res.json({
@@ -401,5 +407,10 @@ router.post('/setworkerforproject', (req, res, next) => {
   })
 })
 
+
+router.post('/saveImage', (req, res, next) => {
+  console.log("In /saveImage the image base 64 version is: ", req.body.imageDetailsBase64);
+  console.log("In /saveImage the image file name is: ", req.body.imageFileName);
+});
 
 module.exports = router;
