@@ -66,9 +66,17 @@
 textarea { vertical-align: top; }
 
 img {
-    max-width:100%;
+    /*max-width:100%;
     max-height:100%;
-    object-fit: contain;
+    object-fit: contain;*/
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+#h1LoginandSignup {
+    text-align: center;
 }
 
 #logo {

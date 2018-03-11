@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-
+import image from '../images/freelancerlogo.png';
 import axios from 'axios';
 
 import '../css/style.css';
@@ -46,6 +46,7 @@ class Signup extends Component {
         if (this.props.signupSuccess === 'SIGNUP_SUCCESS') {
             authRedirect = <Redirect to='/login'/>
         }
+    
         return(
             
             <div className="Signup">
@@ -53,8 +54,8 @@ class Signup extends Component {
             <div id="mainDiv">
             <div className="center">
                     <div>
-                        <h1> Freelancer logo here </h1>
-                        <h3> SignUp for free today </h3>
+                        <div id='logo'><img src={image} alt='Freelancer logo' /></div>
+                        <h3 id = 'h1LoginandSignup'> SignUp for free today </h3>
                         <hr />
                     </div>
                     <div id="divSignupForm">

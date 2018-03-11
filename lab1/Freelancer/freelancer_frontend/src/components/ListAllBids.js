@@ -47,6 +47,7 @@ class ListAllBids extends Component {
         axios.post('http://localhost:3001/setworkerforproject', details)
         .then( (response) => {
             console.log("In hire button handle click", response.data);
+            alert('Freelancer hired...check in your dashboard now...thanks');
         })
     }
 

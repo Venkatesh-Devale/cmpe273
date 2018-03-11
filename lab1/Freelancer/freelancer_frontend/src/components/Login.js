@@ -46,7 +46,7 @@ class Login extends Component {
             <div id="mainDiv">
             <div className="center">
                     <div>
-                         <h1> Login  </h1>
+                         <h1 id = 'h1LoginandSignup'> Login  </h1>
                     </div>
                     <div id="divLoginForm">
                         <form onSubmit={this.handleLogin.bind(this)}>

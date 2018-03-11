@@ -6,6 +6,8 @@ import '../css/style.css';
 import uuid from 'uuid';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
+import Navbar from './Navbar';
+import UserNavbar from './UserNavbar';
 
 class Postproject extends Component {
     constructor() {
@@ -55,7 +57,9 @@ class Postproject extends Component {
         return(
             <div className="Postproject">
                 {redirect}
-                <div className='container'>
+                <div className='container-fluid'>
+                <Navbar />
+                <UserNavbar />
                     <div id='holdPostProjectData'>
                         <form onSubmit={this.submitProject.bind(this)}>
                             <div className="form-group">
