@@ -69,17 +69,6 @@ class Signup extends Component {
                                 <input type="password" ref="password" onChange={this.handleChange} className="form-control" id="txtPassword" placeholder="Enter Password" name="password" />
                             </div>
                             <div className="form-group">
-                                <div className="btn-group btn-group-justified">
-                                    <div class="btn-group">
-                                        <button type="button" className="btn btn-default form-control"><label><input type="radio" onClick={this.handleChange} name="radioHireOrEmployer" value="employer"/>   Hire</label></button>
-                                    </div>
-                                    <div class="btn-group">
-                                        <button type="button" className="btn btn-default form-control"><label><input type="radio" onClick={this.handleChange} name="radioHireOrEmployer" value="worker"/>     Work</label></button>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                            <div className="form-group">
                                 <input type="submit" className="form-control btn btn-primary" id="btnSubmitSignUpForm" value="Create Account" />
                             </div>
                             

@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
+var bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 
 var connectionPool = mysql.createPool({
   connectionLimit : 1000,
@@ -21,10 +24,10 @@ router.post('/signup', function(req, res, next) {
   console.log(req.body);
 
   const username = req.body.username;
-  const password = req.body.password;
+  let password = req.body.password;
   const emailid = req.body.emailid;
-  const usertype = req.body.radioHireOrEmployer;
-
+  
+  
   connectionPool.getConnection((err, connection) => {
     if(err) {
       res.json({
@@ -33,9 +36,11 @@ router.post('/signup', function(req, res, next) {
       });
       
     } else {
+      bcrypt.hash(password, saltRounds, (err, hash) => {
+        console.log("In /signup....password hash is:" + hash);
       console.log('Connected to database with thread '+ connection.threadId);
-      var sql = 'INSERT INTO users (username, email, password, usertype) VALUES (?, ?, ?, ?)';
-      connection.query(sql,[username, emailid, password, usertype], (err, result) => {
+      var sql = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+      connection.query(sql,[username, emailid, hash], (err, result) => {
         if(err) {
           console.log(err.name);
           console.log(err.message);
@@ -46,6 +51,8 @@ router.post('/signup', function(req, res, next) {
           res.json('SIGNUP_SUCCESS');
         }
       });
+      
+      })
       
     }
   })
@@ -63,22 +70,27 @@ router.post('/login', function(req, res, next) {
       
     } else {
       console.log('Connected to database with thread '+ connection.threadId);
-      var sql = 'SELECT * from users WHERE username = ' + mysql.escape(req.body.username) +' AND password = ' + mysql.escape(req.body.password);
+      var sql = 'SELECT * from users WHERE username = ' + mysql.escape(req.body.username);
       connection.query(sql, (err, result) => {
-        if(result.length == 0) {
-          console.log(err);
-          res.json('ERROR');
-        }
-        else {
+
+
+      var hash = result[0].password;
+      console.log("This is hashed password from the db...." + hash);  
+      bcrypt.compare(req.body.password, hash, (err, doesMatch) => {
+        if(doesMatch) {
           req.session.username = 'venky';
           console.log("# Session value set "+ req.session.username);
           //globalUsername[req.body.username] = req.session.username;
-          
+          console.log("In /login..printing username", result[0].password);
           console.log("Session Initialized");
           console.log('In login node...' + req.session.username);
-          var jsonResponse = {"result" : result};
+          var jsonResponse = {"result" : result[0].username};
           res.send(jsonResponse);
+        } else {
+          console.log(err);
+          res.json('ERROR');
         }
+      })
       });
       
     }
