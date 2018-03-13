@@ -16,7 +16,7 @@ class Imageuploader extends Component {
 
     handleChange = e => {
         e.preventDefault();
-        
+        console.log("bhdib", e.target.files[0].name);
         let rdr = new FileReader();
         let fileSelected = e.target.files[0];
         rdr.onloadend = () => {
@@ -32,7 +32,7 @@ class Imageuploader extends Component {
 
     handleUplaod = () => {
         console.log("In handle upload...")
-        
+        console.log("In mapDispatch" + this.state.fileSelected + "......" + this.state.imagePreview);
     }
 
 

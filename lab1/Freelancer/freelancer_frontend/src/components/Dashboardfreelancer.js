@@ -18,7 +18,7 @@ class Dashboardfreelancer extends Component {
     componentWillMount() {
             console.log('In my Dashboardfreelancer...');
             const userDetails = {
-                username: sessionStorage.getItem('username')
+                username: localStorage.getItem('username')
             }
             axios.post('http://localhost:3001/getmybiddedprojects', userDetails)
             .then((response) => {

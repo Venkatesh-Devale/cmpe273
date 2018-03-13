@@ -18,7 +18,7 @@ class Dashboard extends Component {
     componentWillMount() {
             console.log('In my Dashboard');
             const userDetails = {
-                username: sessionStorage.getItem('username')
+                username: localStorage.getItem('username')
             }
             axios.post('http://localhost:3001/getmypublishedprojects', userDetails)
             .then((response) => {

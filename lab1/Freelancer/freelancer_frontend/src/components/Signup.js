@@ -61,13 +61,13 @@ class Signup extends Component {
                     <div id="divSignupForm">
                         <form onSubmit={this.createUser.bind(this)}>
                             <div className="form-group">
-                                <input type="email" ref="emailid"  onChange={this.handleChange} className="form-control" id="txtEmailId" placeholder="Enter Email" name="emailid" />
+                                <input type="email" ref="emailid"  onChange={this.handleChange} className="form-control" id="txtEmailId" placeholder="Enter Email" name="emailid" required/>
                             </div>
                             <div className="form-group">
-                                <input type="text" ref="username" onChange={this.handleChange} className="form-control" id="txtUserName" placeholder="Enter Username" name="username" />
+                                <input type="text" ref="username" onChange={this.handleChange} className="form-control" id="txtUserName" placeholder="Enter Username" name="username" required/>
                             </div>
                             <div className="form-group">
-                                <input type="password" ref="password" onChange={this.handleChange} className="form-control" id="txtPassword" placeholder="Enter Password" name="password" />
+                                <input type="password" ref="password" onChange={this.handleChange} className="form-control" id="txtPassword" placeholder="Enter Password" name="password" required/>
                             </div>
                             <div className="form-group">
                                 <input type="submit" className="form-control btn btn-primary" id="btnSubmitSignUpForm" value="Create Account" />

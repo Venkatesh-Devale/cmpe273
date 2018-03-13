@@ -3,7 +3,7 @@ import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
 import Bidnow from './Bidnow';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import '../css/style.css';
 
 class Userhome extends Component {
@@ -21,7 +21,7 @@ class Userhome extends Component {
             //console.log('In allopenprojects',response.data);
             if(response.data === 'ERROR') {
                 let emptyProject = [];
-                emptyProject.push('No projects to show');
+                //emptyProject.push('No projects to show');
                 this.setState({
                     projects: emptyProject
                 })
@@ -35,6 +35,10 @@ class Userhome extends Component {
 
     
     render() {
+        let redirect = null;
+        if(localStorage.getItem("username") === null) {
+            redirect = <Redirect to="/login" />
+        }
         let projectsToShow = [];
             projectsToShow = this.state.projects.map(p => {
                 return (
@@ -72,6 +76,7 @@ class Userhome extends Component {
         
         return (
             <div className="Userhome">
+             { redirect }
                <Navbar />
                <UserNavbar />
                <div className='divProjectTable'>

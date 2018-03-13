@@ -19,14 +19,14 @@ class ListAllBids extends Component {
         axios.post('http://localhost:3001/getAllBidsForThisProject', pid)
         .then( (response) => {
             console.log('In getAllBidsForThis project:',response.data);
-            if(response.data === 'ERROR') {
+            if(response.data.length === 0) {
                 let tempBids = [];
                 tempBids.push('No projects to show');
                 this.setState({
-                    bids: tempBids
+                    bids: []
                 })
             } else {
-                if(response.data[0].employer === sessionStorage.getItem('username')) {
+                if(response.data[0].employer === localStorage.getItem('username')) {
                     this.setState({
                         display : "block"
                     })

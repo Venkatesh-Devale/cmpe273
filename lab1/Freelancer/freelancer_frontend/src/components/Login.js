@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import '../css/style.css';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+//import cookie from 'react-cookies';
 import axios from 'axios';
 
 class Login extends Component {
@@ -36,7 +37,7 @@ class Login extends Component {
    
     render() {
         let redirect = null;
-        if(this.props.loginData !== null) {
+        if(localStorage.getItem("username") !== null) {
             redirect = <Redirect to="/userhome" />
         }
         
@@ -90,7 +91,7 @@ function mapDispatchToProps(dispatch) {
                 dispatch({type: 'ERROR',payload : response})
              }
              else {
-                sessionStorage.setItem('username', response.data.result)
+                localStorage.setItem('username', response.data.result)
                 dispatch({type: 'LOGIN_SUCCESS',payload : response})
              }
                

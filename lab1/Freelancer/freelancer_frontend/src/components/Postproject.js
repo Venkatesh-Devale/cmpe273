@@ -21,7 +21,7 @@ class Postproject extends Component {
     }
 
     componentWillMount() {
-        if(sessionStorage.getItem('username') === null) {
+        if(localStorage.getItem('username') === null) {
             alert('Please login first');
             this.props.history.push('/');
         }
@@ -38,7 +38,7 @@ class Postproject extends Component {
         e.preventDefault();
         const project = {
             id: uuid.v4(),
-            owner: sessionStorage.getItem('username'),
+            owner: localStorage.getItem('username'),
             title: this.state.title,
             description: this.state.description,
             skillsRequired: this.state.skillsRequired,

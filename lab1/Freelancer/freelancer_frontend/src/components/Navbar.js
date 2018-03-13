@@ -7,14 +7,14 @@ class Navbar extends Component {
     
     handleLogout() {
         //alert(sessionStorage.getItem('username'));
-        sessionStorage.removeItem('username');
+        localStorage.removeItem('username');
         this.props.history.push('/');
     }
 
     render() {
         //console.log(this.props.success);
         let changes = null;
-        if(sessionStorage.getItem('username') === null) {
+        if(localStorage.getItem('username') === null) {
             changes = (
                 <ul className="nav navbar-nav navbar-right">
                     <li className="nav-item mr-4 "><a className='text-dark' href="/login">Log In</a></li>
@@ -25,7 +25,7 @@ class Navbar extends Component {
         } else {
             changes = (
                 <ul className="nav navbar-nav navbar-right">
-                    <li className='nav-item mr-4'><Link className='text-dark' to={`/userprofile/${ sessionStorage.getItem('username') }`}><span className="glyphicon glyphicon-user"></span> My Profile</Link></li>
+                    <li className='nav-item mr-4'><Link className='text-dark' to={`/userprofile/${ localStorage.getItem('username') }`}><span className="glyphicon glyphicon-user"></span> My Profile</Link></li>
                     <li className='nav-item mr-4'><a className='text-dark' onClick={this.handleLogout} href="/"><span className="glyphicon glyphicon-log-out"></span> Logout</a></li>
                     
                 </ul>

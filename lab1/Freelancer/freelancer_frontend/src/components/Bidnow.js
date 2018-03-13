@@ -21,8 +21,8 @@ class Bidnow extends Component {
 
     handleBidSubmit = (events) => {
         events.preventDefault();
-        let pid = sessionStorage.getItem('project_id');
-        let uname = sessionStorage.getItem('username');
+        let pid = localStorage.getItem('project_id');
+        let uname = localStorage.getItem('username');
         const bid = {
             project_id: pid,
             bid: this.state.bid,
@@ -35,7 +35,7 @@ class Bidnow extends Component {
     }
 
     handleClick(e){
-        sessionStorage.setItem("project_id", e.target.dataset.id);
+        localStorage.setItem("project_id", e.target.dataset.id);
     }
 
 
