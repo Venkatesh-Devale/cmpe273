@@ -7,32 +7,25 @@ var bodyParser = require('body-parser');
 var session = require('client-sessions');
 var index = require('./routes/index');
 var users = require('./routes/users');
+var cors = require('cors');
 
 var app = express();
 
 
-
-/*app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});*/
-
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin","*");
-   res.header("Access-Control-Allow-Credentials","true");
-   res.header("Access-Control-Allow-Methods","HEAD, GET, POST, PUT, PATCH, DELETE");
-   res.header("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token");
-   res.header("Content-Type", "application/json");
- next();
-});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(logger('dev'));
+
+app.use(cors ({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+
 app.use( bodyParser.json({limit: '50mb'}) );
 app.use(bodyParser.urlencoded({
   limit: '50mb',
@@ -40,14 +33,16 @@ app.use(bodyParser.urlencoded({
   parameterLimit:50000
 }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use( session ({
   cookieName : 'session',
   secret : "abhabclkjbiyvyyYEWGwevbldyeu",
   duration : 30 * 60 * 1000,
-  activeDuration : 5 * 60 * 1000
-})
-);
-app.use(express.static(path.join(__dirname, 'public')));
+  activeDuration : 5 * 60 * 1000,
+  resave: false,
+  saveUninitialized: false
+}));
 
 app.use('/', index);
 app.use('/users', users);

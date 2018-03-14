@@ -80,14 +80,9 @@ router.post('/login', function(req, res, next) {
       console.log("This is hashed password from the db...." + hash);  
       bcrypt.compare(req.body.password, hash, (err, doesMatch) => {
         if(doesMatch) {
-          //req.session.username = 'venky';
-          //console.log("# Session value set "+ req.session.username);
-          //globalUsername[req.body.username] = req.session.username;
-          //console.log("In /login..printing username", result[0].password);
-          //console.log("Session Initialized");
-          //console.log('In login node...' + req.session.username);
-          
-          var jsonResponse = {"result" : result[0].username};
+          console.log('Session started....');
+          req.session.username = result[0].username;
+          var jsonResponse = {"result" : result[0].username, "session": req.session.username};
           res.send(jsonResponse);
         } else {
           console.log(err);

@@ -91,7 +91,8 @@ function mapDispatchToProps(dispatch) {
                 dispatch({type: 'ERROR',payload : response})
              }
              else {
-                localStorage.setItem('username', response.data.result)
+                console.log("In login...", response.data.session); 
+                localStorage.setItem('username', response.data.result);
                 dispatch({type: 'LOGIN_SUCCESS',payload : response})
              }
                
