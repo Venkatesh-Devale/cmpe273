@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import image from '../images/freelancerlogo.png';
 import '../css/style.css';
 
 class Navbar extends Component {
@@ -36,7 +37,9 @@ class Navbar extends Component {
                 <nav className="navbar navbar-expand-lg navbar-light bg-white">
                     <div className="container-fluid">
                         <div className="navbar-header">
-                            <a className="navbar-brand" href="/">Freelancer</a>
+                            <a className="navbar-brand" href="/">
+                                <div id='logo'><img src={image} alt='Freelancer logo' /></div>
+                            </a>
                         </div>
                         {changes}
                     </div>

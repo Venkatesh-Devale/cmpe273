@@ -13,6 +13,13 @@ var connectionPool = mysql.createPool({
   database : 'freelancer'
 })
 
+// var connection = mysql.createConnection({
+//   host: "localhost",
+//   user: "root",
+//   password: "root",
+//   database: "freelancer"
+// });
+
 //var globalUsername = [];
 
 /* GET home page. */

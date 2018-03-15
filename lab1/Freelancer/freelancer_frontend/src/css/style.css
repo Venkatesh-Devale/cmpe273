@@ -11,6 +11,44 @@
     padding: 10px;
 }
 
+#divHomePageBottomDiv {
+    background-color: #8080ff;
+    height: 200px;
+    width: 1410px;
+}
+
+.hireExperts {
+    color: white;
+    margin-left: 80px;
+    margin-top: -8px;
+    font-size: 48px;
+}
+
+.hireExperts1 {
+    color: white;
+    margin-left: 80px;
+    margin-top: -16px;
+    font-size: 30px;  
+     
+}
+
+#h2 {
+    background-color: #8080ff;
+    height: 200px;
+    width: 1410px;
+    margin-top: -20px;
+}
+
+#h3 {
+    background-color: #8080ff;
+    height: 200px;
+    width: 1410px;
+    margin-top: -20px;
+}
+
+#h1 {
+    background-color: #8080ff;
+}
 
 .row > div{
     float:left;
