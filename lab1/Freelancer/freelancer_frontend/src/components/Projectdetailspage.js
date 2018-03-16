@@ -23,8 +23,10 @@ class Projectdetailspage extends Component {
     }
 
     componentWillMount() {
-        
-        console.log(this.props.match.params.value);
+        if(localStorage.getItem('username') === null) {
+            this.props.history.push('/login');
+        } else {
+            console.log(this.props.match.params.value);
         this.setState({
             projectId: this.props.match.params.value
         }, () => {
@@ -48,6 +50,9 @@ class Projectdetailspage extends Component {
                 })
             })
         })
+        }
+        
+        
     }
 
     render() {

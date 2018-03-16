@@ -20,9 +20,11 @@ const Main = () => (
             <Route path='/dashboard' component={Dashboard} />
             <Route path='/userhome' component={Userhome} />
             <Route path='/userprofile/:value' component={Userprofile} />
+            <Route path='/userprofile' component={Userprofile} />
             <Route path='/postproject' component={Postproject} />
             <Route path='/projectdetails/:value/' component={Projectdetailspage} />
             <Route path='/dashboardfreelancer' component={Dashboardfreelancer} />
+            <Route path='/projectdetails' component={Projectdetailspage} />
         </Switch>
     
     </div>

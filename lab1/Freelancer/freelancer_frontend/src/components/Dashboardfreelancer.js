@@ -16,6 +16,10 @@ class Dashboardfreelancer extends Component {
     }
 
     componentWillMount() {
+        
+        if(localStorage.getItem("username") === null) {
+            this.props.history.push('/login');
+        } else {
             console.log('In my Dashboardfreelancer...');
             const userDetails = {
                 username: localStorage.getItem('username')
@@ -37,6 +41,8 @@ class Dashboardfreelancer extends Component {
                     })
                 }
             })
+        }
+            
     }
 
     handleEmployerClicked() {

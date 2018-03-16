@@ -102,6 +102,23 @@ router.post('/login', function(req, res, next) {
   })
 });
 
+
+router.get('/checksession', (req, res) => {
+  console.log("In checksession...",req.session.username);
+  if(req.session.username) {
+    res.json({"session" : req.session});
+  }
+    
+  else 
+    res.json({"session" : "ERROR"});
+});
+
+router.post('/logout', (req, res) => {
+  console.log('Logging out...', req.session.username);
+  req.session.destroy();
+  res.json({"result": "Session destoryed..please login"});
+});
+
 router.post('/updateprofile', function(req, res, next) {
   console.log(req.body);
   const username = req.body.username;

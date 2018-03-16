@@ -1,4 +1,5 @@
 var express = require('express');
+var cors = require('cors');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -7,7 +8,7 @@ var bodyParser = require('body-parser');
 var session = require('client-sessions');
 var index = require('./routes/index');
 var users = require('./routes/users');
-var cors = require('cors');
+
 
 var app = express();
 
@@ -18,31 +19,29 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 
-app.use(cors ({
+app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true
 }));
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
-app.use( bodyParser.json({limit: '50mb'}) );
-app.use(bodyParser.urlencoded({
-  limit: '50mb',
-  extended: true,
-  parameterLimit:50000
-}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use( session ({
+app.use(session({
   cookieName : 'session',
-  secret : "abhabclkjbiyvyyYEWGwevbldyeu",
+  secret : 'abhabclkjbiyvyy',
   duration : 30 * 60 * 1000,
   activeDuration : 5 * 60 * 1000,
   resave: false,
   saveUninitialized: false
 }));
+
+
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 app.use('/', index);
 app.use('/users', users);

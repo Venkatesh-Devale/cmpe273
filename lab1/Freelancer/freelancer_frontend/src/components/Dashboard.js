@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import '../css/style.css';
 import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 class Dashboard extends Component {
@@ -44,6 +44,10 @@ class Dashboard extends Component {
     }
 
     render() {
+        let redirect = null;
+        if(localStorage.getItem("username") === null) {
+            redirect = <Redirect to="/login" />
+        }
         if(this.state.freelancerButtonClicked === true)
             this.props.history.push('/dashboardfreelancer');
         let projectsToShow = [];
@@ -91,6 +95,7 @@ class Dashboard extends Component {
         });
         return(
             <div className="Dashboard">
+            { redirect }
                 <Navbar />
                 <UserNavbar />
                 <div className='divBtnEmployerOrFreelancer'>

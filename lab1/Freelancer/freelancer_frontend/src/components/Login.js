@@ -15,6 +15,13 @@ class Login extends Component {
         }
     }
 
+    componentWillMount() {
+        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        .then( (response) => {
+            console.log("In login component will mount...", response.data);
+        })
+    }
+
     handleChange = (events) => {
         
             this.setState({
@@ -83,7 +90,7 @@ function mapDispatchToProps(dispatch) {
     return {
      loginUser: (userDetails) => {
          console.log("In Login dispatch",userDetails);
-         axios.post('http://localhost:3001/login', userDetails)
+         axios.post('http://localhost:3001/login', userDetails, { withCredentials: true })
              .then((response) => {
                  console.log("After login dispatch", response.data);
              if(response.data === 'ERROR') {

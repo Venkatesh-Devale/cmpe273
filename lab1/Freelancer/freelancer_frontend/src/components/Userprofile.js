@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Imageupload from './Imageupload';
 import '../css/style.css';
@@ -84,7 +85,10 @@ class Userprofile extends Component {
     }
 
     render() {
-        
+        let redirect = null;
+        if(localStorage.getItem("username") === null) {
+            redirect = <Redirect to="/login" />
+        }
         let buttons = null;
         if(this.state.editing === false) {
             buttons = (
@@ -118,6 +122,7 @@ class Userprofile extends Component {
         return (
 
             <div className = 'Userprofile'>
+            { redirect }
                 <Navbar />
                 <UserNavbar />
                 <div className='container-fluid'>
