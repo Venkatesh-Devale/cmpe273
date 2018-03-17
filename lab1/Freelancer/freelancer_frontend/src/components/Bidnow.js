@@ -21,7 +21,10 @@ class Bidnow extends Component {
 
     handleBidSubmit = (events) => {
         events.preventDefault();
-        let pid = localStorage.getItem('project_id');
+        if(localStorage.getItem('username') === null) {
+            alert('Login First...');
+        } else {
+            let pid = localStorage.getItem('project_id');
         let uname = localStorage.getItem('username');
         const bid = {
             project_id: pid,
@@ -31,11 +34,18 @@ class Bidnow extends Component {
         }
         
         this.props.insertBid(bid);
+        }
+        
         
     }
 
     handleClick(e){
-        localStorage.setItem("project_id", e.target.dataset.id);
+        if(localStorage.getItem('username') === null) {
+            alert('Login First...');
+        } else {
+            localStorage.setItem("project_id", e.target.dataset.id);
+        }
+        
     }
 
 

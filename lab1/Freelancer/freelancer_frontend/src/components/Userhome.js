@@ -36,8 +36,9 @@ class Userhome extends Component {
     
     render() {
         let redirect = null;
-        if(localStorage.getItem("username") === null) {
-            redirect = <Redirect to="/login" />
+        if(localStorage.getItem("username") !== null) {
+            //redirect = <Redirect to="/login" />
+            redirect = <UserNavbar />;
         }
         let projectsToShow = [];
             projectsToShow = this.state.projects.map(p => {
@@ -76,9 +77,9 @@ class Userhome extends Component {
         
         return (
             <div className="Userhome">
-             { redirect }
+             
                <Navbar />
-               <UserNavbar />
+               { redirect }  
                <div className='divProjectTable'>
                     <table className='table table-hover'>
                        <thead>

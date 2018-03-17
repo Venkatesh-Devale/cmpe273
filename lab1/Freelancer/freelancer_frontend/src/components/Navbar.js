@@ -18,6 +18,7 @@ class Navbar extends Component {
         if(localStorage.getItem('username') === null) {
             changes = (
                 <ul className="nav navbar-nav navbar-right">
+                    <li className="nav-item mr-4 "><a className='text-dark' href="/userhome">All Projects</a></li>
                     <li className="nav-item mr-4 "><a className='text-dark' href="/login">Log In</a></li>
                     <li className="nav-item mr-4"><a className='text-dark' href="/signup">Signup</a></li>
                     <li className="nav-item mr-4"><button className=" navbar-btn btn btn-warning"><a className='text-dark' href="/postproject">Post a Project</a></button></li>
@@ -40,6 +41,7 @@ class Navbar extends Component {
                             <a className="navbar-brand" href="/">
                                 <div id='logo'><img src={image} alt='Freelancer logo' /></div>
                             </a>
+    
                         </div>
                         {changes}
                     </div>

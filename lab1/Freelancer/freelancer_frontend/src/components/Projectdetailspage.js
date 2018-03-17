@@ -5,6 +5,7 @@ import axios from 'axios';
 import '../css/style.css';
 import Bidnow from './Bidnow';
 import ListAllBids from './ListAllBids';
+import { Redirect } from 'react-router-dom';
 
 class Projectdetailspage extends Component {
     constructor() {
@@ -23,10 +24,13 @@ class Projectdetailspage extends Component {
     }
 
     componentWillMount() {
-        if(localStorage.getItem('username') === null) {
-            this.props.history.push('/login');
-        } else {
-            console.log(this.props.match.params.value);
+        // if(localStorage.getItem('username') === null) {
+        //     this.props.history.push('/login');
+        // } else {
+            
+        // }
+        
+        console.log(this.props.match.params.value);
         this.setState({
             projectId: this.props.match.params.value
         }, () => {
@@ -50,17 +54,20 @@ class Projectdetailspage extends Component {
                 })
             })
         })
-        }
         
         
     }
 
     render() {
-        
+        let redirect = null;
+        if(localStorage.getItem("username") !== null) {
+            //redirect = <Redirect to="/login" />
+            redirect = <UserNavbar />;
+        }
         return(
             <div className="Projectdetailspage">
             <Navbar />
-                <UserNavbar />
+            { redirect }
                 <div className='container-fluid'>
                 
                     <div id='divProjectDetails'>
