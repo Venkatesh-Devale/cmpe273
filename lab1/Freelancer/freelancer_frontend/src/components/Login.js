@@ -15,13 +15,6 @@ class Login extends Component {
         }
     }
 
-    componentWillMount() {
-        axios.get('http://localhost:3001/checksession', { withCredentials: true })
-        .then( (response) => {
-            console.log("In login component will mount...", response.data);
-        })
-    }
-
     handleChange = (events) => {
         
             this.setState({
@@ -45,15 +38,16 @@ class Login extends Component {
     }
    
     render() {
-         let redirect = null;
-        // if(localStorage.getItem('username') !== null) {
-        //     redirect = <Redirect to="/userhome" />
-        // }
-        if(this.props.loginData !== null)
-            redirect = <Redirect to="/userhome" />
+        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        .then( (response) => {
+            console.log("In render login component will mount...", response.data.session.username);
+            if(response.data.session !== "ERROR") {
+                this.props.history.push('/userhome');
+            }
+        })
         return(
             <div className="Login"> 
-            { redirect }
+            
             <div id="mainDiv">
             <div className="center">
                     <div>

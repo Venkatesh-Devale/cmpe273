@@ -1,21 +1,54 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import image from '../images/freelancerlogo.png';
 import '../css/style.css';
+import axios from 'axios';
 
 class Navbar extends Component {
+
+    constructor() {
+        super();
+        this.state = {
+            isLoggedIn: false
+        }
+    }
+
+    componentWillMount() {
+        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        .then( (response) => {
+            console.log("In navbar component will mount..."+ response.data.session.username);
+            if(response.data.session !== "ERROR") {
+                this.setState({
+                    isLoggedIn: true
+                })
+            } else {
+                this.setState({
+                    isLoggedIn: false
+                })
+            }
+        })
+    }
     
     handleLogout() {
         //alert(sessionStorage.getItem('username'));
-        localStorage.removeItem('username');
-        this.props.history.push('/');
+         localStorage.removeItem('username');
+        // 
+        axios.post('http://localhost:3001/logout', null, {withCredentials: true})
+        .then((response) => {
+            console.log(response.data);
+            if(response.data.result === "Session destoryed..please login") {
+               
+               this.props.history.push('/');
+            }
+            
+        })
     }
 
     render() {
         //console.log(this.props.success);
         let changes = null;
-        if(localStorage.getItem('username') === null) {
+        if(this.state.isLoggedIn === false) {
             changes = (
                 <ul className="nav navbar-nav navbar-right">
                     <li className="nav-item mr-4 "><a className='text-dark' href="/userhome">All Projects</a></li>
@@ -57,4 +90,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(Navbar);
+export default withRouter(connect(mapStateToProps)(Navbar));

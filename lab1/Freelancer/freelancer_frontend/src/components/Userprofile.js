@@ -86,17 +86,23 @@ class Userprofile extends Component {
 
     render() {
         let redirect = null;
+        let editButton = null;
+        let imageupload1 = null;
         if(localStorage.getItem("username") === null) {
             redirect = <Redirect to="/login" />
+        }
+        if(localStorage.getItem("username") === this.state.username) {
+            editButton = (<button type="button" onClick={this.edit.bind(this)} className="btn btn-primary form-control"><label> Edit your profile </label></button>);
+            imageupload1 = <Imageupload />
         }
         let buttons = null;
         if(this.state.editing === false) {
             buttons = (
                 <div className="form-group">
                                 <div className="btn-group btn-group-justified">
-                                    <div className="btn-group">
-                                        <button type="button" onClick={this.edit.bind(this)} className="btn btn-primary form-control"><label> Edit your profile </label></button>
-                                    </div>
+            
+                                      { editButton }  
+            
                                 </div>
                                 
                             </div>
@@ -127,7 +133,7 @@ class Userprofile extends Component {
                 <UserNavbar />
                 <div className='container-fluid'>
                     <div className='row'>
-                        <Imageupload />
+                        { imageupload1 }
                         <div id='profileDescription'>
                         <form >
                             <div className="form-group">

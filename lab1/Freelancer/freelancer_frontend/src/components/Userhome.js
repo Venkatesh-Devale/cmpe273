@@ -36,13 +36,15 @@ class Userhome extends Component {
 
     
     render() {
-        let redirect = null;
-        if(localStorage.getItem("username") !== null) {
-            //redirect = <Redirect to="/login" />
-            redirect = <UserNavbar />;
-        }
+        // let redirect = null;
+        // if(localStorage.getItem("username") !== null) {
+        //     //redirect = <Redirect to="/login" />
+        //     redirect = <UserNavbar />;
+        // }
         let projectsToShow = [];
-
+        if(this.state.projects === []) {
+            projectsToShow = []
+        } else {
             projectsToShow = this.state.projects.map(p => {
                 return (
                     <tr key={p.id}>
@@ -77,11 +79,13 @@ class Userhome extends Component {
                 
             });
         
+        }
+            
         return (
             <div className="Userhome">
              
                <Navbar />
-               { redirect }  
+               <UserNavbar /> 
                <div className='divProjectTable'>
                     <table className='table table-hover'>
                        <thead>
