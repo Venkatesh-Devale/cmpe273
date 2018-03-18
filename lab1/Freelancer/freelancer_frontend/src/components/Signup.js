@@ -99,7 +99,7 @@ function mapDispatchToProps(dispatch) {
    return {
     insertUser: (newUser) => {
         console.log(newUser);
-        axios.post('http://localhost:3001/signup', newUser)
+        axios.post('http://localhost:3001/signup', newUser, {withCredentials: true})
             .then((response) => {
             console.log(response);
             dispatch({type: 'SIGNUP_SUCCESS',payload : response})

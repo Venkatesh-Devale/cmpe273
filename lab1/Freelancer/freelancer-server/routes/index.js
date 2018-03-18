@@ -249,10 +249,11 @@ router.post('/getmypublishedprojects', function(req, res, next) {
 
       connection.query(sql, (err, result) => {
         if(result.length == 0) {
+          console.log("In getmypublished projects...1",result);
           res.json('ERROR');
         }
         else {
-          console.log(result);
+          console.log("In getmypublished projects...2",result);
           res.json(result);
         }
       });
@@ -442,9 +443,8 @@ router.post('/setworkerforproject', (req, res, next) => {
 })
 
 
-router.post('/saveImage', (req, res, next) => {
-  console.log("In /saveImage the image base 64 version is: ", req.body.imageDetailsBase64);
-  console.log("In /saveImage the image file name is: ", req.body.imageFileName);
+router.post('/saveimage', (req, res, next) => {
+  console.log("In /saveImage... ", req.body);
 });
 
 module.exports = router;

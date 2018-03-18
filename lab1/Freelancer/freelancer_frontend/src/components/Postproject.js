@@ -145,7 +145,7 @@ function mapDispatchToProps(dispatch) {
     return {
         postProject: (project) => {
             console.log('In postProjectDispatch of Postproject...', project);
-            axios.post('http://localhost:3001/postproject', project)
+            axios.post('http://localhost:3001/postproject', project, {withCredentials: true})
             .then((response) => {
                 console.log(response);
                 alert('Project created successfully...');

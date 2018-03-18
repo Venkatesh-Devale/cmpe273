@@ -5,7 +5,7 @@ import axios from 'axios';
 import '../css/style.css';
 import Bidnow from './Bidnow';
 import ListAllBids from './ListAllBids';
-import { Redirect } from 'react-router-dom';
+
 
 class Projectdetailspage extends Component {
     constructor() {
@@ -37,7 +37,7 @@ class Projectdetailspage extends Component {
             const projectId = {
                 projectid: this.state.projectId
             }
-            axios.post('http://localhost:3001/getproject', projectId)
+            axios.post('http://localhost:3001/getproject', projectId, {withCredentials: true})
             .then( (response) => {
                 console.log('In projectdetails Component will mount', response.data);
                 this.setState({

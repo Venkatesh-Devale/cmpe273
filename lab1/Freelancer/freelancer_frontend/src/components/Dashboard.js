@@ -20,12 +20,12 @@ class Dashboard extends Component {
             const userDetails = {
                 username: localStorage.getItem('username')
             }
-            axios.post('http://localhost:3001/getmypublishedprojects', userDetails)
+            axios.post('http://localhost:3001/getmypublishedprojects', userDetails, {withCredentials: true})
             .then((response) => {
                 console.log(response.data);
                 if(response.data === 'ERROR') {
                     let emptyProject = [];
-                    emptyProject.push('No projects to show');
+                    //emptyProject.push('No projects to show');
                     this.setState({
                         projects: emptyProject
                     })
@@ -51,48 +51,55 @@ class Dashboard extends Component {
         if(this.state.freelancerButtonClicked === true)
             this.props.history.push('/dashboardfreelancer');
         let projectsToShow = [];
-        projectsToShow = this.state.projects.map(p => {
-            var finalDate = null
-            if( p.estimated_completion_date !== null) {
-                finalDate = p.estimated_completion_date.slice(0,10);
-            }
-            return (
-                <tr key={p.id}>
-                <td>
-                    <p><Link to={`/projectdetails/${ p.id }`}> {p.title} </Link></p>
-                    <p> {p.description} </p>
-                    <span> {p.skills_required} </span>
-                </td>
-                <td>
-                    <div>
-                        <p> { p.average } </p>
-                    </div>
-                </td>
-                <td>
-                    <div>
-                        <p><Link to={`/userprofile/${ p.worker }`}>{p.worker}</Link></p>
-                    </div>
-                </td>
-                <td>
-                    <div>
-                    <p> { finalDate } </p>
-                    </div>
-                </td>
-                <td>
-                    <div>
-                        <p>{p.number_of_bids}</p>
-                    </div>
-                </td>
-                <td>
-                    <div>
-                        <p>{p.open}</p>
-                    </div>
-                </td>
+        
+        if(this.state.projects === []) {
+          
+        } else {
+            projectsToShow = this.state.projects.map(p => {
+                var finalDate = null
+                if( p.estimated_completion_date !== null) {
+                    finalDate = p.estimated_completion_date.slice(0,10);
+                }
+                return (
+                    <tr key={p.id}>
+                    <td>
+                        <p><Link to={`/projectdetails/${ p.id }`}> {p.title} </Link></p>
+                        <p> {p.description} </p>
+                        <span> {p.skills_required} </span>
+                    </td>
+                    <td>
+                        <div>
+                            <p> { p.average } </p>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <p><Link to={`/userprofile/${ p.worker }`}>{p.worker}</Link></p>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                        <p> { finalDate } </p>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <p>{p.number_of_bids}</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <p>{p.open}</p>
+                        </div>
+                    </td>
+                    
+                 </tr>
+                );
                 
-             </tr>
-            );
-            
-        });
+            });
+        }
+        
+        
         return(
             <div className="Dashboard">
             { redirect }

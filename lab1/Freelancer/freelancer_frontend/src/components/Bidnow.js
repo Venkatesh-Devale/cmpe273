@@ -101,7 +101,7 @@ function mapDispatchToProps(dispatch) {
     return {
         insertBid : (bid) => {
             console.log("In insertBid dispatcher actions", bid);
-            axios.post('http://localhost:3001/insertBidAndUpdateNumberOfBids', bid)
+            axios.post('http://localhost:3001/insertBidAndUpdateNumberOfBids', bid, {withCredentials: true})
             .then((response) => {
                 console.log(response.data);
                 if(response.data === 'BID INSERTED SUCCESS') {

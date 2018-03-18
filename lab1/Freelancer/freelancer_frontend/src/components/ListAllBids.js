@@ -16,7 +16,7 @@ class ListAllBids extends Component {
         const pid = {
             projectid : this.props.id
         }
-        axios.post('http://localhost:3001/getAllBidsForThisProject', pid)
+        axios.post('http://localhost:3001/getAllBidsForThisProject', pid, {withCredentials: true})
         .then( (response) => {
             console.log('In getAllBidsForThis project:',response.data);
             if(response.data.length === 0) {
@@ -44,7 +44,7 @@ class ListAllBids extends Component {
             pid : this.props.id,
             freelancer : freelancer
         }
-        axios.post('http://localhost:3001/setworkerforproject', details)
+        axios.post('http://localhost:3001/setworkerforproject', details, {withCredentials: true})
         .then( (response) => {
             console.log("In hire button handle click", response.data);
             alert('Freelancer hired...check in your dashboard now...thanks');

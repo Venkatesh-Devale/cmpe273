@@ -24,7 +24,7 @@ class Dashboardfreelancer extends Component {
             const userDetails = {
                 username: localStorage.getItem('username')
             }
-            axios.post('http://localhost:3001/getmybiddedprojects', userDetails)
+            axios.post('http://localhost:3001/getmybiddedprojects', userDetails, {withCredentials: true})
             .then((response) => {
                 console.log('Showing all bidded projects',response.data);
                 if(response.data === 'ERROR') {

@@ -34,23 +34,26 @@ class Login extends Component {
     handleLogin = (e) => {
         e.preventDefault();
         console.log("In Login page.." + this.state.username + " " + this.state.password);
+        
         const userDetails = {
             username : this.state.username,
             password : this.state.password
         }
         console.log(userDetails);
         this.props.loginUser(userDetails);
+        
     }
    
     render() {
-        let redirect = null;
-        if(localStorage.getItem("username") !== null) {
+         let redirect = null;
+        // if(localStorage.getItem('username') !== null) {
+        //     redirect = <Redirect to="/userhome" />
+        // }
+        if(this.props.loginData !== null)
             redirect = <Redirect to="/userhome" />
-        }
-        
         return(
             <div className="Login"> 
-            {redirect}
+            { redirect }
             <div id="mainDiv">
             <div className="center">
                     <div>
@@ -101,6 +104,7 @@ function mapDispatchToProps(dispatch) {
                 console.log("In login...", response.data.session); 
                 localStorage.setItem('username', response.data.result);
                 dispatch({type: 'LOGIN_SUCCESS',payload : response})
+                
              }
                
          });

@@ -17,8 +17,8 @@ class Imageuploader extends Component {
     handleChange = e => {
         e.preventDefault();
         console.log("bhdib", e.target.files[0].name);
-        let rdr = new FileReader();
-        let fileSelected = e.target.files[0];
+        var rdr = new FileReader();
+        var fileSelected = e.target.files[0];
         rdr.onloadend = () => {
           this.setState({
             fileSelected: fileSelected,
@@ -32,7 +32,15 @@ class Imageuploader extends Component {
 
     handleUplaod = () => {
         console.log("In handle upload...")
-        console.log("In mapDispatch" + this.state.fileSelected + "......" + this.state.imagePreview);
+        console.log("In mapDispatch",  this.state.fileSelected + "......" + this.state.imagePreview);
+        const imageDetails = {
+            fileSelected: this.state.fileSelected,
+            imagePreview: this.state.imagePreview
+        }
+        axios.post('http://localhost:3001/saveimage', imageDetails, { withCredentials: true})
+        .then( (response) => {
+            
+        })
     }
 
 
@@ -48,12 +56,12 @@ class Imageuploader extends Component {
         return(
             <div className="Imageuploader">
                 <div id='profileImage'>
-                            {$imagePreviewFinal}
-                            <div id='imageUploader'> 
-                                <input type='file' className='fileInput' onChange={this.handleChange} />
-                                <button style = {style} onClick = {this.handleUplaod} className="btn btn-primary"><label>Upload</label></button>
-                            </div>
+                    {$imagePreviewFinal}
+                        <div id='imageUploader'> 
+                            <input type='file' className='fileInput' onChange={this.handleChange} />
+                            <button style = {style} onClick = {this.handleUplaod} className="btn btn-primary"><label>Upload</label></button>
                         </div>
+                </div>
             </div>
         );
     }

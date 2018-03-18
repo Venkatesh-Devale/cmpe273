@@ -3,7 +3,7 @@ import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
 import Bidnow from './Bidnow';
 import axios from 'axios';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../css/style.css';
 
 class Userhome extends Component {
@@ -16,7 +16,8 @@ class Userhome extends Component {
     }
     
     componentWillMount() {
-        axios.post('http://localhost:3001/getallopenprojects')
+        let param = null;
+        axios.post('http://localhost:3001/getallopenprojects', param, {withCredentials: true})
         .then((response) => {
             //console.log('In allopenprojects',response.data);
             if(response.data === 'ERROR') {
@@ -41,6 +42,7 @@ class Userhome extends Component {
             redirect = <UserNavbar />;
         }
         let projectsToShow = [];
+
             projectsToShow = this.state.projects.map(p => {
                 return (
                     <tr key={p.id}>
