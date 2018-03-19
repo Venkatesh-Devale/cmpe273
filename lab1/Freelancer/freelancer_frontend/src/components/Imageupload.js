@@ -10,8 +10,25 @@ class Imageuploader extends Component {
         this.state = {
             fileSelected: '',
             imagePreview: '',
-            display: 'none'
+            display: 'none',
+            filename: 'default.png'
         }
+    }
+
+    componentWillMount(){
+        
+        this.loadUserImage();
+    }
+
+    loadUserImage(){
+        
+        var self = this;
+        axios.get("http://localhost:3001/getuserimage?username=" + localStorage.getItem('username'), {withCredentials: true} )
+        .then( (response) => {
+            self.setState({
+                filename: response.data.image_name.image_name
+            })
+        })
     }
 
     handleChange = e => {
@@ -21,34 +38,60 @@ class Imageuploader extends Component {
         var fileSelected = e.target.files[0];
         rdr.onloadend = () => {
           this.setState({
-            fileSelected: fileSelected,
-            imagePreview: rdr.result,
-            display: 'block'
+            // fileSelected: fileSelected,
+            // imagePreview: rdr.result,
+            display: 'block',
+            fileSelected: fileSelected
           });
         }
     
         rdr.readAsDataURL(fileSelected);
     }
 
-    handleUplaod = () => {
-        console.log("In handle upload...")
-        console.log("In mapDispatch",  this.state.fileSelected + "......" + this.state.imagePreview);
-        const imageDetails = {
-            fileSelected: this.state.fileSelected,
-            imagePreview: this.state.imagePreview
+    handleUplaod = (e) => {
+        e.preventDefault();
+        const form_data = new FormData();
+        form_data.append('filevalue', this.state.fileSelected);
+        form_data.append('username', localStorage.getItem('username'));
+        const config = {
+            headers: {
+            'content-type': 'multipart/form-data'
+            }
         }
-        axios.post('http://localhost:3001/saveimage', imageDetails, { withCredentials: true})
-        .then( (response) => {
+        if(this.state.fileSelected != ""){
+            var self =this;
+            axios.post('http://localhost:3001/saveimage', form_data, { withCredentials: true}, config)
+            .then( (response) => {
+                debugger
+                self.setState({
+                filename: "" + localStorage.getItem('username') + "." + response.data.fileType
+                    
+                })
+            })
+        }
+        else{
+            alert("Please upload an image first");
+        }
+        // console.log("In handle upload...")
+        // console.log("In mapDispatch",  this.state.fileSelected + "......" + this.state.imagePreview);
+        // const imageDetails = {
+        //     fileSelected: this.state.fileSelected,
+        //     imagePreview: this.state.imagePreview
+        // }
+        // axios.post('http://localhost:3001/saveimage', imageDetails, { withCredentials: true})
+        // .then( (response) => {
             
-        })
+        // })
     }
 
 
     render() {
-        let {imagePreview} = this.state;
+        debugger
+        // let {imagePreview} = this.state;
         let $imagePreviewFinal = null;
-        if (imagePreview) {
-            $imagePreviewFinal = (<img src = {imagePreview} alt = "This is user's display pic"/>);
+        if (this.state.filename) {
+            debugger
+            $imagePreviewFinal = (<img src = { require('/Users/venkateshdevale/Desktop/backup/Freelancer/freelancer-server/images/' + this.state.filename) } alt = "This is user's display pic"/>);
           }
         const style ={
             display : this.state.display
@@ -58,8 +101,8 @@ class Imageuploader extends Component {
                 <div id='profileImage'>
                     {$imagePreviewFinal}
                         <div id='imageUploader'> 
-                            <input type='file' className='fileInput' onChange={this.handleChange} />
-                            <button style = {style} onClick = {this.handleUplaod} className="btn btn-primary"><label>Upload</label></button>
+                            <input type='file' className='fileInput' onChange={this.handleChange.bind(this)} />
+                            <button style = {style} onClick = {this.handleUplaod.bind(this)} className="btn btn-primary"><label>Upload</label></button>
                         </div>
                 </div>
             </div>

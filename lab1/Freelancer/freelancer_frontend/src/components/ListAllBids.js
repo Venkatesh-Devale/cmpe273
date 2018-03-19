@@ -64,7 +64,7 @@ class ListAllBids extends Component {
             return (
                 <tr key={k++}>
                 <td>
-                    <p>Show Profile Image here</p>
+                <img src = { require('/Users/venkateshdevale/Desktop/backup/Freelancer/freelancer-server/images/' + b.image_name) } alt = "" width= {'100px'} height={'100px'}/>
                 </td>
                 <td>
                     <div>

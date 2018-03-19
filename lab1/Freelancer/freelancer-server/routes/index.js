@@ -1,8 +1,12 @@
+
 var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
+var fs= require('fs');
+var multiparty = require('multiparty');
+var util = require('util');
 
 
 var connectionPool = mysql.createPool({
@@ -399,7 +403,8 @@ router.post('/getAllBidsForThisProject', (req, res, next) => {
       });
       
     } else {
-      var sql = 'SELECT * from bids inner join projects on bids.projectid = projects.id WHERE projectid = ' + mysql.escape(projectId);
+      //var sql = 'SELECT * from bids inner join projects on bids.projectid = projects.id WHERE projectid = ' + mysql.escape(projectId);
+      var sql = 'select  t.freelancer, t.period, t.bidamount, users.image_name from users inner join ((SELECT bids.freelancer, bids.bidamount, bids.period from bids inner join projects on bids.projectid = projects.id WHERE projectid = ' + mysql.escape(projectId) + ') as t) on t.freelancer = users.username;'
       connection.query(sql, (err, result) => {
         if(err) {
           res.json({
@@ -443,8 +448,56 @@ router.post('/setworkerforproject', (req, res, next) => {
 })
 
 
-router.post('/saveimage', (req, res, next) => {
+router.post('/saveimage', (req, res) => {
+  console.log("hello");
+  let image_form = new multiparty.Form();
+  image_form.parse(req, (err, fields, files) => {
+    console.log(files);
+  let { path: tempPath, originalFilename } = files.filevalue[0];
+  var fileType = originalFilename.split(".");
+  console.log(fileType)
+  let copyToPath = "./images/" + fields.username[0] + "." + fileType[fileType.length - 1];
+  //add path (copyToPath) to database pending 
+  console.log(copyToPath);
+  fs.readFile(tempPath, (err, data) => {
+    if (err) throw err;
+    fs.writeFile(copyToPath, data, (err) => {
+      if (err) throw err;
+      // delete temp image
+      fs.unlink(tempPath, () => {
+      });
+      connectionPool.getConnection(function(err, connection){
+        var sql = "update users set image_name='" + fields.username[0] + "." + fileType[fileType.length - 1] +   "' where username = '" +  fields.username[0] + "'";
+        connection.query(sql,function(err,rows){
+          if(err) throw err;
+          connection.release();
+          console.log(rows);
+        });
+        res.json({message: 'Image Uploaded', fileType: fileType[fileType.length - 1]});
+        });
+       });
+    });
   console.log("In /saveImage... ", req.body);
+  //res.json({message: "hello"});
 });
+});
+
+router.get('/getuserimage', (req, res) => {
+  connectionPool.getConnection(function(err, connection){
+    var sql = "select image_name from users where username='" + req.query.username + "'";
+    connection.query(sql,function(err,rows){
+      if(err) throw err;
+      connection.release();
+      console.log(rows);
+      res.json({image_name: rows[0]})
+    });
+  })
+});
+
+
+
+// router.post('/saveimage', (req, res, next) => {
+//   console.log("In /saveImage... ", req.body);
+// });
 
 module.exports = router;
