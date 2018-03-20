@@ -86,11 +86,11 @@ class Imageuploader extends Component {
 
 
     render() {
-        debugger
+    
         // let {imagePreview} = this.state;
         let $imagePreviewFinal = null;
         if (this.state.filename) {
-            debugger
+            
             $imagePreviewFinal = (<img src = { require('/Users/venkateshdevale/Desktop/private git/cmpe273/lab1/Freelancer/freelancer-server/images/' + this.state.filename) } alt = "This is user's display pic"/>);
           }
         const style ={
