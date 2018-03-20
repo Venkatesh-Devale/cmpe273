@@ -91,7 +91,7 @@ class Imageuploader extends Component {
         let $imagePreviewFinal = null;
         if (this.state.filename) {
             debugger
-            $imagePreviewFinal = (<img src = { require('/Users/venkateshdevale/Desktop/backup/Freelancer/freelancer-server/images/' + this.state.filename) } alt = "This is user's display pic"/>);
+            $imagePreviewFinal = (<img src = { require('/Users/venkateshdevale/Desktop/private git/cmpe273/lab1/Freelancer/freelancer-server/images/' + this.state.filename) } alt = "This is user's display pic"/>);
           }
         const style ={
             display : this.state.display
