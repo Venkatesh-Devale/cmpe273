@@ -36,7 +36,8 @@ class Userprofile extends Component {
                 username: response.data[0].username,
                 email: response.data[0].email,
                 phone: response.data[0].phone,
-                aboutme: response.data[0].aboutme
+                aboutme: response.data[0].aboutme,
+                skills: response.data[0].skills
             })
         })
     }
@@ -58,21 +59,35 @@ class Userprofile extends Component {
 
     saveUpdatedUser(e) {
         e.preventDefault();
-        
-        let newUser = {};
-        this.setState({
+
+
+        const newUser = {
             username: this.state.username,
             email: this.state.email,
             phone: this.state.phone,
             aboutme: this.state.aboutme,
+            skills: this.state.skills,
+        }
+
+        this.setState({
             editing: false,
             disabled: true
-        }, function() {
-            newUser.username = this.state.username;
-            newUser.email = this.state.email;
-            newUser.phone = this.state.phone;
-            newUser.aboutme = this.state.aboutme;    
         })
+        // this.setState({
+        //     username: this.state.username,
+        //     email: this.state.email,
+        //     phone: this.state.phone,
+        //     aboutme: this.state.aboutme,
+        //     skills: this.state.skills,
+        //     editing: false,
+        //     disabled: true
+        // }, function() {
+        //     newUser.username = this.state.username;
+        //     newUser.email = this.state.email;
+        //     newUser.phone = this.state.phone;
+        //     newUser.aboutme = this.state.aboutme;
+        //     newUser.skills = this.state.skills;
+        // })
         console.log(newUser);
         this.props.saveUpdatedUser(newUser);
     }
@@ -159,7 +174,7 @@ class Userprofile extends Component {
                             <div id = 'profileSkills'>
                                 <div className="form-group">
                                     <label>Skills:  <span className="glyphicon glyphicon-edit"></span></label>
-                                    <textarea id="txtskills"  className="form-control" rows="5" name='skills' disabled={this.state.disabled}></textarea>
+                                    <textarea id="txtskills" ref="skills" onChange={this.handleChange}  value={this.state.skills} className="form-control" rows="5" name='skills' disabled={this.state.disabled}></textarea>
                                 </div>
                             </div>
                         </div>

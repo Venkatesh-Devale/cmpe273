@@ -7,7 +7,11 @@ const saltRounds = 10;
 var fs= require('fs');
 var multiparty = require('multiparty');
 var util = require('util');
-
+var mongo = require('mongodb');
+var mongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/";
+var passport = require('passport')
+    , LocalStrategy = require('passport-local').Strategy;
 
 var connectionPool = mysql.createPool({
   connectionLimit : 1000,
@@ -38,72 +42,161 @@ router.post('/signup', function(req, res, next) {
   let password = req.body.password;
   const emailid = req.body.emailid;
   
-  
-  connectionPool.getConnection((err, connection) => {
-    if(err) {
-      res.json({
-        code : 100,
-        status : "Error in connecting to database"
-      });
-      
-    } else {
-      bcrypt.hash(password, saltRounds, (err, hash) => {
-        console.log("In /signup....password hash is:" + hash);
-      console.log('Connected to database with thread '+ connection.threadId);
-      var sql = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
-      connection.query(sql,[username, emailid, hash], (err, result) => {
-        if(err) {
-          console.log(err.name);
-          console.log(err.message);
-          res.json('ERROR');
-        }
+  ////commented mysql part from lab1
+  // connectionPool.getConnection((err, connection) => {
+  //   if(err) {
+  //     res.json({
+  //       code : 100,
+  //       status : "Error in connecting to database"
+  //     });
+  //
+  //   } else {
+  //     bcrypt.hash(password, saltRounds, (err, hash) => {
+  //       console.log("In /signup....password hash is:" + hash);
+  //     console.log('Connected to database with thread '+ connection.threadId);
+  //     var sql = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+  //     connection.query(sql,[username, emailid, hash], (err, result) => {
+  //       if(err) {
+  //         console.log(err.name);
+  //         console.log(err.message);
+  //         res.json('ERROR');
+  //       }
+  //       else {
+  //         console.log("New user signed up...");
+  //         res.json('SIGNUP_SUCCESS');
+  //       }
+  //     });
+  //
+  //     })
+  //
+  //   }
+  // });
+
+    //mongo from lab2
+    mongoClient.connect(url, (err, connection) => {
+        if(err) throw err;
         else {
-          console.log("New user signed up...");
-          res.json('SIGNUP_SUCCESS');
+
+            bcrypt.hash(password, saltRounds, (err, hash) => {
+                console.log("In /signup....password hash is:" + hash);
+
+                console.log("Connected to mongodb...");
+                var dbo = connection.db("freelancer");
+                dbo.collection('users').insertOne({
+                    username: req.body.username,
+                    password: hash,
+                    email: req.body.emailid,
+                    phone: '',
+                    aboutme: '',
+                    skills: '',
+                    image_name: 'default.png'
+                }).then( (result) => {
+                    console.log("Insertion Successfully");
+                    console.log(result.insertedId);
+                    connection.close();
+                    res.json('SIGNUP_SUCCESS');
+                })
+
+
+            })
+
+
+
         }
-      });
-      
-      })
-      
-    }
-  })
+    });
   
 });
 
+
+
+//this will be called from authenticate function from passport in /login API call
+passport.use(new LocalStrategy( function(username, password, done) {
+        mongoClient.connect(url, (err, db) => {
+            if(err) throw err;
+            else
+                console.log("Connected to mongodb...");
+            var dbo = db.db("freelancer");
+            var query = {username: username};
+            dbo.collection("users").find(query).toArray( (err, result) => {
+                if(err) {
+                    return done(err, false);
+                }
+
+                if(result.length > 0) {
+                    console.log(result[0].username);
+                    var hash = result[0].password;
+                    bcrypt.compare(password, hash, (err, doesMatch) => {
+                        if(doesMatch) {
+                            console.log("Inside result.length",result[0].username);
+                            return done(null, result[0]);
+                        } else {
+                            return done(null, false);
+                        }
+                        db.close();
+                    })
+
+                }
+            });
+        });
+    }
+));
+
 router.post('/login', function(req, res, next) {
   console.log(req.body);
-  
-  connectionPool.getConnection((err, connection) => {
-    if(err) {
-      res.json({
-        code : 100,
-        status : "Error in connecting to database"
-      });
-      
-    } else {
-      console.log('Connected to database with thread '+ connection.threadId);
-      var sql = 'SELECT * from users WHERE username = ' + mysql.escape(req.body.username);
-      
-      connection.query(sql, (err, result) => {
 
+  //commented mysql part from lab1
+  // connectionPool.getConnection((err, connection) => {
+  //   if(err) {
+  //     res.json({
+  //       code : 100,
+  //       status : "Error in connecting to database"
+  //     });
+  //
+  //   } else {
+  //     console.log('Connected to database with thread '+ connection.threadId);
+  //     var sql = 'SELECT * from users WHERE username = ' + mysql.escape(req.body.username);
+  //
+  //     connection.query(sql, (err, result) => {
+  //
+  //
+  //     var hash = result[0].password;
+  //     console.log("This is hashed password from the db...." + hash);
+  //     bcrypt.compare(req.body.password, hash, (err, doesMatch) => {
+  //       if(doesMatch) {
+  //         console.log('Session started....');
+  //         req.session.username = result[0].username;
+  //         var jsonResponse = {"result" : result[0].username, "session": req.session.username};
+  //         res.send(jsonResponse);
+  //       } else {
+  //         console.log(err);
+  //         res.json('ERROR');
+  //       }
+  //     })
+  //     });
+  //
+  //   }
+  // })
 
-      var hash = result[0].password;
-      console.log("This is hashed password from the db...." + hash);  
-      bcrypt.compare(req.body.password, hash, (err, doesMatch) => {
-        if(doesMatch) {
-          console.log('Session started....');
-          req.session.username = result[0].username;
-          var jsonResponse = {"result" : result[0].username, "session": req.session.username};
-          res.send(jsonResponse);
-        } else {
-          console.log(err);
-          res.json('ERROR');
+ //mongo from lab2
+    passport.authenticate('local', function(err, user) {
+        if(err) {
+            console.log("In authenticate....",err);
+            res.json('ERROR');
         }
-      })
-      });
-      
-    }
-  })
+
+        if(!user) {
+            console.log("In authenticate....error in authenticating as user could not be found");
+            res.json('ERROR');
+        }
+        if(user) {
+            console.log("In user authenticate....", user);
+            req.session.username = user.username;
+            console.log("Session Started...", req.session);
+            var jsonResponse = {"result" : user.username, "session": req.session.username};
+            res.send(jsonResponse);
+        }
+
+    })(req, res, next);
 });
 
 
@@ -126,58 +219,101 @@ router.post('/logout', (req, res) => {
 router.post('/updateprofile', function(req, res, next) {
   console.log(req.body);
   const username = req.body.username;
-  const email = req.body.email;
-  const phone = req.body.phone;
-  const aboutme = req.body.aboutme;
+  const email = req.body.email[0];
+  const phone = req.body.phone[0];
+  const aboutme = req.body.aboutme[0];
+  const skills = req.body.skills[0];
 
-  connectionPool.getConnection((err, connection) => {
-    if(err) {
-      console.log('Cannot connect to DB..');
-    } else {
-      console.log('Connected to database with thread '+ connection.threadId);
-      var sql = 'UPDATE users SET email = ' + mysql.escape(email) + ', phone = ' + mysql.escape(phone) + ', aboutme = ' + mysql.escape(aboutme) +
-                  ' WHERE username = ' + mysql.escape(username);
-      console.log(sql);
-      connection.query(sql,(err, result) => {
-        if(err) {
-          console.log(err.name);
-          console.log(err.message);
-          //res.json('ERROR');
-        }
+  // connectionPool.getConnection((err, connection) => {
+  //   if(err) {
+  //     console.log('Cannot connect to DB..');
+  //   } else {
+  //     console.log('Connected to database with thread '+ connection.threadId);
+  //     var sql = 'UPDATE users SET email = ' + mysql.escape(email) + ', phone = ' + mysql.escape(phone) + ', aboutme = ' + mysql.escape(aboutme) +
+  //                 ' WHERE username = ' + mysql.escape(username);
+  //     console.log(sql);
+  //     connection.query(sql,(err, result) => {
+  //       if(err) {
+  //         console.log(err.name);
+  //         console.log(err.message);
+  //         //res.json('ERROR');
+  //       }
+  //       else {
+  //         console.log("user updated...");
+  //         res.json('UPDATE_SUCCESS');
+  //       }
+  //     });
+  //   }
+  // })
+
+
+    mongoClient.connect(url, function(err, db) {
+        if (err) throw err;
         else {
-          console.log("user updated...");
-          res.json('UPDATE_SUCCESS');
+            var dbo = db.db("freelancer");
+            var myquery = { username: username };
+            var newvalues = {$set: {email: email, phone: phone, aboutme: aboutme, skills: skills }} ;
+            dbo.collection("users").updateOne(myquery, newvalues, function(err, result) {
+                if (err) {
+                    res.json('ERROR');
+                }
+                else {
+                    console.log("1 document updated", result.result);
+                    res.json('UPDATE_SUCCESS');
+                    db.close();
+                }
+
+            });
         }
-      });
-    }
-  })
+    });
 });
 
 router.post('/getprofile', function(req, res, next) {
   console.log(req.body);
   console.log('In getprofile node...' + req.session.username);
-  connectionPool.getConnection((err, connection) => {
-    if(err) {
-      res.json({
-        code : 100,
-        status : "Error in connecting to database"
-      });
-      
-    } else {
-      console.log('Connected to database with thread '+ connection.threadId);
-      var sql = 'SELECT * from users WHERE username = ' + mysql.escape(req.body.username);
-      connection.query(sql, (err, result) => {
-        if(result.length == 0) {
-          res.json('ERROR');
-        }
+  // connectionPool.getConnection((err, connection) => {
+  //   if(err) {
+  //     res.json({
+  //       code : 100,
+  //       status : "Error in connecting to database"
+  //     });
+  //
+  //   } else {
+  //     console.log('Connected to database with thread '+ connection.threadId);
+  //     var sql = 'SELECT * from users WHERE username = ' + mysql.escape(req.body.username);
+  //     connection.query(sql, (err, result) => {
+  //       if(result.length == 0) {
+  //         res.json('ERROR');
+  //       }
+  //       else {
+  //         console.log(result);
+  //         res.json(result);
+  //       }
+  //     });
+  //
+  //   }
+  // })
+
+    mongoClient.connect(url, (err, db) => {
+        if(err) throw err;
         else {
-          console.log(result);
-          res.json(result);
+            console.log("Connected to mongodb...");
+            var dbo = db.db("freelancer");
+            var query = {username: req.body.username};
+            dbo.collection("users").find(query).toArray( (err, result) => {
+                if(err) {
+                    res.json('ERROR');
+                }
+
+                if(result.length > 0) {
+                    console.log(result);
+                    res.json(result);
+                    db.close();
+                }
+            });
         }
-      });
-      
-    }
-  })
+    });
+
 });
 
 
@@ -190,21 +326,44 @@ router.post('/postproject', function(req, res, next) {
   const budgetrange = req.body.budgetrange;
   const id = req.body.id;
 
-  connectionPool.getConnection((err, connection) => {
-    if(err) {
-      res.json('DB Connection error');
-    } else {
-      var sql = 'INSERT INTO projects (id, title, description, skills_required, budgetrange, employer) VALUES (?, ?, ?, ?, ?, ?)';
-      connection.query(sql, [id, title, description, skills_required, budgetrange, employer], (err, result) => {
-          if(err) {
-            console.log(err);
-            res.json('ERROR');
-          } else {
-            console.log('Project inserted successfully...');
-            res.json('PROJECT_INSERTED_SUCCESS');
-          }
-        })
-    }
+  // connectionPool.getConnection((err, connection) => {
+  //   if(err) {
+  //     res.json('DB Connection error');
+  //   } else {
+  //     var sql = 'INSERT INTO projects (id, title, description, skills_required, budgetrange, employer) VALUES (?, ?, ?, ?, ?, ?)';
+  //     connection.query(sql, [id, title, description, skills_required, budgetrange, employer], (err, result) => {
+  //         if(err) {
+  //           console.log(err);
+  //           res.json('ERROR');
+  //         } else {
+  //           console.log('Project inserted successfully...');
+  //           res.json('PROJECT_INSERTED_SUCCESS');
+  //         }
+  //       })
+  //   }
+  // })
+
+  mongoClient.connect(url, function(err, db) {
+      if(err) throw err;
+      else {
+          var dbo = db.db('freelancer');
+          dbo.collection('projects').insertOne({
+              id: id,
+              title: title,
+              description: description,
+              skills_required: skills_required,
+              budgetrange: budgetrange,
+              employer: employer,
+              open: 'open',
+              worker: '',
+              number_of_bids: 0
+          }).then( (response) => {
+              console.log("Project Insertion Successfully");
+              console.log(response.insertedId);
+              db.close();
+              res.json('PROJECT_INSERTED_SUCCESS');
+          })
+      }
   })
   
 });
@@ -212,28 +371,48 @@ router.post('/postproject', function(req, res, next) {
 
 router.post('/getallopenprojects', function(req, res, next) {
   console.log('In getallopenprojects');
-  connectionPool.getConnection((err, connection) => {
-    if(err) {
-      res.json({
-        code : 100,
-        status : "Error in connecting to database"
-      });
-      
-    } else {
-      console.log('Connected to database with thread '+ connection.threadId);
-      var sql = 'SELECT * from projects WHERE open = ' + mysql.escape('open');
-      connection.query(sql, (err, result) => {
-        if(result.length == 0) {
-          res.json('ERROR');
-        }
+  // connectionPool.getConnection((err, connection) => {
+  //   if(err) {
+  //     res.json({
+  //       code : 100,
+  //       status : "Error in connecting to database"
+  //     });
+  //
+  //   } else {
+  //     console.log('Connected to database with thread '+ connection.threadId);
+  //     var sql = 'SELECT * from projects WHERE open = ' + mysql.escape('open');
+  //     connection.query(sql, (err, result) => {
+  //       if(result.length == 0) {
+  //         res.json('ERROR');
+  //       }
+  //       else {
+  //         console.log(result);
+  //         res.json(result);
+  //       }
+  //     });
+  //
+  //   }
+  // });
+
+    mongoClient.connect(url, (err, db) => {
+        if(err) throw err;
         else {
-          console.log(result);
-          res.json(result);
+            console.log("Connected to mongodb...");
+            var dbo = db.db("freelancer");
+            var query = {open: "open"};
+            dbo.collection("projects").find(query).toArray( (err, result) => {
+                if(err) {
+                    res.json('ERROR');
+                }
+
+                if(result.length > 0) {
+                    console.log("In mongos get all open projects...",result);
+                    res.json(result);
+                    db.close();
+                }
+            });
         }
-      });
-      
-    }
-  })
+    });
 });
 
 router.post('/getmypublishedprojects', function(req, res, next) {
@@ -264,6 +443,8 @@ router.post('/getmypublishedprojects', function(req, res, next) {
       
     }
   })
+
+
 });
 
 
@@ -496,8 +677,5 @@ router.get('/getuserimage', (req, res) => {
 
 
 
-// router.post('/saveimage', (req, res, next) => {
-//   console.log("In /saveImage... ", req.body);
-// });
 
 module.exports = router;

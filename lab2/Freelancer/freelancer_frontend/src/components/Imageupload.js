@@ -58,7 +58,7 @@ class Imageuploader extends Component {
             'content-type': 'multipart/form-data'
             }
         }
-        if(this.state.fileSelected != ""){
+        if(this.state.fileSelected !== ""){
             var self =this;
             axios.post('http://localhost:3001/saveimage', form_data, { withCredentials: true}, config)
             .then( (response) => {
@@ -91,7 +91,7 @@ class Imageuploader extends Component {
         let $imagePreviewFinal = null;
         if (this.state.filename) {
             
-            $imagePreviewFinal = (<img src = { require('/Users/venkateshdevale/Desktop/private git/cmpe273/lab1/Freelancer/freelancer-server/images/' + this.state.filename) } alt = "This is user's display pic"/>);
+            $imagePreviewFinal = (<img src = { require('/Users/venkateshdevale/Desktop/private git/cmpe273/lab2/Freelancer/freelancer-server/images/' + this.state.filename) } alt = "This is user's display pic"/>);
           }
         const style ={
             display : this.state.display
