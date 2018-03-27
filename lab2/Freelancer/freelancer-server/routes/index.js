@@ -21,6 +21,8 @@ var connectionPool = mysql.createPool({
   database : 'freelancer'
 })
 
+
+
 // var connection = mysql.createConnection({
 //   host: "localhost",
 //   user: "root",
@@ -356,7 +358,8 @@ router.post('/postproject', function(req, res, next) {
               employer: employer,
               open: 'open',
               worker: '',
-              number_of_bids: 0
+              number_of_bids: 0,
+              estimated_completion_date: null
           }).then( (response) => {
               console.log("Project Insertion Successfully");
               console.log(response.insertedId);
@@ -417,32 +420,101 @@ router.post('/getallopenprojects', function(req, res, next) {
 
 router.post('/getmypublishedprojects', function(req, res, next) {
   console.log('In getmypublishedprojects');
-  connectionPool.getConnection((err, connection) => {
-    if(err) {
-      res.json({
-        code : 100,
-        status : "Error in connecting to database"
-      });
-      
-    } else {
-      console.log('Connected to database with thread '+ connection.threadId);
-      var sql = 'select * from projects left join (select projectid, sum(bidamount)/count(projectid) as average from bids group by projectid) as t' +
-                ' on projects.id = t.projectid where employer = ' +  mysql.escape(req.body.username);
+  // connectionPool.getConnection((err, connection) => {
+  //   if(err) {
+  //     res.json({
+  //       code : 100,
+  //       status : "Error in connecting to database"
+  //     });
+  //
+  //   } else {
+  //     console.log('Connected to database with thread '+ connection.threadId);
+  //     var sql = 'select * from projects left join (select projectid, sum(bidamount)/count(projectid) as average from bids group by projectid) as t' +
+  //               ' on projects.id = t.projectid where employer = ' +  mysql.escape(req.body.username);
+  //
+  //
+  //     connection.query(sql, (err, result) => {
+  //       if(result.length == 0) {
+  //         console.log("In getmypublished projects...1",result);
+  //         res.json('ERROR');
+  //       }
+  //       else {
+  //         console.log("In getmypublished projects...2",result);
+  //         res.json(result);
+  //       }
+  //     });
+  //
+  //   }
+  // })
 
-
-      connection.query(sql, (err, result) => {
-        if(result.length == 0) {
-          console.log("In getmypublished projects...1",result);
-          res.json('ERROR');
-        }
+    mongoClient.connect(url, (err, db) => {
+        if(err) throw err;
         else {
-          console.log("In getmypublished projects...2",result);
-          res.json(result);
+            console.log("Connected to mongodb...");
+            var dbo = db.db("freelancer");
+
+            dbo.collection('projects').aggregate([
+                { $match: { "employer" : req.body.username } },
+                {
+                $lookup:{
+                    "from":"bids",
+                    "localField":"id",
+                    "foreignField":"projectid",
+                    "as":"projectbids"
+                    }
+                },
+                {
+                $unwind:{
+                    "path": "$projectbids",
+                    "preserveNullAndEmptyArrays": true
+                    }
+                },
+                {
+                $group:{
+                        "_id":{"id" : "$id",
+                        "title" : "$title",
+                        "description" : "$description",
+                        "skills_required" : "$skills_required",
+                        "budgetrange" : "$budgetrange",
+                        "number_of_bids" : "$number_of_bids",
+                        "employer" : "$employer",
+                        "worker" : "$worker",
+                        "open" : "$open",
+                        "estimated_completion_date" : "$estimated_completion_date"},
+                        "average":{$avg:"$projectbids.bidamount"}
+                    }
+                },
+                {
+                $project:{
+                    "id" : "$_id.id",
+                    "title" : "$_id.title",
+                    "description" : "$_id.description",
+                    "skills_required" : "$_id.skills_required",
+                    "budgetrange" : "$_id.budgetrange",
+                    "number_of_bids" :"$_id.number_of_bids",
+                    "employer" : "$_id.employer",
+                    "worker" : "$_id.worker",
+                    "open" : "$_id.open",
+                    "estimated_completion_date" : "$_id.estimated_completion_date",
+                    "average" :{$ifNull: [ "$average",0 ] }
+                    }
+                }
+
+
+        ]).toArray(function(err, result) {
+                if (err) {
+                    res.json('ERROR');
+                }
+                else {
+                    res.json(result);
+                }
+
+                db.close();
+            });
         }
-      });
-      
-    }
-  })
+    });
+
+
 
 
 });
@@ -451,61 +523,114 @@ router.post('/getmypublishedprojects', function(req, res, next) {
 router.post('/insertBidAndUpdateNumberOfBids', function(req, res, next) {
   console.log(req.body);
   const pid = req.body.project_id;
-  const bidAmount = req.body.bid;
-  const days = req.body.deliveryDays;
+  const bidAmount = parseInt(req.body.bid);
+  const days = parseInt(req.body.deliveryDays);
   const freelancer = req.body.freelancer;
   let bids = 0;
-  connectionPool.getConnection((err, connection) => {
-    if(err) {
-      res.json({
-        code : 100,
-        status : "Error in connecting to database"
-      });
-      
-    } else {
-      console.log('Connected to database with thread '+ connection.threadId);
-      var sqltemp = 'SELECT * FROM bids WHERE freelancer = ' + mysql.escape(freelancer) + ' AND projectid = ' + mysql.escape(pid);
-      connection.query(sqltemp, (err, result) => {
-        if(result.length == 0) {
-          var sqlInsert = 'INSERT INTO bids (projectid, freelancer, period, bidamount) VALUES (?, ?, ?, ?)';
-          connection.query(sqlInsert,[pid, freelancer, days, bidAmount], (err, result) => {
-            if(err) {
-              //console.log(err.name);
-              //console.log(err.message);
-              res.json('ERROR');
-            }
-            else {
-              console.log("Bid inserted Successfully...");
-              res.json('BID INSERTED SUCCESS');
-            }
-          });
-        } else {
-          res.json('ERROR');
-        }
-      })
-      
-       
-      var getNumberOfBids = 'SELECT number_of_bids from projects WHERE id = ' + mysql.escape(pid);
-      connection.query(getNumberOfBids, (err, result) => {
-        if(err) 
-          console.log(err);
+  // connectionPool.getConnection((err, connection) => {
+  //   if(err) {
+  //     res.json({
+  //       code : 100,
+  //       status : "Error in connecting to database"
+  //     });
+  //
+  //   } else {
+  //
+  //     console.log('Connected to database with thread '+ connection.threadId);
+  //     var sqltemp = 'SELECT * FROM bids WHERE freelancer = ' + mysql.escape(freelancer) + ' AND projectid = ' + mysql.escape(pid);
+  //     connection.query(sqltemp, (err, result) => {
+  //       if(result.length == 0) {
+  //         var sqlInsert = 'INSERT INTO bids (projectid, freelancer, period, bidamount) VALUES (?, ?, ?, ?)';
+  //         connection.query(sqlInsert,[pid, freelancer, days, bidAmount], (err, result) => {
+  //           if(err) {
+  //             //console.log(err.name);
+  //             //console.log(err.message);
+  //             res.json('ERROR');
+  //           }
+  //           else {
+  //             console.log("Bid inserted Successfully...");
+  //             res.json('BID INSERTED SUCCESS');
+  //           }
+  //         });
+  //       } else {
+  //         res.json('ERROR');
+  //       }
+  //     })
+  //
+  //
+  //     var getNumberOfBids = 'SELECT number_of_bids from projects WHERE id = ' + mysql.escape(pid);
+  //     connection.query(getNumberOfBids, (err, result) => {
+  //       if(err)
+  //         console.log(err);
+  //       else {
+  //         bids = result[0].number_of_bids;
+  //       console.log('After getNumberOfBids...'+bids);
+  //       var ubids = bids + 1;
+  //       var updateBids = 'UPDATE projects SET number_of_bids = ' + ubids + ' WHERE id = ' + mysql.escape(pid);
+  //         connection.query(updateBids, (err, result) => {
+  //           if(err)
+  //             console.log(err);
+  //           else
+  //             console.log('After updateBids...',result);
+  //
+  //       });
+  //       }
+  //
+  //     });
+  //
+  //
+  //
+  //   }
+  // })
+
+    mongoClient.connect(url, (err, db) => {
+        if(err) throw err;
         else {
-          bids = result[0].number_of_bids;
-        console.log('After getNumberOfBids...'+bids);
-        var ubids = bids + 1;
-        var updateBids = 'UPDATE projects SET number_of_bids = ' + ubids + ' WHERE id = ' + mysql.escape(pid);
-          connection.query(updateBids, (err, result) => {
-            if(err)
-              console.log(err);
-            else
-              console.log('After updateBids...',result);
-        
-        });
+            console.log("Connected to mongodb...");
+            var dbo = db.db("freelancer");
+
+            dbo.collection("bids").find({
+                freelancer: freelancer,
+                projectid: pid
+            }).toArray( (err, result) => {
+
+                if(result.length == 0) {
+                    dbo.collection("bids").insertOne({
+                        projectid: pid,
+                        freelancer: freelancer,
+                        period: days,
+                        bidamount: bidAmount
+                    }).
+                    then((result) => {
+                        console.log("Bid inserted Successfully...");
+                        db.close();
+                        res.json('BID INSERTED SUCCESS');
+                    })
+                } else {
+                    db.close();
+                    res.json('ERROR');
+                }
+            });
+
+            dbo.collection("projects").find({
+                id: pid
+            }).toArray((err, result1) => {
+                console.log("After inserting bid..getting the number_of_bids for that project", result1[0].number_of_bids);
+                bids = result1[0].number_of_bids;
+                var ubids = bids + 1;
+                dbo.collection("projects").updateOne({id: pid}, {$set: {number_of_bids: ubids} }, function(err, result2) {
+                    if (err) {
+                        console.log('ERROR in updating bids...');
+                    }
+                    else {
+                        console.log("1 document updated", result2.result);
+                        db.close();
+                    }
+
+                });
+            });
         }
-        
-      });
-    }
-  })
+    });
   
 });
 
