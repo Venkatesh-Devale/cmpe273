@@ -6,17 +6,20 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import '../css/style.css';
 
+
 class Userhome extends Component {
 
     constructor() {
         super();
         this.state = {
-            projects : []
+            projects : [],
+            searchText:''
+
         }
     }
     
     componentWillMount() {
-        
+
         let param = null;
         axios.post('http://localhost:3001/getallopenprojects', param, {withCredentials: true})
         .then((response) => {
@@ -33,15 +36,41 @@ class Userhome extends Component {
                 })
             }
         })
+
     }
 
-    
+    handleChange(e) {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
+    }
+
+    handleSearch(e) {
+        e.preventDefault();
+        console.log("In handleSearch", this.state.searchText);
+        const search = {
+            search: this.state.searchText
+        }
+        axios.post("http://localhost:3001/getSearchCriteria", search, { withCredentials: true})
+            .then((response) => {
+                console.log(response.data);
+                if(response.data.length !== 0)
+                this.setState({
+                    projects: response.data
+                })
+            })
+
+    }
+
+
+
     render() {
-        
+
+
 
         let projectsToShow = [];
         if(this.state.projects === []) {
-            projectsToShow = []
+            projectsToShow = [];
         } else {
             projectsToShow = this.state.projects.map(p => {
                 return (
@@ -76,15 +105,34 @@ class Userhome extends Component {
                 );
                 
             });
+
+
         
         }
-            
         return (
             <div className="Userhome">
              
                <Navbar />
-               <UserNavbar /> 
+               <UserNavbar />
+
+
+                <div className = "Searchbar">
+                    <div className="row">
+                        <div className="col-lg-10">
+                            <div className="input-group">
+                                <input type="text" name = "searchText" onChange={this.handleChange.bind(this)} className="form-control" placeholder="Search projects or technology..."/>
+                                <span className="input-group-btn">
+                              <button className="btn btn-default" onClick={this.handleSearch.bind(this)} type="button">Go!</button>
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
                <div className='divProjectTable'>
+
                     <table className='table table-hover'>
                        <thead>
                         <tr className='table-secondary'>
@@ -101,6 +149,7 @@ class Userhome extends Component {
                        
                     </table>
                </div>
+
             </div>
         );
     }
