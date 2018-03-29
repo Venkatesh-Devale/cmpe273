@@ -62,9 +62,7 @@ class Postproject extends Component {
                 <UserNavbar />
                     <div id='holdPostProjectData'>
                         <form onSubmit={this.submitProject.bind(this)}>
-                            <div className="form-group">
-                                <div id='logo'><img src={image} alt='Freelancer logo' /></div>
-                            </div>
+
                             <div className="form-group">
                                 <h1>Tell us what you need done</h1>
                             </div>

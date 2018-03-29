@@ -72,7 +72,7 @@ class Navbar extends Component {
                     <div className="container-fluid">
                         <div className="navbar-header">
                             <a className="navbar-brand" href="/">
-                                <div id='logo'><img src={image} alt='Freelancer logo' /></div>
+                                <div id='logoMainNavbar'><img src={image} alt='Freelancer logo' /></div>
                             </a>
     
                         </div>

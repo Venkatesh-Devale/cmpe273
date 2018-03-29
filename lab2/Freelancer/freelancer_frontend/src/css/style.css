@@ -119,6 +119,13 @@ img {
     margin-left: 140px;
 }
 
+#logoMainNavbar {
+    width: 200px;
+    height: 50px;
+    margin-left: 20px;
+}
+
+
 .Postproject {
     background-color: white;
     width: 100%;
@@ -135,10 +142,10 @@ img {
 
 .divProjectTable {
     background: white;
-    margin-top: 3%;
-    margin-left: 4%;
+    margin-top: 1%;
+
     margin-bottom: 20%;
-    width: 1300px;
+    width: 1410px;
     height: auto;
     
 }
@@ -146,20 +153,18 @@ img {
 .divDashboardProjectTable {
     background: white;
     margin-top: 5%;
-    margin-left: 2%;
+
     margin-bottom: 20%;
-    width: 1300px;
+    width: 1410px;
     height: auto;
     
 }
 
 #projectNameColomn {
-    width: 45%;
+    width: 40%;
 }
 
-#employerColomn, #numberOfBidsColomn, #budgetRangeColomn, #bidNowColomn{
-    width: 17%;
-}
+
 
 .divBtnEmployerOrFreelancer {
     float: right;
@@ -196,4 +201,20 @@ img {
 
 #divListHeader {
     margin-left: 3%;
+}
+
+.Searchbar {
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 1400px;
+}
+
+.pagination {
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.pagination #li1 {
+    color: blue;
 }

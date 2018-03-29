@@ -5,6 +5,7 @@
   "dependencies": {
     "ajv": "^6.1.1",
     "classnames": "^2.2.5",
+    "lodash": "^4.17.5",
     "raxios": "^1.0.4",
     "react": "^16.2.0",
     "react-cookie": "^2.1.4",
@@ -16,6 +17,7 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.1",
+    "reactable": "^0.14.1",
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6",

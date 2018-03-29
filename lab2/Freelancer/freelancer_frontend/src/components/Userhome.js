@@ -3,6 +3,7 @@ import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
 import Bidnow from './Bidnow';
 import axios from 'axios';
+import Pagination from './Pagination';
 import { Link } from 'react-router-dom';
 import '../css/style.css';
 
@@ -13,15 +14,18 @@ class Userhome extends Component {
         super();
         this.state = {
             projects : [],
-            searchText:''
+            searchText:'',
+            pageOfItems: []
+        };
 
-        }
+        this.onChangePage = this.onChangePage.bind(this);
     }
-    
+
+
     componentWillMount() {
 
-        let param = null;
-        axios.post('http://localhost:3001/getallopenprojects', param, {withCredentials: true})
+
+        axios.post('http://localhost:3001/getallopenprojects', null, {withCredentials: true})
         .then((response) => {
             //console.log('In allopenprojects',response.data);
             if(response.data === 'ERROR') {
@@ -39,6 +43,11 @@ class Userhome extends Component {
 
     }
 
+    onChangePage(pageOfItems) {
+        // update state with new page of items
+        this.setState({ pageOfItems: pageOfItems});
+    }
+
     handleChange(e) {
         this.setState({
             [e.target.name]: e.target.value
@@ -54,10 +63,16 @@ class Userhome extends Component {
         axios.post("http://localhost:3001/getSearchCriteria", search, { withCredentials: true})
             .then((response) => {
                 console.log(response.data);
-                if(response.data.length !== 0)
-                this.setState({
-                    projects: response.data
-                })
+                if(response.data.length !== 0) {
+                    this.setState({
+                        projects: response.data
+                    })
+                } else {
+                    this.setState({
+                        projects: []
+                    })
+                }
+
             })
 
     }
@@ -66,13 +81,11 @@ class Userhome extends Component {
 
     render() {
 
-
-
         let projectsToShow = [];
-        if(this.state.projects === []) {
+        if(this.state.pageOfItems === []) {
             projectsToShow = [];
         } else {
-            projectsToShow = this.state.projects.map(p => {
+            projectsToShow = this.state.pageOfItems.map(p => {
                 return (
                     <tr key={p.id}>
                     <td>
@@ -110,6 +123,7 @@ class Userhome extends Component {
         
         }
         return (
+
             <div className="Userhome">
              
                <Navbar />
@@ -118,18 +132,19 @@ class Userhome extends Component {
 
                 <div className = "Searchbar">
                     <div className="row">
-                        <div className="col-lg-10">
+
                             <div className="input-group">
-                                <input type="text" name = "searchText" onChange={this.handleChange.bind(this)} className="form-control" placeholder="Search projects or technology..."/>
+                                <input type="text" id = "idsearchText" name = "searchText" onChange={this.handleChange.bind(this)} className="form-control" placeholder="Search projects or technology..."/>
                                 <span className="input-group-btn">
-                              <button className="btn btn-default" onClick={this.handleSearch.bind(this)} type="button">Go!</button>
+                              <button className="btn btn-secondary" onClick={this.handleSearch.bind(this)} type="button">Go!</button>
                             </span>
                             </div>
-                        </div>
+
                     </div>
 
                 </div>
 
+                <Pagination items={this.state.projects} onChangePage={this.onChangePage} />
 
                <div className='divProjectTable'>
 
@@ -148,7 +163,10 @@ class Userhome extends Component {
                        </tbody>
                        
                     </table>
+
                </div>
+
+
 
             </div>
         );
