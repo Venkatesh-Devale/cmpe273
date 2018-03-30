@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import '../css/style.css';
 import { connect } from 'react-redux';
-//import cookie from 'react-cookies';
 import axios from 'axios';
+import image from '../images/freelancerlogo.png';
 
 class Login extends Component {
     constructor() {
@@ -49,9 +49,13 @@ class Login extends Component {
             
             <div id="mainDiv">
             <div className="center">
-                    <div>
-                         <h1 id = 'h1LoginandSignup'> Login  </h1>
-                    </div>
+                <div>
+                    <a href="/">
+                        <div id='logo'><img src={image} alt='Freelancer logo' /></div>
+                    </a>
+                    <h3 id = 'h1LoginandSignup'> Login </h3>
+                    <hr />
+                </div>
                     <div id="divLoginForm">
                         <form onSubmit={this.handleLogin.bind(this)}>
                             <div className="form-group">
@@ -63,7 +67,14 @@ class Login extends Component {
                             <div className="form-group">
                                 <input type="submit" className="form-control btn btn-primary" id="btnSubmitSignUpForm" value="Login" />
                             </div>
-                            
+                            <div className="form-group">
+                                <a id='loginPageHomeNavigation' href="/">
+                                    Home
+                                </a>
+                                <a id='loginPageSignupNavigation' href="/signup">
+                                    Signup
+                                </a>
+                            </div>
                         </form>
                     </div>
                 </div>

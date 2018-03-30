@@ -218,3 +218,17 @@ img {
 .pagination #li1 {
     color: blue;
 }
+
+#loginPageSignupNavigation {
+    float: right;
+}
+
+.Submissionpanel {
+    width: 1300px;
+    margin-left: 3%;
+}
+
+#divPaymentForm {
+    margin-top: 100px;
+    margin-left: 100px;
+}

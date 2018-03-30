@@ -8,9 +8,27 @@ class Bidnow extends Component {
         super();
         this.state = {
             bid: '',
-            deliveryDays: ''
-        }
-        
+            deliveryDays: '',
+            username: ''
+        };
+        this.checkSession = this.checkSession.bind(this);
+    }
+
+    checkSession() {
+        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+            .then( (response) => {
+                console.log("In render login component will mount...", response.data.session.username);
+                if(response.data.session !== "ERROR") {
+                    this.setState({
+                        username: response.data.session.username
+                    })
+
+                }
+            })
+    }
+
+    componentWillMount() {
+        this.checkSession();
     }
 
     handleChange = (events) => {
@@ -21,11 +39,11 @@ class Bidnow extends Component {
 
     handleBidSubmit = (events) => {
         events.preventDefault();
-        if(localStorage.getItem('username') === null) {
+        if(this.state.username === null) {
             alert('Login First...');
         } else {
             let pid = localStorage.getItem('project_id');
-        let uname = localStorage.getItem('username');
+        let uname = this.state.username;
         const bid = {
             project_id: pid,
             bid: this.state.bid,
@@ -40,8 +58,12 @@ class Bidnow extends Component {
     }
 
     handleClick(e){
-        if(localStorage.getItem('username') === null) {
+        if(this.state.username === '') {
             alert('Login First...');
+            window.location.reload(true);
+        } else if(this.state.username === this.props.employer) {
+            alert('You cannot bid on your own project...');
+            window.location.reload(true);
         } else {
             localStorage.setItem("project_id", e.target.dataset.id);
         }

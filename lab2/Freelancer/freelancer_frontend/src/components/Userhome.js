@@ -110,7 +110,7 @@ class Userhome extends Component {
                     </td>
                     <td>
                         <div>
-                            <Bidnow id={p.id}/>
+                            <Bidnow id={p.id} employer={p.employer}/>
                         </div>
                         <div data-id = {p.id}></div>
                     </td>

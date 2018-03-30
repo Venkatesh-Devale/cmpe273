@@ -48,6 +48,7 @@ class ListAllBids extends Component {
         .then( (response) => {
             console.log("In hire button handle click", response.data);
             alert('Freelancer hired...check in your dashboard now...thanks');
+
         })
     }
 
@@ -73,12 +74,12 @@ class ListAllBids extends Component {
                 </td>
                 <td>
                     <div>
-                        <p>{ b.period }</p>
+                        <p>{ b.bidamount }</p>
                     </div>
                 </td>
                 <td>
                     <div>
-                        <p>{ b.bidamount }</p>
+                        <p>{ b.period }</p>
                     </div>
                 </td>
                 <td>

@@ -10,23 +10,27 @@ import Postproject from './Postproject';
 import Projectdetailspage from './Projectdetailspage';
 import Dashboardfreelancer from './Dashboardfreelancer';
 import Myrelevantprojects from './Myrelevantprojects';
+import Myassignedprojects from "./Myassignedprojects";
+import Makepayment from "./Makepayment";
 
 const Main = () => (
     <div> 
         
         <Switch>
-            <Route exact path='/' component={Home} />
-            <Route path='/login' component={Login} />
-            <Route path='/signup' component={Signup} />
-            <Route path='/dashboard' component={Dashboard} />
-            <Route path='/userhome' component={Userhome} />
-            <Route path='/userprofile/:value' component={Userprofile} />
-            <Route path='/userprofile' component={Userprofile} />
-            <Route path='/postproject' component={Postproject} />
-            <Route path='/projectdetails/:value/' component={Projectdetailspage} />
-            <Route path='/dashboardfreelancer' component={Dashboardfreelancer} />
-            <Route path='/projectdetails' component={Projectdetailspage} />
-            <Route path='/myrelevantprojects' component={Myrelevantprojects} />
+            <Route exact path='/' component={ Home } />
+            <Route path='/login' component={ Login } />
+            <Route path='/signup' component={ Signup } />
+            <Route path='/dashboard' component={ Dashboard } />
+            <Route path='/userhome' component={ Userhome } />
+            <Route path='/userprofile/:value' component={ Userprofile } />
+            <Route path='/userprofile' component={ Userprofile } />
+            <Route path='/postproject' component={ Postproject } />
+            <Route path='/projectdetails/:value/' component={ Projectdetailspage } />
+            <Route path='/dashboardfreelancer' component={ Dashboardfreelancer } />
+            <Route path='/projectdetails' component={ Projectdetailspage } />
+            <Route path='/myrelevantprojects' component={ Myrelevantprojects } />
+            <Route path='/myassignedprojects' component={ Myassignedprojects } />
+            <Route path='/makepayment' component={ Makepayment }/>
         </Switch>
     
     </div>

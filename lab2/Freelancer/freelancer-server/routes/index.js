@@ -12,6 +12,15 @@ var mongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 var passport = require('passport')
     , LocalStrategy = require('passport-local').Strategy;
+var nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: 'devalevenkatesh@gmail.com', // Your email id
+        pass: '94714Sanjay' // Your password
+    }
+});
 
 var connectionPool = mysql.createPool({
   connectionLimit : 1000,
@@ -692,7 +701,24 @@ router.post('/insertBidAndUpdateNumberOfBids', function(req, res, next) {
                     }).
                     then((result) => {
                         console.log("Bid inserted Successfully...");
-                        db.close();
+                        dbo.collection("projects").find({
+                            id: pid
+                        }).toArray((err, result1) => {
+                            console.log("After inserting bid..getting the number_of_bids for that project", result1[0].number_of_bids);
+                            bids = result1[0].number_of_bids;
+                            var ubids = bids + 1;
+                            dbo.collection("projects").updateOne({id: pid}, {$set: {number_of_bids: ubids} }, function(err, result2) {
+                                if (err) {
+                                    console.log('ERROR in updating bids...');
+                                }
+                                else {
+                                    console.log("1 document updated", result2.result);
+                                    db.close();
+                                }
+
+                            });
+                        });
+                        //db.close();
                         res.json('BID INSERTED SUCCESS');
                     })
                 } else {
@@ -701,23 +727,7 @@ router.post('/insertBidAndUpdateNumberOfBids', function(req, res, next) {
                 }
             });
 
-            dbo.collection("projects").find({
-                id: pid
-            }).toArray((err, result1) => {
-                console.log("After inserting bid..getting the number_of_bids for that project", result1[0].number_of_bids);
-                bids = result1[0].number_of_bids;
-                var ubids = bids + 1;
-                dbo.collection("projects").updateOne({id: pid}, {$set: {number_of_bids: ubids} }, function(err, result2) {
-                    if (err) {
-                        console.log('ERROR in updating bids...');
-                    }
-                    else {
-                        console.log("1 document updated", result2.result);
-                        db.close();
-                    }
 
-                });
-            });
         }
     });
   
@@ -857,6 +867,24 @@ router.post('/getmybiddedprojects', function(req, res, next) {
 
 
 });
+
+router.post('/getmyassignedprojects', function(req, res, next) {
+   console.log(req.body.username);
+   mongoClient.connect(url, function(err, db) {
+       if(err) throw err;
+       else {
+           var dbo = db.db('freelancer');
+           dbo.collection('projects').find({worker: req.body.username}).toArray(function (err, result) {
+               if(result.length > 0) {
+                   res.json({'myassignedprojectsArray': result});
+               } else {
+                   res.json({'myassignedprojectsArray': []});
+               }
+           });
+       }
+   })
+});
+
 
 router.post('/getproject', function(req, res, next) {
   console.log('In getproject', req.body);
@@ -1153,6 +1181,66 @@ router.post('/setworkerforproject', (req, res, next) => {
                 }
                 else {
                     console.log("1 document updated", result.result);
+                    dbo.collection('projects').aggregate([
+                        {
+                            $match: {
+                                "id": req.body.pid
+                            }
+                        },
+                        {
+                            $lookup: {
+                                "from": "users",
+                                "localField": "worker",
+                                "foreignField": "username",
+                                "as": "freelancerAndProjectDetails"
+                            }
+                        },
+                        {
+                            $unwind: {
+                                "path": "$freelancerAndProjectDetails",
+                                "preserveNullAndEmptyArrays": true
+                            }
+                        },
+                        {
+                            $project: {
+                                "id" : 1,
+                                "title" : 1,
+                                "description" : 1,
+                                "skills_required" : 1,
+                                "budgetrange" : 1,
+                                "employer" : 1,
+                                "open" : 1,
+                                "worker" : 1,
+                                "number_of_bids" : 1,
+                                "workeremail": "$freelancerAndProjectDetails.email"
+                            }
+                        }
+                    ]).toArray(function (err, result) {
+                        console.log("After getting project details and freelancer email", result[0])
+                        //write logic to send email
+                        var text = 'Hello world from Venkatesh';
+                        var mailOptions = {
+                            from: 'devalevenkatesh@gmail.com', // sender address
+                            to: result[0].workeremail, // list of receivers
+                            subject: 'You are hired on Freelancer for Project '+ result[0].title, // Subject line
+                            //text: text //, // plaintext body
+                            html:
+                            '<p>This is to inform you that you have been hired for the project with below details, logon to Freelancer now.</p>' +
+                            '<h3> Project Name:</h3>'+ result[0].title +
+                            '<h3> Description:</h3>' + result[0].description +
+                            '<h3> Employer:</h3>' + result[0].employer // You can choose to send an HTML body instead
+                        };
+
+                        transporter.sendMail(mailOptions, function(error, info){
+                            if(error){
+                                console.log(error);
+
+                            }else{
+                                console.log('Message sent: ' + info.response);
+
+                            };
+                        });
+                    });
                     res.json('UPDATE_SUCCESS');
                     db.close();
                 }

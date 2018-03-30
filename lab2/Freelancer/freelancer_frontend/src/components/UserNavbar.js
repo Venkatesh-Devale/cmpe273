@@ -42,6 +42,9 @@ class UserNavbar extends Component {
                                 <li className="nav-item">
                                     <a className="nav-link" href="/myrelevantprojects">My Relevant Projects</a>
                                 </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="/myassignedprojects">My Assigned Projects</a>
+                                </li>
                             </ul>
                             <ul className="nav navbar-nav navbar-right">
                                 <li className="nav-item mr-4">

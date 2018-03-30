@@ -72,6 +72,14 @@ class Signup extends Component {
                             <div className="form-group">
                                 <input type="submit" className="form-control btn btn-primary" id="btnSubmitSignUpForm" value="Create Account" />
                             </div>
+                            <div className="form-group">
+                                <a id='loginPageHomeNavigation' href="/">
+                                    Home
+                                </a>
+                                <a id='loginPageSignupNavigation' href="/login">
+                                    Login
+                                </a>
+                            </div>
                             
                         </form>
                     </div>
