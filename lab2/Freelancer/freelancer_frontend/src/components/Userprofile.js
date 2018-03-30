@@ -24,8 +24,11 @@ class Userprofile extends Component {
     }
     
     componentWillMount() {
+
         let usernameFromSession = this.props.match.params.value;
+
         console.log("Username from userprofile" + usernameFromSession);
+
         const usernameJSON = {
             username: usernameFromSession
         }

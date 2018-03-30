@@ -22,7 +22,7 @@ const Main = () => (
             <Route path='/signup' component={ Signup } />
             <Route path='/dashboard' component={ Dashboard } />
             <Route path='/userhome' component={ Userhome } />
-            <Route path='/userprofile/:value' component={ Userprofile } />
+            <Route path='/userprofile/:value/' component={ Userprofile } />
             <Route path='/userprofile' component={ Userprofile } />
             <Route path='/postproject' component={ Postproject } />
             <Route path='/projectdetails/:value/' component={ Projectdetailspage } />
@@ -30,7 +30,7 @@ const Main = () => (
             <Route path='/projectdetails' component={ Projectdetailspage } />
             <Route path='/myrelevantprojects' component={ Myrelevantprojects } />
             <Route path='/myassignedprojects' component={ Myassignedprojects } />
-            <Route path='/makepayment' component={ Makepayment }/>
+            <Route path='/makepayment/:value/' component={ Makepayment }/>
         </Switch>
     
     </div>

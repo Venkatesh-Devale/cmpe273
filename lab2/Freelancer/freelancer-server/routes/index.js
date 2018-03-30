@@ -1142,6 +1142,112 @@ router.post('/getAllBidsForThisProject', (req, res, next) => {
     });
 })
 
+router.post('/getspecificbidforproject', (req, res, next) => {
+   console.log('In getspecificbidforproject server side...', req.body.projectid);
+
+
+    mongoClient.connect(url, (err, db) => {
+        if(err) throw err;
+        else {
+            console.log("Connected to mongodb...");
+            var dbo = db.db("freelancer");
+
+
+
+            dbo.collection("projects").aggregate([
+                {
+                    $match: { "id": req.body.projectid}
+                },
+                {
+                    $project: {
+                        "id": 1,
+                        "worker":1,
+                        "employer": 1,
+                        "title": 1,
+                        "description" : 1,
+                        "estimated_completion_date": 1
+                    }
+                }
+                ,
+                {
+                    $lookup: {
+                        from: "bids",
+                        let: { pid: "$id", worker: "$worker" },
+                        pipeline: [
+                            { $match:
+                                    { $expr:
+                                            { $and:
+                                                    [
+                                                        { $eq: [ "$projectid",  "$$pid" ] },
+                                                        { $eq: [ "$freelancer", "$$worker" ] }
+                                                    ]
+                                            }
+                                    }
+                            }
+                        ],
+                        as: "projectspecificbid"
+                    }
+                },
+                {
+                    $unwind: {
+                        "path": "$projectspecificbid"
+                    }
+                },
+                {
+                    $project: {
+                        "_id": 0,
+                        "id" : 1,
+                        "employer" : 1,
+                        "worker" : 1,
+                        "title": 1,
+                        "description" : 1,
+                        "estimated_completion_date": 1,
+                        "bidperiod" : "$projectspecificbid.period",
+                        "bidamount" : "$projectspecificbid.bidamount"
+                    }
+                }
+            ]).toArray( (err, result) => {
+                if(err) {
+                    res.json('ERROR');
+                }
+
+                if(result.length > 0) {
+                    console.log(result);
+                    res.json(result);
+                    db.close();
+                }
+            });
+        }
+    });
+
+});
+
+router.post('/getuseraccountbalance', (req, res, next) => {
+   console.log(req.body);
+
+    mongoClient.connect(url, (err, db) => {
+        if(err) throw err;
+        else {
+            console.log("Connected to mongodb...");
+            var dbo = db.db("freelancer");
+            var query = {username: req.body.user};
+            dbo.collection("users").find(query).toArray( (err, result) => {
+                if(err) {
+                    res.json('ERROR');
+                }
+
+                if(result.length > 0) {
+                    console.log(result);
+                    res.json(result);
+                    db.close();
+                }
+            });
+        }
+    });
+
+
+});
+
 router.post('/setworkerforproject', (req, res, next) => {
   console.log(req.body);
   // connectionPool.getConnection( (err, connection) => {

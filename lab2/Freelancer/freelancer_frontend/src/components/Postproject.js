@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import image from '../images/freelancerlogo.png';
 import { connect } from 'react-redux';
 //import Login from './Login';
 import '../css/style.css';

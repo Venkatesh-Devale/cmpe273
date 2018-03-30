@@ -81,7 +81,7 @@ class Projectdetailspage extends Component {
 
     handlePayment() {
         console.log("Payment button clicked");
-        this.props.history.push('/makepayment');
+        this.props.history.push(`/makepayment/${ this.state.projectId }`);
     }
 
     renderEmployer() {
