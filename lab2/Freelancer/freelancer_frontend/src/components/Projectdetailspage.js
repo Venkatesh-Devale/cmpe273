@@ -22,7 +22,8 @@ class Projectdetailspage extends Component {
             budgetrange: '',
             number_of_bids: '',
             average: '',
-            username: ''
+            username: '',
+            open: 'open'
         };
 
         this.handlePayment = this.handlePayment.bind(this);
@@ -67,10 +68,12 @@ class Projectdetailspage extends Component {
                     worker: response.data[0].worker,
                     budgetrange: response.data[0].budgetrange,
                     number_of_bids: response.data[0].number_of_bids,
-                    average : response.data[0].average
+                    average : response.data[0].average,
+                    open: response.data[0].open
                 }, () => {
                     console.log('In projectdetails Component will mount showing state of employer',this.state.employer);
                     console.log('In projectdetails Component will mount showing state of worker',this.state.worker);
+
                 })
             })
 
@@ -86,10 +89,23 @@ class Projectdetailspage extends Component {
 
     renderEmployer() {
         let redirect = null;
+        var changes = null;
         if(localStorage.getItem("username") !== null) {
             //redirect = <Redirect to="/login" />
             redirect = <UserNavbar />;
         }
+
+        if(this.state.open === 'open') {
+            changes = (
+                <div id = 'div1' >
+
+                    <button type="submit" class="btn btn-secondary" onClick={this.handlePayment} >Make Payment</button>
+
+                </div>
+            );
+        }
+
+
         return(
             <div className="Projectdetailspage">
                 <Navbar />
@@ -130,11 +146,12 @@ class Projectdetailspage extends Component {
                                 {this.state.average}
                             </p>
                         </div>
-                        <div id = 'div1' >
+                        {/*<div id = 'div1' >*/}
 
-                                <button type="submit" class="btn btn-secondary" onClick={this.handlePayment} >Make Payment</button>
+                                {/*<button type="submit" class="btn btn-secondary" onClick={this.handlePayment} >Make Payment</button>*/}
 
-                        </div>
+                        {/*</div>*/}
+                        { changes }
                     </div>
                 </div>
 
@@ -256,13 +273,15 @@ class Projectdetailspage extends Component {
     }
 
     render() {
-        if(this.state.worker === this.state.username) {
+        if(this.state.worker === '')
+            return this.renderNormal();
+        else if(this.state.worker === this.state.username) {
             return this.renderWorker();
         }
         else if(this.state.employer === this.state.username) {
             return this.renderEmployer();
         }
-        else if(this.state.worker === '' || this.state.worker !== this.state.username)
+        else if(this.state.worker !== this.state.username)
             return this.renderNormal();
 
     }

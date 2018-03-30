@@ -1,4 +1,3 @@
-
 var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
@@ -1222,31 +1221,6 @@ router.post('/getspecificbidforproject', (req, res, next) => {
 
 });
 
-router.post('/getuseraccountbalance', (req, res, next) => {
-   console.log(req.body);
-
-    mongoClient.connect(url, (err, db) => {
-        if(err) throw err;
-        else {
-            console.log("Connected to mongodb...");
-            var dbo = db.db("freelancer");
-            var query = {username: req.body.user};
-            dbo.collection("users").find(query).toArray( (err, result) => {
-                if(err) {
-                    res.json('ERROR');
-                }
-
-                if(result.length > 0) {
-                    console.log(result);
-                    res.json(result);
-                    db.close();
-                }
-            });
-        }
-    });
-
-
-});
 
 router.post('/setworkerforproject', (req, res, next) => {
   console.log(req.body);
@@ -1356,6 +1330,123 @@ router.post('/setworkerforproject', (req, res, next) => {
     });
 
 })
+
+router.post('/getuseraccountbalance', (req, res, next) => {
+    console.log(req.body);
+
+    mongoClient.connect(url, (err, db) => {
+        if(err) throw err;
+        else {
+            console.log("Connected to mongodb...");
+            var dbo = db.db("freelancer");
+            var query = {username: req.body.user};
+            dbo.collection("users").find(query).toArray( (err, result) => {
+                if(err) {
+                    res.json('ERROR');
+                }
+
+                if(result.length > 0) {
+                    console.log(result);
+                    res.json(result);
+                    db.close();
+                }
+            });
+        }
+    });
+
+
+});
+
+router.post('/transact', (req, res, next) => {
+   console.log(req.body);
+   var updatedBalanceForEmployer = req.body.employerbalance - req.body.bidamount;
+
+   mongoClient.connect(url, (err, db) => {
+       if(err) {
+           db.close();
+           throw err;
+       }
+       else {
+           var dbo = db.db("freelancer");
+           var myquery = { username: req.body.employer };
+           var newvalues = {$set: { balance: updatedBalanceForEmployer }} ;
+           dbo.collection("users").updateOne(myquery, newvalues, function(err, result) {
+               if (err) {
+                   console.log("In updating employer balance",err);
+                   db.close();
+                   res.json('ERROR');
+               }
+               else {
+                   console.log("1 document employer balance updated", result.result);
+
+                   //updating worker balance
+
+                   var updatedBalanceForWorker = req.body.workerbalance + req.body.bidamount;
+                   myquery = { username: req.body.worker };
+                   newvalues = {$set: { balance: updatedBalanceForWorker }} ;
+                   dbo.collection("users").updateOne(myquery, newvalues, function(err, result) {
+                       if (err) {
+                           console.log("In updating worker balance",err);
+                           db.close();
+                           res.json('ERROR');
+                       }
+                       else {
+                           console.log("1 document worker balance updated", result.result);
+
+                           //inserting into transactionhistory for employer
+                           dbo.collection('transaction_history').insertOne({
+                               transactionid: req.body.transactionidemployer,
+                               transactiontype: 'debit',
+                               username: req.body.employer,
+                               projectname: req.body.projectname,
+                               projectid: req.body.projectid,
+                               amount: req.body.bidamount
+                           }).then( (result) => {
+                               console.log("Transaction Insertion Successfull for worker");
+                               console.log(result.insertedId);
+
+                               //inserting into transactionhistory for worker
+                               dbo.collection('transaction_history').insertOne({
+                                   transactionid: req.body.transactionidworker,
+                                   transactiontype: 'credit',
+                                   username: req.body.worker,
+                                   projectname: req.body.projectname,
+                                   projectid: req.body.projectid,
+                                   amount: req.body.bidamount
+                               }).then( (result) => {
+                                   console.log("Transaction Insertion Successfull for worker");
+                                   console.log(result.insertedId);
+
+                                   //update the status to close of the project
+
+                                   dbo.collection('projects').updateOne(
+                                       {id: req.body.projectid},
+                                       {$set: {open: 'closed'}}, function(err, result) {
+                                            if(err) {
+                                                console.log(err);
+                                                db.close();
+                                                res.json("Error updating project status to close");
+                                            } else {
+                                                res.json('200');
+                                                db.close();
+                                            }
+                                       })
+
+                               })
+                           })
+                       }
+
+                   });
+
+
+
+               }
+
+           });
+       }
+   })
+
+});
 
 router.post('/getSearchCriteria', (req, res, next) => {
     console.log("In getSearchCriteria", req.body.search);
