@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Pagination from './Pagination';
 
 class Dashboardfreelancer extends Component {
 
@@ -11,8 +12,12 @@ class Dashboardfreelancer extends Component {
         super();
         this.state = {
             projects : [],
-            employerButtonClicked: false
-        }
+            employerButtonClicked: false,
+            searchText:'',
+            pageOfItems: []
+        };
+
+        this.onChangePage = this.onChangePage.bind(this);
     }
 
     componentWillMount() {
@@ -45,17 +50,51 @@ class Dashboardfreelancer extends Component {
             
     }
 
+    onChangePage(pageOfItems) {
+        // update state with new page of items
+        this.setState({ pageOfItems: pageOfItems});
+    }
+
+    handleChange(e) {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
+    }
+
     handleEmployerClicked() {
         this.setState({
             employerButtonClicked: true
         })
     }
 
+    handleSearch(e) {
+        e.preventDefault();
+        console.log("In handleSearch", this.state.searchText);
+        const search = {
+            search: this.state.searchText
+        }
+        axios.post("http://localhost:3001/getSearchCriteria", search, { withCredentials: true})
+            .then((response) => {
+                console.log(response.data);
+                if(response.data.length !== 0) {
+                    this.setState({
+                        projects: response.data
+                    })
+                } else {
+                    this.setState({
+                        projects: []
+                    })
+                }
+
+            })
+
+    }
+
     render() {
         if(this.state.employerButtonClicked === true)
             this.props.history.push('/dashboard');
         let projectsToShow = [];
-        projectsToShow = this.state.projects.map(p => {
+        projectsToShow = this.state.pageOfItems.map(p => {
             return (
                 <tr key={p.id}>
                 <td>
@@ -98,6 +137,22 @@ class Dashboardfreelancer extends Component {
                         <button type="button" className="btn btn-secondary">Freelancer</button>
                     </div>
                 </div>
+
+                <div className = "Searchbar">
+                    <div className="row">
+
+                        <div className="input-group">
+                            <input type="text" id = "idsearchText" name = "searchText" onChange={this.handleChange.bind(this)} className="form-control" placeholder="Search projects or technology..."/>
+                            <span className="input-group-btn">
+                              <button className="btn btn-secondary" onClick={this.handleSearch.bind(this)} type="button">Go!</button>
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
                 <div className='divDashboardProjectTable'>
                     <table className='table table-hover'>
                        <thead>
@@ -115,6 +170,8 @@ class Dashboardfreelancer extends Component {
                        
                     </table>
                </div>
+
+                <Pagination items={this.state.projects} onChangePage={this.onChangePage} />
             </div>
         );
     }

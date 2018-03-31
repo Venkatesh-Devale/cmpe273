@@ -4,7 +4,7 @@ import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
-
+import Pagination from './Pagination';
 
 
 class Dashboard extends Component {
@@ -13,13 +13,22 @@ class Dashboard extends Component {
         super();
         this.state = {
             projects: [],
-            freelancerButtonClicked: false
+            freelancerButtonClicked: false,
+            searchText:'',
+            pageOfItems: []
         };
+
         this.getAllPublishedProjects = this.getAllPublishedProjects.bind(this);
+        this.onChangePage = this.onChangePage.bind(this);
     }
 
     componentWillMount() {
         this.getAllPublishedProjects();
+    }
+
+    onChangePage(pageOfItems) {
+        // update state with new page of items
+        this.setState({ pageOfItems: pageOfItems});
     }
 
     getAllPublishedProjects() {
@@ -44,11 +53,41 @@ class Dashboard extends Component {
             })
     }
 
+    handleChange(e) {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
+    }
+
     handleFreelancerClicked() {
         this.setState({
             freelancerButtonClicked: true
         })
     }
+
+    handleSearch(e) {
+        e.preventDefault();
+        console.log("In handleSearch", this.state.searchText);
+        const search = {
+            search: this.state.searchText
+        }
+        axios.post("http://localhost:3001/getSearchCriteria", search, { withCredentials: true})
+            .then((response) => {
+                console.log(response.data);
+                if(response.data.length !== 0) {
+                    this.setState({
+                        projects: response.data
+                    })
+                } else {
+                    this.setState({
+                        projects: []
+                    })
+                }
+
+            })
+
+    }
+
 
     render() {
         let redirect = null;
@@ -62,7 +101,7 @@ class Dashboard extends Component {
         if(this.state.projects === []) {
 
         } else {
-            projectsToShow = this.state.projects.map(p => {
+            projectsToShow = this.state.pageOfItems.map(p => {
                 var finalDate = null
                 if( p.estimated_completion_date !== null) {
                     finalDate = p.estimated_completion_date.slice(0,10);
@@ -118,6 +157,21 @@ class Dashboard extends Component {
                         <button type="button" onClick = {()=> this.handleFreelancerClicked()} className="btn btn-secondary">Freelancer</button>
                     </div>
                 </div>
+
+                <div className = "Searchbar">
+                    <div className="row">
+
+                        <div className="input-group">
+                            <input type="text" id = "idsearchText" name = "searchText" onChange={this.handleChange.bind(this)} className="form-control" placeholder="Search projects or technology..."/>
+                            <span className="input-group-btn">
+                              <button className="btn btn-secondary" onClick={this.handleSearch.bind(this)} type="button">Go!</button>
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
                 <div className='divDashboardProjectTable'>
                     <table className='table table-hover'>
                         <thead>
@@ -136,6 +190,9 @@ class Dashboard extends Component {
 
                     </table>
                 </div>
+
+                <Pagination items={this.state.projects} onChangePage={this.onChangePage} />
+
             </div>
         );
 
