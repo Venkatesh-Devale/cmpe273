@@ -1342,13 +1342,14 @@ router.post('/getuseraccountbalance', (req, res, next) => {
             var query = {username: req.body.user};
             dbo.collection("users").find(query).toArray( (err, result) => {
                 if(err) {
+                    db.close();
                     res.json('ERROR');
                 }
 
                 if(result.length > 0) {
                     console.log(result);
-                    res.json(result);
                     db.close();
+                    res.json(result);
                 }
             });
         }
@@ -1400,7 +1401,8 @@ router.post('/transact', (req, res, next) => {
                                username: req.body.employer,
                                projectname: req.body.projectname,
                                projectid: req.body.projectid,
-                               amount: req.body.bidamount
+                               amount: req.body.bidamount,
+                               date: new Date()
                            }).then( (result) => {
                                console.log("Transaction Insertion Successfull for worker");
                                console.log(result.insertedId);
@@ -1412,7 +1414,8 @@ router.post('/transact', (req, res, next) => {
                                    username: req.body.worker,
                                    projectname: req.body.projectname,
                                    projectid: req.body.projectid,
-                                   amount: req.body.bidamount
+                                   amount: req.body.bidamount,
+                                   date: new Date()
                                }).then( (result) => {
                                    console.log("Transaction Insertion Successfull for worker");
                                    console.log(result.insertedId);
@@ -1515,6 +1518,68 @@ router.get('/getuserimage', (req, res) => {
 });
 
 
+router.post('/gettransactionhistory', (req, res, next) => {
+    console.log("In gettransactionhistory", req.body);
+    mongoClient.connect(url, (err, db) => {
+        if(err) {
+            console.log(err);
+            db.close();
+            res.json('ERROR');
+        } else {
+            console.log("Connected to mongodb...");
+            var dbo = db.db('freelancer');
+            dbo.collection('transaction_history').find({username: req.body.user}).toArray((err, result) => {
+                if(err) {
+                    db.close();
+                    res.json('ERROR');
+                }
 
+                if(result.length > 0) {
+                    console.log(result);
+                    db.close();
+                    res.json(result);
+                } else {
+                    db.close();
+                    res.json('No transaction history for this user');
+                }
+            })
+        }
+    })
+});
+
+router.post('/updateuserbalance', (req, res, next) => {
+    console.log(req.body);
+    mongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        else {
+            var dbo = db.db("freelancer");
+            var myquery = { username: req.body.username };
+            var newvalues = {$set: { balance: req.body.amount}} ;
+            dbo.collection("users").updateOne(myquery, newvalues, function(err, result) {
+                if (err) {
+                    res.json('ERROR');
+                }
+                else {
+                    console.log("1 document updated", result.result);
+                    dbo.collection('transaction_history').insertOne({
+                        transactionid: req.body.transactionid,
+                        transactiontype: req.body.transactiontype,
+                        username: req.body.username,
+                        amount: req.body.transactedamount,
+                        date: new Date(),
+                        projectname: req.body.projectname,
+                    }).then( (result) => {
+                        console.log("Transaction Insertion Successfull for user");
+                        console.log(result.insertedId);
+                        db.close();
+                        res.json('UPDATE_SUCCESS');
+                    })
+
+                }
+
+            });
+        }
+    });
+});
 
 module.exports = router;

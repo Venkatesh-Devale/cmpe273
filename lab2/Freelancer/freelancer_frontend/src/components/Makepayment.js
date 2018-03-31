@@ -118,22 +118,22 @@ class Makepayment extends Component {
                     <form onSubmit={ this.handlePaymentSubmission }>
 
                         <div className="form-group">
-                            <label for="nameOnCard">Name on Card</label>
+                            <label htmlFor="nameOnCard">Name on Card</label>
                             <input type="text" className="form-control col-lg-5" id="nameOnCard"  />
                         </div>
 
                         <div className="form-group">
-                            <label for="crediCardNum">Credit Card Number</label>
+                            <label htmlFor="crediCardNum">Credit Card Number</label>
                             <input type="text" className="form-control col-lg-5" id="crediCardNum" />
                         </div>
 
                         <div className="form-group">
-                            <label for="cvv">CVV:</label>
+                            <label htmlFor="cvv">CVV:</label>
                             <input type="text" className="form-control col-sm-1" id="cvv" />
                         </div>
 
                         <div className="form-group">
-                            <label for="expiryMonth">Expiry Month:</label>
+                            <label htmlFor="expiryMonth">Expiry Month:</label>
                             <select className="form-control col-sm-1" id="expiryMonth">
                                 <option>01</option>
                                 <option>02</option>
@@ -152,7 +152,7 @@ class Makepayment extends Component {
                         </div>
 
                         <div className="form-group">
-                            <label for="expiryYear">Expiry Year:</label>
+                            <label htmlFor="expiryYear">Expiry Year:</label>
 
                             <select className="form-control col-sm-1" id="expiryYear">
                                 <option>2019</option>
@@ -172,7 +172,7 @@ class Makepayment extends Component {
                         </div>
 
                         <div className="form-group">
-                            <label for="bidamount">Amount to Pay:</label>
+                            <label htmlFor="bidamount">Amount to Pay:</label>
                             <input type="text" className="form-control col-sm-1" id="bidamount" disabled value={this.state.bidamount}/>
                         </div>
 

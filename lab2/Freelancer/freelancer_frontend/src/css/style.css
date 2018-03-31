@@ -144,10 +144,19 @@ img {
     background: white;
     margin-top: 1%;
 
-    margin-bottom: 20%;
+    margin-bottom: 20px;
     width: 1410px;
     height: auto;
     
+}
+
+#divTransactionsTable {
+    background: white;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+
+    height: auto;
 }
 
 .divDashboardProjectTable {
@@ -229,6 +238,11 @@ img {
 }
 
 #divPaymentForm {
-    margin-top: 100px;
+    margin-top: 50px;
     margin-left: 100px;
+}
+
+#divTransactionManager {
+    margin-top: 50px;
+    margin-left: 20px;
 }

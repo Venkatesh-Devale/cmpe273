@@ -144,7 +144,7 @@ class Userhome extends Component {
 
                 </div>
 
-                <Pagination items={this.state.projects} onChangePage={this.onChangePage} />
+
 
                <div className='divProjectTable'>
 
@@ -165,6 +165,8 @@ class Userhome extends Component {
                     </table>
 
                </div>
+
+                <Pagination items={this.state.projects} onChangePage={this.onChangePage} />
 
 
 

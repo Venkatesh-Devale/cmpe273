@@ -12,6 +12,7 @@ import Dashboardfreelancer from './Dashboardfreelancer';
 import Myrelevantprojects from './Myrelevantprojects';
 import Myassignedprojects from "./Myassignedprojects";
 import Makepayment from "./Makepayment";
+import Transactionmanager from './Transactionmanager';
 
 const Main = () => (
     <div> 
@@ -31,6 +32,7 @@ const Main = () => (
             <Route path='/myrelevantprojects' component={ Myrelevantprojects } />
             <Route path='/myassignedprojects' component={ Myassignedprojects } />
             <Route path='/makepayment/:value/' component={ Makepayment }/>
+            <Route path='/transactionmanager' component={ Transactionmanager } />
         </Switch>
     
     </div>
