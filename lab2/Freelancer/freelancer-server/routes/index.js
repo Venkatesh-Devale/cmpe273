@@ -52,6 +52,21 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+
+router.post('/checkexistinguser', (req, res, next) => {
+   console.log('In checkexistinguser...', req.body);
+   mongoClient.connect(url, (err, db) => {
+      var dbo = db.db('freelancer');
+      dbo.collection('users').find({username: req.body.username}).toArray((err, result) => {
+          if(result.length !== 0) {
+              res.json('Username already exists');
+          } else {
+              res.json('Username does not exists');
+          }
+      })
+   });
+});
+
 router.post('/signup', function(req, res, next) {
   console.log(req.body);
 
@@ -1471,52 +1486,6 @@ router.post('/getSearchCriteria', (req, res, next) => {
 
 });
 
-router.post('/saveimage', (req, res) => {
-  console.log("hello");
-  let image_form = new multiparty.Form();
-  image_form.parse(req, (err, fields, files) => {
-    console.log(files);
-  let { path: tempPath, originalFilename } = files.filevalue[0];
-  var fileType = originalFilename.split(".");
-  console.log(fileType)
-  let copyToPath = "./images/" + fields.username[0] + "." + fileType[fileType.length - 1];
-  //add path (copyToPath) to database pending 
-  console.log(copyToPath);
-  fs.readFile(tempPath, (err, data) => {
-    if (err) throw err;
-    fs.writeFile(copyToPath, data, (err) => {
-      if (err) throw err;
-      // delete temp image
-      fs.unlink(tempPath, () => {
-      });
-      connectionPool.getConnection(function(err, connection){
-        var sql = "update users set image_name='" + fields.username[0] + "." + fileType[fileType.length - 1] +   "' where username = '" +  fields.username[0] + "'";
-        connection.query(sql,function(err,rows){
-          if(err) throw err;
-          connection.release();
-          console.log(rows);
-        });
-        res.json({message: 'Image Uploaded', fileType: fileType[fileType.length - 1]});
-        });
-       });
-    });
-  console.log("In /saveImage... ", req.body);
-  //res.json({message: "hello"});
-});
-});
-
-router.get('/getuserimage', (req, res) => {
-  connectionPool.getConnection(function(err, connection){
-    var sql = "select image_name from users where username='" + req.query.username + "'";
-    connection.query(sql,function(err,rows){
-      if(err) throw err;
-      connection.release();
-      console.log(rows);
-      res.json({image_name: rows[0]})
-    });
-  })
-});
-
 
 router.post('/gettransactionhistory', (req, res, next) => {
     console.log("In gettransactionhistory", req.body);
@@ -1581,5 +1550,102 @@ router.post('/updateuserbalance', (req, res, next) => {
         }
     });
 });
+
+
+
+router.post('/insertworkercomment', (req, res, next) => {
+    console.log(req.body);
+
+    mongoClient.connect(url, (err, db) => {
+        if(err) {
+            console.log(err);
+            res.json('ERROR');
+        } else {
+            var dbo = db.db('freelancer');
+            dbo.collection('projects').updateOne(
+                {id: req.body.projectid},
+                {$set: {comment: req.body.comment}}, function(err, result) {
+                    if(err) {
+                        console.log(err);
+                        res.json('ERROR');
+                    } else {
+                        console.log(result.result);
+                        res.json('Comment Updated Successfully');
+                    }
+                })
+        }
+    })
+
+});
+
+
+router.post('/getworkercomment', (req, res, next) => {
+    console.log(req.body);
+    mongoClient.connect(url, (err, db) => {
+        if(err) {
+            console.log(err);
+            res.json('ERROR');
+        } else {
+            var dbo = db.db('freelancer');
+            dbo.collection('projects').find({id: req.body.projectid}).toArray(function(err, result) {
+                if(err) {
+                    console.log(err);
+                    res.json('ERROR');
+                } else {
+                    console.log(result[0]);
+                    res.json(result[0].comment);
+                }
+            })
+        }
+    })
+});
+
+//mysql yet to convert to mongo
+router.post('/saveimage', (req, res) => {
+    console.log("hello");
+    let image_form = new multiparty.Form();
+    image_form.parse(req, (err, fields, files) => {
+        console.log(files);
+        let { path: tempPath, originalFilename } = files.filevalue[0];
+        var fileType = originalFilename.split(".");
+        console.log(fileType)
+        let copyToPath = "./images/" + fields.username[0] + "." + fileType[fileType.length - 1];
+        //add path (copyToPath) to database pending
+        console.log(copyToPath);
+        fs.readFile(tempPath, (err, data) => {
+            if (err) throw err;
+            fs.writeFile(copyToPath, data, (err) => {
+                if (err) throw err;
+                // delete temp image
+                fs.unlink(tempPath, () => {
+                });
+                connectionPool.getConnection(function(err, connection){
+                    var sql = "update users set image_name='" + fields.username[0] + "." + fileType[fileType.length - 1] +   "' where username = '" +  fields.username[0] + "'";
+                    connection.query(sql,function(err,rows){
+                        if(err) throw err;
+                        connection.release();
+                        console.log(rows);
+                    });
+                    res.json({message: 'Image Uploaded', fileType: fileType[fileType.length - 1]});
+                });
+            });
+        });
+        console.log("In /saveImage... ", req.body);
+        //res.json({message: "hello"});
+    });
+});
+
+router.get('/getuserimage', (req, res) => {
+    connectionPool.getConnection(function(err, connection){
+        var sql = "select image_name from users where username='" + req.query.username + "'";
+        connection.query(sql,function(err,rows){
+            if(err) throw err;
+            connection.release();
+            console.log(rows);
+            res.json({image_name: rows[0]})
+        });
+    })
+});
+
 
 module.exports = router;
