@@ -4,6 +4,7 @@ import Usernavbar from './UserNavbar';
 import axios from 'axios';
 import uuid from 'uuid';
 import Pagination from './Pagination';
+import Piechart from './Piechart';
 
 class Transactionmanager extends Component {
 
@@ -81,7 +82,7 @@ class Transactionmanager extends Component {
         console.log("In handleAddMoney...", this.state.amount);
         var user = {
             username: this.state.username,
-            transactedamount: this.state.amount,
+            transactedamount: Number(this.state.amount),
             amount: Number(this.state.amount) + this.state.userbalance,
             transactionid: uuid.v4(),
             transactiontype: 'credit',
@@ -102,7 +103,7 @@ class Transactionmanager extends Component {
         console.log("In handleWithdrawMoney...", this.state.amount);
         var user = {
             username: this.state.username,
-            transactedamount: this.state.amount,
+            transactedamount: Number(this.state.amount),
             amount: this.state.userbalance - Number(this.state.amount),
             transactionid: uuid.v4(),
             transactiontype: 'debit',
@@ -298,6 +299,9 @@ class Transactionmanager extends Component {
 
                 </div>
                 <Pagination items={this.state.transactions} onChangePage={this.onChangePage} />
+
+
+                    <Piechart data={this.state.transactions}/>
 
 
             </div>
