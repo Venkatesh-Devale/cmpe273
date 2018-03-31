@@ -13,11 +13,11 @@ class Signup extends Component {
         this.state = {
             username:"",
             password:"",
-            emailid:"",
-            radioHireOrEmployer:""
+            emailid:""
            
         }
     }
+
 
     handleChange = (events) => {
         
@@ -27,6 +27,8 @@ class Signup extends Component {
             
             
     }
+
+
     
     createUser = (events) => {
         events.preventDefault();
@@ -35,10 +37,25 @@ class Signup extends Component {
         const userDetails = {
             username: this.state.username,
             password: this.state.password,
-            emailid: this.state.emailid,
-            radioHireOrEmployer: this.state.radioHireOrEmployer
+            emailid: this.state.emailid
+
         }
-        this.props.insertUser(userDetails);
+        axios.post('http://localhost:3001/checkexistinguser', userDetails, {withCredentials: true})
+            .then((response) => {
+                if(response.data === 'Username already exists') {
+                    alert(response.data + " Please try different username");
+                    document.getElementById('txtEmailId').value = '';
+                    document.getElementById('txtUserName').value = '';
+                    document.getElementById('txtPassword').value = '';
+
+                } else {
+
+                    this.props.insertUser(userDetails);
+                }
+
+            })
+
+
     }
 
     render() {
@@ -98,7 +115,6 @@ function mapStateToProps(state) {
         username: state.username,
         password: state.password,
         emailid: state.emailid,
-        radioHireOrEmployer: state.radioHireOrEmployer,
         signupSuccess: state.signup_success
     }
 }
@@ -110,6 +126,7 @@ function mapDispatchToProps(dispatch) {
         axios.post('http://localhost:3001/signup', newUser, {withCredentials: true})
             .then((response) => {
             console.log(response);
+            alert("Registered Successfully");
             dispatch({type: 'SIGNUP_SUCCESS',payload : response})
         });
     }
