@@ -66,16 +66,16 @@ class Myassignedprojects extends Component {
                                 <p><Link to={`/userprofile/${p.employer}`}> {p.employer} </Link></p>
                             </div>
                         </td>
-                        <td>
-                            <div>
-                                <p>{p.number_of_bids}</p>
-                            </div>
-                        </td>
-                        <td>
-                            <div>
-                                <p>{p.budgetrange}</p>
-                            </div>
-                        </td>
+                        {/*<td>*/}
+                            {/*<div>*/}
+                                {/*<p>{p.number_of_bids}</p>*/}
+                            {/*</div>*/}
+                        {/*</td>*/}
+                        {/*<td>*/}
+                            {/*<div>*/}
+                                {/*<p>{p.budgetrange}</p>*/}
+                            {/*</div>*/}
+                        {/*</td>*/}
 
                     </tr>
                 );
@@ -89,15 +89,15 @@ class Myassignedprojects extends Component {
                 { redirect }
                 <Navbar />
                 <UserNavbar />
-                <div className='divProjectTable'>
+                <div id='myAssignedProjectsTable'>
 
                     <table className='table table-hover'>
                         <thead>
                         <tr className='table-secondary'>
-                            <th id='projectNameColomn'>Project Name</th>
+                            <th id='assignedproject'>Project Name</th>
                             <th id='employerColomn'>Employer</th>
-                            <th id='numberOfBidsColomn'>Number of Bids</th>
-                            <th id='budgetRangeColomn'>Budget Range</th>
+                            {/*<th id='numberOfBidsColomn'>Number of Bids</th>*/}
+                            {/*<th id='budgetRangeColomn'>Budget Range</th>*/}
                         </tr>
                         </thead>
                         <tbody>

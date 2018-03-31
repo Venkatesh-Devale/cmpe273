@@ -46,6 +46,7 @@ class Myrelevantprojects extends Component {
 
     render() {
         let relevantProjectsToShow = [];
+
         let redirect = null;
         if(localStorage.getItem("username") === null) {
             redirect = <Redirect to="/login" />
@@ -109,6 +110,7 @@ class Myrelevantprojects extends Component {
                         </thead>
                         <tbody>
                         { relevantProjectsToShow }
+
                         </tbody>
 
                     </table>
