@@ -5,7 +5,8 @@ import axios from 'axios';
 import '../css/style.css';
 import Bidnow from './Bidnow';
 import ListAllBids from './ListAllBids';
-import Submissionpanel from "./Submissionpanel";
+import Submissionpanelworker from "./Submissionpanelworker";
+import Submissionpanelemployer from "./Submissionpanelemployer";
 
 
 
@@ -146,13 +147,12 @@ class Projectdetailspage extends Component {
                                 {this.state.average}
                             </p>
                         </div>
-                        {/*<div id = 'div1' >*/}
 
-                                {/*<button type="submit" class="btn btn-secondary" onClick={this.handlePayment} >Make Payment</button>*/}
-
-                        {/*</div>*/}
                         { changes }
                     </div>
+
+                    <Submissionpanelemployer projectid={this.state.projectId} employer={this.state.employer} worker={this.state.worker}/>
+
                 </div>
 
             </div>
@@ -206,7 +206,7 @@ class Projectdetailspage extends Component {
                             </p>
                         </div>
                     </div>
-                    <Submissionpanel />
+                    <Submissionpanelworker projectid={this.state.projectId} employer={this.state.employer} worker={this.state.worker}/>
                 </div>
 
             </div>
