@@ -2,10 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7b3fbad4-39c2-4f3f-83c0-7345003dc8ed" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/routes/index.js" afterPath="$PROJECT_DIR$/routes/index.js" />
-      <change beforePath="$PROJECT_DIR$/../freelancer_frontend/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../freelancer_frontend/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/../freelancer_frontend/src/components/Dashboard.js" afterPath="$PROJECT_DIR$/../freelancer_frontend/src/components/Dashboard.js" />
-      <change beforePath="$PROJECT_DIR$/../freelancer_frontend/src/components/Dashboardfreelancer.js" afterPath="$PROJECT_DIR$/../freelancer_frontend/src/components/Dashboardfreelancer.js" />
       <change beforePath="$PROJECT_DIR$/../freelancer_frontend/src/components/Transactionmanager.js" afterPath="$PROJECT_DIR$/../freelancer_frontend/src/components/Transactionmanager.js" />
       <change beforePath="$PROJECT_DIR$/../freelancer_frontend/src/components/Userhome.js" afterPath="$PROJECT_DIR$/../freelancer_frontend/src/components/Userhome.js" />
     </list>
@@ -204,12 +200,12 @@
       <workItem from="1522342747008" duration="9009000" />
       <workItem from="1522428490327" duration="13900000" />
       <workItem from="1522474218338" duration="6307000" />
-      <workItem from="1522516497202" duration="13125000" />
+      <workItem from="1522516497202" duration="13230000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="96482000" />
+    <option name="totallyTimeSpent" value="96587000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />

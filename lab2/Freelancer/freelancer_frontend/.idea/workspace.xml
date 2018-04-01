@@ -29,8 +29,8 @@
       <file leaf-file-name="Transactionmanager.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/Transactionmanager.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="392">
-              <caret line="120" column="18" lean-forward="false" selection-start-line="120" selection-start-column="18" selection-end-line="120" selection-end-column="18" />
+            <state relative-caret-position="580">
+              <caret line="122" column="0" lean-forward="true" selection-start-line="122" selection-start-column="0" selection-end-line="122" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -40,7 +40,7 @@
         <entry file="file://$PROJECT_DIR$/src/components/Dashboardfreelancer.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="412">
-              <caret line="160" column="187" lean-forward="true" selection-start-line="160" selection-start-column="165" selection-end-line="160" selection-end-column="187" />
+              <caret line="160" column="187" lean-forward="false" selection-start-line="160" selection-start-column="165" selection-end-line="160" selection-end-column="187" />
               <folding />
             </state>
           </provider>
@@ -227,12 +227,12 @@
       <workItem from="1522342889738" duration="16861000" />
       <workItem from="1522428606658" duration="14335000" />
       <workItem from="1522475452581" duration="9665000" />
-      <workItem from="1522516529057" duration="18645000" />
+      <workItem from="1522516529057" duration="18750000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="99256000" />
+    <option name="totallyTimeSpent" value="99361000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
@@ -671,7 +671,7 @@
     <entry file="file://$PROJECT_DIR$/src/components/Dashboardfreelancer.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="412">
-          <caret line="160" column="187" lean-forward="true" selection-start-line="160" selection-start-column="165" selection-end-line="160" selection-end-column="187" />
+          <caret line="160" column="187" lean-forward="false" selection-start-line="160" selection-start-column="165" selection-end-line="160" selection-end-column="187" />
           <folding />
         </state>
       </provider>
@@ -696,8 +696,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Transactionmanager.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="120" column="18" lean-forward="false" selection-start-line="120" selection-start-column="18" selection-end-line="120" selection-end-column="18" />
+        <state relative-caret-position="580">
+          <caret line="122" column="0" lean-forward="true" selection-start-line="122" selection-start-column="0" selection-end-line="122" selection-end-column="0" />
           <folding />
         </state>
       </provider>

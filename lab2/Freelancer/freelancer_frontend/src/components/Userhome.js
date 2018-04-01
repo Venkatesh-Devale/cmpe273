@@ -134,7 +134,7 @@ class Userhome extends Component {
                     <div className="row">
 
                             <div className="input-group">
-                                <input type="text" id = "idsearchText" name = "searchText" onChange={this.handleChange.bind(this)} className="form-control" placeholder="Search projects or technology..."/>
+                                <input type="text" id = "idsearchText" name = "searchText" onChange={this.handleChange.bind(this)} className="form-control" placeholder="search by project name or technology skillset"/>
                                 <span className="input-group-btn">
                               <button className="btn btn-secondary" onClick={this.handleSearch.bind(this)} type="button">Go!</button>
                             </span>
