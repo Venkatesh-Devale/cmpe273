@@ -162,15 +162,18 @@ img {
 .divDashboardProjectTable {
     background: white;
     margin-top: 5%;
-
-    margin-bottom: 20%;
+    margin-bottom: 20px;
     width: 1410px;
     height: auto;
     
 }
 
 #projectNameColomn {
-    width: 40%;
+    width: 30%;
+}
+
+#assignedproject {
+    width: 70%;
 }
 
 
@@ -190,6 +193,14 @@ img {
     padding: 10px;
     margin-bottom: 3%;
     width: 700px;
+    height: auto;
+}
+
+#myAssignedProjectsTable {
+    background: white;
+    margin-top: 50px;
+    margin-left: 50px;
+    width: 800px;
     height: auto;
 }
 
@@ -245,4 +256,17 @@ img {
 #divTransactionManager {
     margin-top: 50px;
     margin-left: 20px;
+}
+
+#incomingtransaction {
+    background-color: yellow;
+}
+
+#outgoingtransaction {
+    background-color: orange;
+}
+
+#divSubmissionPanel {
+    margin-left: 4%;
+    width: 1000px;
 }
