@@ -101,20 +101,27 @@ class Transactionmanager extends Component {
     handleWithdrawMoney(e) {
         e.preventDefault();
         console.log("In handleWithdrawMoney...", this.state.amount);
-        var user = {
-            username: this.state.username,
-            transactedamount: Number(this.state.amount),
-            amount: this.state.userbalance - Number(this.state.amount),
-            transactionid: uuid.v4(),
-            transactiontype: 'debit',
-            projectname: 'Money Withdrawn'
+
+        if(this.state.userbalance <= 0) {
+            alert("Insufficient funds to deduct, Please add money first");
+        } else {
+            var user = {
+                username: this.state.username,
+                transactedamount: Number(this.state.amount),
+                amount: this.state.userbalance - Number(this.state.amount),
+                transactionid: uuid.v4(),
+                transactiontype: 'debit',
+                projectname: 'Money Withdrawn'
+            }
+            axios.post("http://localhost:3001/updateuserbalance", user, {withCredentials: true})
+                .then((response) => {
+                    console.log(response);
+                    alert("Amount debited Successfully...");
+                    window.location.reload(true);
+                })
         }
-        axios.post("http://localhost:3001/updateuserbalance", user, {withCredentials: true})
-            .then((response) => {
-                console.log(response);
-                alert("Amount debited Successfully...");
-                window.location.reload(true);
-            })
+
+
     }
 
 
