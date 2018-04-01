@@ -14,40 +14,55 @@ class Dashboardfreelancer extends Component {
             projects : [],
             employerButtonClicked: false,
             searchText:'',
-            pageOfItems: []
+            pageOfItems: [],
+            username: ''
         };
-
+        this.getmybiddedprojects = this.getmybiddedprojects.bind(this);
         this.onChangePage = this.onChangePage.bind(this);
     }
 
     componentWillMount() {
-        
-        if(localStorage.getItem("username") === null) {
-            this.props.history.push('/login');
-        } else {
-            console.log('In my Dashboardfreelancer...');
-            const userDetails = {
-                username: localStorage.getItem('username')
-            }
-            axios.post('http://localhost:3001/getmybiddedprojects', userDetails, {withCredentials: true})
-            .then((response) => {
-                console.log('Showing all bidded projects',response.data);
-                if(response.data === 'ERROR') {
-                    let emptyProject = [];
-                    emptyProject.push('No projects to show');
-                    this.setState({
-                        projects: emptyProject
-                    })
+        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+            .then( (response) => {
+                console.log("In render dashboardfreelancer component will mount...", response.data.session.username);
+                if(response.data.session === "ERROR") {
+                    this.props.history.push('/login');
                 } else {
                     this.setState({
-                        projects: response.data
+                        username: response.data.session.username
                     }, () => {
-                        console.log('All projects you have bidded on to:', this.state.projects);
+                        this.getmybiddedprojects();
                     })
+
                 }
             })
-        }
             
+    }
+
+    getmybiddedprojects() {
+
+            console.log('In my Dashboardfreelancer...');
+            const userDetails = {
+                username: this.state.username
+            }
+            axios.post('http://localhost:3001/getmybiddedprojects', userDetails, {withCredentials: true})
+                .then((response) => {
+                    console.log('Showing all bidded projects',response.data);
+                    if(response.data === 'ERROR') {
+                        let emptyProject = [];
+                        emptyProject.push('No projects to show');
+                        this.setState({
+                            projects: emptyProject
+                        })
+                    } else {
+                        this.setState({
+                            projects: response.data
+                        }, () => {
+                            console.log('All projects you have bidded on to:', this.state.projects);
+                        })
+                    }
+                })
+
     }
 
     onChangePage(pageOfItems) {
@@ -71,9 +86,10 @@ class Dashboardfreelancer extends Component {
         e.preventDefault();
         console.log("In handleSearch", this.state.searchText);
         const search = {
-            search: this.state.searchText
+            search: this.state.searchText,
+            username: localStorage.getItem('username')
         }
-        axios.post("http://localhost:3001/getSearchCriteria", search, { withCredentials: true})
+        axios.post("http://localhost:3001/getSearchCriteriaForFreelancerDashboard", search, { withCredentials: true})
             .then((response) => {
                 console.log(response.data);
                 if(response.data.length !== 0) {
@@ -142,7 +158,7 @@ class Dashboardfreelancer extends Component {
                     <div className="row">
 
                         <div className="input-group">
-                            <input type="text" id = "idsearchText" name = "searchText" onChange={this.handleChange.bind(this)} className="form-control" placeholder="Search projects or technology..."/>
+                            <input type="text" id = "idsearchText" name = "searchText" onChange={this.handleChange.bind(this)} className="form-control" placeholder="search by project name"/>
                             <span className="input-group-btn">
                               <button className="btn btn-secondary" onClick={this.handleSearch.bind(this)} type="button">Go!</button>
                             </span>

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import '../css/style.css';
 import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Pagination from './Pagination';
 
@@ -15,7 +15,8 @@ class Dashboard extends Component {
             projects: [],
             freelancerButtonClicked: false,
             searchText:'',
-            pageOfItems: []
+            pageOfItems: [],
+            username: ''
         };
 
         this.getAllPublishedProjects = this.getAllPublishedProjects.bind(this);
@@ -23,7 +24,21 @@ class Dashboard extends Component {
     }
 
     componentWillMount() {
-        this.getAllPublishedProjects();
+        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+            .then( (response) => {
+                console.log("In render dashboard component will mount...", response.data.session.username);
+                if(response.data.session === "ERROR") {
+                    this.props.history.push('/login');
+                } else {
+                    this.setState({
+                        username: response.data.session.username
+                    }, () => {
+                        this.getAllPublishedProjects();
+                    })
+
+                }
+            })
+
     }
 
     onChangePage(pageOfItems) {
@@ -34,7 +49,7 @@ class Dashboard extends Component {
     getAllPublishedProjects() {
         console.log('In my Dashboard');
         const userDetails = {
-            username: localStorage.getItem('username')
+            username: this.state.username
         }
         axios.post('http://localhost:3001/getmypublishedprojects', userDetails, {withCredentials: true})
             .then((response) => {
@@ -69,9 +84,10 @@ class Dashboard extends Component {
         e.preventDefault();
         console.log("In handleSearch", this.state.searchText);
         const search = {
-            search: this.state.searchText
+            search: this.state.searchText,
+            username: this.state.username
         }
-        axios.post("http://localhost:3001/getSearchCriteria", search, { withCredentials: true})
+        axios.post("http://localhost:3001/getSearchCriteriaForDashBoard", search, { withCredentials: true})
             .then((response) => {
                 console.log(response.data);
                 if(response.data.length !== 0) {
@@ -90,10 +106,10 @@ class Dashboard extends Component {
 
 
     render() {
-        let redirect = null;
-        if(localStorage.getItem("username") === null) {
-            redirect = <Redirect to="/login" />
-        }
+        // let redirect = null;
+        // if(this.state.username === '') {
+        //     redirect = <Redirect to="/login" />
+        // }
         if(this.state.freelancerButtonClicked === true)
             this.props.history.push('/dashboardfreelancer');
         let projectsToShow = [];
@@ -148,7 +164,7 @@ class Dashboard extends Component {
 
         return(
             <div className="Dashboard">
-                { redirect }
+
                 <Navbar />
                 <UserNavbar />
                 <div className='divBtnEmployerOrFreelancer'>
@@ -162,7 +178,7 @@ class Dashboard extends Component {
                     <div className="row">
 
                         <div className="input-group">
-                            <input type="text" id = "idsearchText" name = "searchText" onChange={this.handleChange.bind(this)} className="form-control" placeholder="Search projects or technology..."/>
+                            <input type="text" id = "idsearchText" name = "searchText" onChange={this.handleChange.bind(this)} className="form-control" placeholder="search by project name"/>
                             <span className="input-group-btn">
                               <button className="btn btn-secondary" onClick={this.handleSearch.bind(this)} type="button">Go!</button>
                             </span>
