@@ -7,7 +7,7 @@ import '../css/style.css';
 import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
 
-class Userprofile extends Component {
+class Myprofile extends Component {
     constructor() {
         super();
         this.state = {
@@ -22,7 +22,7 @@ class Userprofile extends Component {
             disabled: true,
         }
     }
-    
+
     componentWillMount() {
 
         let usernameFromSession = this.props.match.params.value;
@@ -32,16 +32,16 @@ class Userprofile extends Component {
             username: usernameFromSession
         }
         axios.post('http://localhost:3001/getprofile', usernameJSON, {withCredentials: true})
-        .then((response) => {
-            console.log('Userdetails retrieved from username in userprofile  ', response.data[0])
-            this.setState({
-                username: response.data[0].username,
-                email: response.data[0].email,
-                phone: response.data[0].phone,
-                aboutme: response.data[0].aboutme,
-                skills: response.data[0].skills
+            .then((response) => {
+                console.log('Userdetails retrieved from username in userprofile  ', response.data[0])
+                this.setState({
+                    username: response.data[0].username,
+                    email: response.data[0].email,
+                    phone: response.data[0].phone,
+                    aboutme: response.data[0].aboutme,
+                    skills: response.data[0].skills
+                })
             })
-        })
     }
 
 
@@ -52,7 +52,7 @@ class Userprofile extends Component {
         })
     }
 
-    cancel() {  
+    cancel() {
         this.setState({
             editing: false,
             disabled: true
@@ -102,60 +102,60 @@ class Userprofile extends Component {
         if(this.state.editing === false) {
             buttons = (
                 <div className="form-group">
-                                <div className="btn-group btn-group-justified">
-            
-                                      { editButton }  
-            
-                                </div>
-                                
-                            </div>
+                    <div className="btn-group btn-group-justified">
+
+                        { editButton }
+
+                    </div>
+
+                </div>
             )
         } else {
             buttons = (
                 <div className="form-group">
-                                <div className="btn-group btn-group-justified">
-                                    <div className="btn-group">
-                                        <button type="button" onClick={this.saveUpdatedUser.bind(this)} className="btn btn-primary form-control"><label>Save</label></button>
-                                    </div>
-                                    <div className="btn-group">
-                                        <button type="button" onClick={this.cancel.bind(this)} className="btn btn-primary form-control"><label>Cancel</label></button>
-                                    </div>
-                                </div>
-                                
-                            </div> 
+                    <div className="btn-group btn-group-justified">
+                        <div className="btn-group">
+                            <button type="button" onClick={this.saveUpdatedUser.bind(this)} className="btn btn-primary form-control"><label>Save</label></button>
+                        </div>
+                        <div className="btn-group">
+                            <button type="button" onClick={this.cancel.bind(this)} className="btn btn-primary form-control"><label>Cancel</label></button>
+                        </div>
+                    </div>
+
+                </div>
             )
         }
 
-       
+
 
         return (
 
-            <div className = 'Userprofile'>
-            { redirect }
+            <div className = 'Myprofile'>
+                { redirect }
                 <Navbar />
                 <UserNavbar />
                 <div className='container-fluid'>
                     <div className='row'>
                         { imageupload1 }
                         <div id='profileDescription'>
-                        <form >
-                            <div className="form-group">
-                                <div id='name'><h1>{this.state.username}</h1></div>
-                            </div>
-                            <div className="form-group">
-                                <label>About Me:  <span className="glyphicon glyphicon-edit"></span></label>
-                                <textarea id="txtaboutme" value={this.state.aboutme} disabled={this.state.disabled} onChange={this.handleChange} className="form-control" rows="5" name="aboutme" ></textarea>
-                            </div>
-                            <div className="form-group">
-                                <label>Email:  <span className="glyphicon glyphicon-edit"></span></label>    
-                                <input type="email"  ref="emailid"  value={this.state.email} disabled={this.state.disabled} onChange={this.handleChange} className="form-control" placeholder='Enter your email id'  id="txtEmailId" name="email" />
-                            </div>
-                            <div className="form-group">
-                                <label>Phone:  <span className="glyphicon glyphicon-edit"></span></label>
-                                <input type="text" ref="phone"  value={this.state.phone} disabled={this.state.disabled} onChange={this.handleChange} className="form-control" placeholder='Enter your phone number' id="txtPhone" name="phone" />
-                            </div>
-                            
-                        </form>
+                            <form >
+                                <div className="form-group">
+                                    <div id='name'><h1>{this.state.username}</h1></div>
+                                </div>
+                                <div className="form-group">
+                                    <label>About Me:  <span className="glyphicon glyphicon-edit"></span></label>
+                                    <textarea id="txtaboutme" value={this.state.aboutme} disabled={this.state.disabled} onChange={this.handleChange} className="form-control" rows="5" name="aboutme" ></textarea>
+                                </div>
+                                <div className="form-group">
+                                    <label>Email:  <span className="glyphicon glyphicon-edit"></span></label>
+                                    <input type="email"  ref="emailid"  value={this.state.email} disabled={this.state.disabled} onChange={this.handleChange} className="form-control" placeholder='Enter your email id'  id="txtEmailId" name="email" />
+                                </div>
+                                <div className="form-group">
+                                    <label>Phone:  <span className="glyphicon glyphicon-edit"></span></label>
+                                    <input type="text" ref="phone"  value={this.state.phone} disabled={this.state.disabled} onChange={this.handleChange} className="form-control" placeholder='Enter your phone number' id="txtPhone" name="phone" />
+                                </div>
+
+                            </form>
                         </div>
                         <div id='profileSkillsAndEditButton'>
                             {buttons}
@@ -186,15 +186,15 @@ function mapDispatchToProps(dispatch) {
         saveUpdatedUser: (user) => {
             console.log("In saveUpdatedUser:",user);
             axios.post('http://localhost:3001/updateprofile', user, {withCredentials: true})
-            .then((response) => {
-                console.log(response);
-                dispatch({
-                    type:'UPDATE_PROFILE_SUCCESS',
-                    payload: response
+                .then((response) => {
+                    console.log(response);
+                    dispatch({
+                        type:'UPDATE_PROFILE_SUCCESS',
+                        payload: response
+                    })
                 })
-            })
         }
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Userprofile);
+export default connect(mapStateToProps, mapDispatchToProps)(Myprofile);

@@ -10,7 +10,8 @@ class Navbar extends Component {
     constructor() {
         super();
         this.state = {
-            isLoggedIn: false
+            isLoggedIn: false,
+            username: ''
         }
     }
 
@@ -20,7 +21,8 @@ class Navbar extends Component {
             console.log("In navbar component will mount..."+ response.data.session.username);
             if(response.data.session !== "ERROR") {
                 this.setState({
-                    isLoggedIn: true
+                    isLoggedIn: true,
+                    username: response.data.session.username
                 })
             } else {
                 this.setState({
@@ -60,7 +62,7 @@ class Navbar extends Component {
         } else {
             changes = (
                 <ul className="nav navbar-nav navbar-right">
-                    <li className='nav-item mr-4'><Link className='text-dark' to={`/userprofile/${ localStorage.getItem('username') }`}><span className="glyphicon glyphicon-user"></span> My Profile</Link></li>
+                    <li className='nav-item mr-4'><Link className='text-dark' to={`/myprofile/${ this.state.username }`}><span className="glyphicon glyphicon-user"></span> My Profile</Link></li>
                     <li className='nav-item mr-4'><a className='text-dark' onClick={this.handleLogout} href="/"><span className="glyphicon glyphicon-log-out"></span> Logout</a></li>
                     
                 </ul>

@@ -255,10 +255,10 @@ router.post('/logout', (req, res) => {
 router.post('/updateprofile', function(req, res, next) {
   console.log(req.body);
   const username = req.body.username;
-  const email = req.body.email[0];
-  const phone = req.body.phone[0];
-  const aboutme = req.body.aboutme[0];
-  const skills = req.body.skills[0];
+  const email = req.body.email;
+  const phone = req.body.phone;
+  const aboutme = req.body.aboutme;
+  const skills = req.body.skills;
 
   // connectionPool.getConnection((err, connection) => {
   //   if(err) {
@@ -465,7 +465,7 @@ router.post('/getallrelevantopenprojects', function(req, res, next) {
                 else {
                         userSkillsArray = userSkills.split(",");
                         console.log("User Skills Array...", userSkillsArray);
-                        dbo.collection("projects").find({}).toArray( (err, result) => {
+                        dbo.collection("projects").find({open:'open'}).toArray( (err, result) => {
                             if(err) {
                                 console.log(err);
                                 res.json('ERROR');

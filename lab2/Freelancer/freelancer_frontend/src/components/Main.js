@@ -13,6 +13,7 @@ import Myrelevantprojects from './Myrelevantprojects';
 import Myassignedprojects from "./Myassignedprojects";
 import Makepayment from "./Makepayment";
 import Transactionmanager from './Transactionmanager';
+import Myprofile from './Myprofile';
 
 const Main = () => (
     <div> 
@@ -23,12 +24,13 @@ const Main = () => (
             <Route path='/signup' component={ Signup } />
             <Route path='/dashboard' component={ Dashboard } />
             <Route path='/userhome' component={ Userhome } />
+            <Route path='/myprofile/:value/' component={ Myprofile } />
             <Route path='/userprofile/:value/' component={ Userprofile } />
-            <Route path='/userprofile' component={ Userprofile } />
+            {/*<Route path='/userprofile' component={ Userprofile } />*/}
             <Route path='/postproject' component={ Postproject } />
             <Route path='/projectdetails/:value/' component={ Projectdetailspage } />
             <Route path='/dashboardfreelancer' component={ Dashboardfreelancer } />
-            <Route path='/projectdetails' component={ Projectdetailspage } />
+            {/*<Route path='/projectdetails' component={ Projectdetailspage } />*/}
             <Route path='/myrelevantprojects' component={ Myrelevantprojects } />
             <Route path='/myassignedprojects' component={ Myassignedprojects } />
             <Route path='/makepayment/:value/' component={ Makepayment }/>
