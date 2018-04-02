@@ -270,3 +270,12 @@ img {
     margin-left: 4%;
     width: 1000px;
 }
+
+#btnSortAsc {
+    float: right;
+}
+
+#divFilterOnStatus {
+    margin-left: 5px;
+    margin-top: 5px;
+}

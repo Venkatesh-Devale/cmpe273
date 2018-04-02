@@ -101,7 +101,7 @@ function mapDispatchToProps(dispatch) {
              .then((response) => {
                  console.log("After login dispatch", response.data);
              if(response.data === 'ERROR') {
-                alert('Error in logging in..check username and password.')
+                alert('Error in logging in..check username, password.')
                 dispatch({type: 'ERROR',payload : response})
              }
              else {
