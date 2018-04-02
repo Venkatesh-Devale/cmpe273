@@ -16,11 +16,14 @@ class Dashboard extends Component {
             freelancerButtonClicked: false,
             searchText:'',
             pageOfItems: [],
-            username: ''
+            username: '',
+            allprojects:[]
         };
 
         this.getAllPublishedProjects = this.getAllPublishedProjects.bind(this);
         this.onChangePage = this.onChangePage.bind(this);
+        this.getFilterProject = this.getFilterProject.bind(this);
+        this.setProjectsAfterFiltering = this.setProjectsAfterFiltering.bind(this);
     }
 
     componentWillMount() {
@@ -53,19 +56,59 @@ class Dashboard extends Component {
         }
         axios.post('http://localhost:3001/getmypublishedprojects', userDetails, {withCredentials: true})
             .then((response) => {
-                console.log(response.data);
+                console.log("After getting my published projects",response.data);
                 if(response.data === 'ERROR') {
                     let emptyProject = [];
                     //emptyProject.push('No projects to show');
                     this.setState({
-                        projects: emptyProject
+                        projects: emptyProject,
+                        allprojects: []
                     })
                 } else {
                     this.setState({
-                        projects: response.data
+                        projects: response.data,
+                        allprojects: response.data
                     })
                 }
             })
+    }
+
+    setProjectsAfterFiltering(tempProjects, filter) {
+        var finalArrayToShow = [];
+        for(var i = 0; i < tempProjects.length; i++) {
+            if(tempProjects[i].open === filter) {
+                finalArrayToShow.push(tempProjects[i]);
+            }
+        }
+        this.setState({
+            projects: finalArrayToShow
+        })
+    }
+
+    getFilterProject() {
+
+        var tempProjects = this.state.allprojects;
+
+        if(document.getElementById("checkboxOpen").checked && document.getElementById("checkboxClosed").checked) {
+            console.log("Both checkbox checked");
+            this.setState({
+                projects: this.state.allprojects
+            })
+        }
+        else if(document.getElementById("checkboxClosed").checked) {
+            console.log("Closed checkbox checked");
+            this.setProjectsAfterFiltering(tempProjects, 'closed');
+        }
+        else if(document.getElementById("checkboxOpen").checked) {
+            console.log("Open checkbox checked");
+            this.setProjectsAfterFiltering(tempProjects, 'open');
+        } else {
+            console.log("No checkbox checked");
+            this.setState({
+                projects: this.state.allprojects
+            })
+        }
+
     }
 
     handleChange(e) {
@@ -92,11 +135,13 @@ class Dashboard extends Component {
                 console.log(response.data);
                 if(response.data.length !== 0) {
                     this.setState({
-                        projects: response.data
+                        projects: response.data,
+                        allprojects: response.data
                     })
                 } else {
                     this.setState({
-                        projects: []
+                        projects: [],
+                        allprojects: []
                     })
                 }
 
@@ -186,6 +231,17 @@ class Dashboard extends Component {
 
                     </div>
 
+                </div>
+
+                <div id="divFilterOnStatus" className="row">
+                    <form>
+                        <label className="checkbox-inline mr-4">
+                            <input type="checkbox" id="checkboxOpen" onClick={ this.getFilterProject } value="open"/>  Open Projects
+                        </label>
+                        <label className="checkbox-inline">
+                            <input type="checkbox" id="checkboxClosed" onClick={ this.getFilterProject } value="closed" />  Closed Projects
+                        </label>
+                    </form>
                 </div>
 
                 <div className='divDashboardProjectTable'>

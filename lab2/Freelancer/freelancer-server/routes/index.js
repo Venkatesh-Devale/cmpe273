@@ -154,6 +154,10 @@ passport.use(new LocalStrategy( function(username, password, done) {
                     return done(err, false);
                 }
 
+                if(result.length === 0) {
+                    return done(err, false);
+                }
+
                 if(result.length > 0) {
                     console.log(result[0].username);
                     var hash = result[0].password;
@@ -402,50 +406,32 @@ router.post('/postproject', function(req, res, next) {
 });
 
 
-router.post('/getallopenprojects', function(req, res, next) {
-  console.log('In getallopenprojects');
-  // connectionPool.getConnection((err, connection) => {
-  //   if(err) {
-  //     res.json({
-  //       code : 100,
-  //       status : "Error in connecting to database"
-  //     });
-  //
-  //   } else {
-  //     console.log('Connected to database with thread '+ connection.threadId);
-  //     var sql = 'SELECT * from projects WHERE open = ' + mysql.escape('open');
-  //     connection.query(sql, (err, result) => {
-  //       if(result.length == 0) {
-  //         res.json('ERROR');
-  //       }
-  //       else {
-  //         console.log(result);
-  //         res.json(result);
-  //       }
-  //     });
-  //
-  //   }
-  // });
-
+router.post('/getallprojects', function(req, res, next) {
+    console.log('In getallprojects', req.body);
     mongoClient.connect(url, (err, db) => {
-        if(err) throw err;
+        if(err) {
+            db.close();
+            throw err;
+        }
         else {
             console.log("Connected to mongodb...");
             var dbo = db.db("freelancer");
-            var query = {open: "open"};
-            dbo.collection("projects").find(query).toArray( (err, result) => {
+
+            dbo.collection("projects").find({}).toArray( (err, result) => {
                 if(err) {
+                    db.close();
                     res.json('ERROR');
                 }
 
                 if(result.length > 0) {
                     console.log("In mongos get all open projects...",result);
-                    res.json(result);
                     db.close();
+                    res.json(result);
                 }
             });
         }
     });
+
 });
 
 
@@ -532,33 +518,6 @@ router.post('/getallrelevantopenprojects', function(req, res, next) {
 
 router.post('/getmypublishedprojects', function(req, res, next) {
   console.log('In getmypublishedprojects');
-  // connectionPool.getConnection((err, connection) => {
-  //   if(err) {
-  //     res.json({
-  //       code : 100,
-  //       status : "Error in connecting to database"
-  //     });
-  //
-  //   } else {
-  //     console.log('Connected to database with thread '+ connection.threadId);
-  //     var sql = 'select * from projects left join (select projectid, sum(bidamount)/count(projectid) as average from bids group by projectid) as t' +
-  //               ' on projects.id = t.projectid where employer = ' +  mysql.escape(req.body.username);
-  //
-  //
-  //     connection.query(sql, (err, result) => {
-  //       if(result.length == 0) {
-  //         console.log("In getmypublished projects...1",result);
-  //         res.json('ERROR');
-  //       }
-  //       else {
-  //         console.log("In getmypublished projects...2",result);
-  //         res.json(result);
-  //       }
-  //     });
-  //
-  //   }
-  // })
-
     mongoClient.connect(url, (err, db) => {
         if(err) throw err;
         else {
@@ -1239,30 +1198,7 @@ router.post('/getspecificbidforproject', (req, res, next) => {
 
 router.post('/setworkerforproject', (req, res, next) => {
   console.log(req.body);
-  // connectionPool.getConnection( (err, connection) => {
-  //   if(err) {
-  //     res.json('Error connecting to database...')
-  //   } else {
-  //     var sql = 'update projects set worker = ' + mysql.escape(req.body.freelancer) + ' where id = ' + mysql.escape(req.body.pid);
-  //     connection.query(sql, (err, result) => {
-  //       if(err) {
-  //         res.json('Error updating the worker for this project');
-  //       } else {
-  //         //res.json('Worker set successfully for this project');
-  //         var newQuery = 'update projects set estimated_completion_date = (SELECT DATE_ADD(CURDATE(), INTERVAL (select period from bids ' +
-  //         'where freelancer = '+ mysql.escape(req.body.freelancer) +' and projectid = '+ mysql.escape(req.body.pid) +' ) DAY)) ' + 'where id = ' + mysql.escape(req.body.pid);
-  //         connection.query(newQuery, (err, result) => {
-  //           if(err) {
-  //             console.log(err);
-  //           } else {
-  //             res.json('Updated the estimated completion date...');
-  //           }
-  //         })
-  //       }
-  //     });
-  //
-  //   }
-  // })
+
     mongoClient.connect(url, function(err, db) {
         if (err) throw err;
         else {
