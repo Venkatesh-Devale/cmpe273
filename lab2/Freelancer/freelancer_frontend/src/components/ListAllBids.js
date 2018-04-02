@@ -69,11 +69,12 @@ class ListAllBids extends Component {
         })
     }
 
-    handleClick( freelancer ) {
-        console.log("Hire button click and freelancer is :" + freelancer, this.props.id);  
+    handleClick( freelancer, period ) {
+        console.log("Hire button click and freelancer is :" + freelancer, period, this.props.id);
         const details = {
             pid : this.props.id,
-            freelancer : freelancer
+            freelancer : freelancer,
+            period: period
         }
         axios.post('http://localhost:3001/setworkerforproject', details, {withCredentials: true})
         .then( (response) => {
@@ -115,7 +116,7 @@ class ListAllBids extends Component {
                 </td>
                 <td>
                     <div style = { divStyle }>
-                        <input type = "button" id = "btnHire" className = "btn btn-secondary" value = "Hire" onClick = {this.handleClick.bind(this, b.freelancer)}/>
+                        <input type = "button" id = "btnHire" className = "btn btn-secondary" value = "Hire" onClick = {this.handleClick.bind(this, b.freelancer, b.period)}/>
                     </div>
                 </td>
                 

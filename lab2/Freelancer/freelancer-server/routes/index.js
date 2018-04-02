@@ -1204,7 +1204,9 @@ router.post('/setworkerforproject', (req, res, next) => {
         else {
             var dbo = db.db("freelancer");
             var myquery = { id: req.body.pid };
-            var newvalues = {$set: {worker: req.body.freelancer , estimated_completion_date: new Date()}} ;
+            var date = new Date();
+            date.setDate(req.body.period);
+            var newvalues = {$set: {worker: req.body.freelancer , estimated_completion_date: date}} ;
 
             dbo.collection("projects").updateOne(myquery, newvalues, function(err, result) {
                 if (err) {
