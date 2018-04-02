@@ -9,8 +9,13 @@ class ListAllBids extends Component {
         this.state = {
             bids : [],
             display : "none"
-        }
+        };
+
+        this.sortBidsAscending = this.sortBidsAscending.bind(this);
+        this.sortBidsDescending = this.sortBidsDescending.bind(this);
     }
+
+
     componentWillMount() {
         console.log('In ListAllBids Component:' + this.props.id);
         const pid = {
@@ -35,6 +40,32 @@ class ListAllBids extends Component {
                     bids: response.data
                 })
             }
+        })
+    }
+
+    sortBidsAscending() {
+        var afterSortAscArray = [];
+        afterSortAscArray = this.state.bids;
+        afterSortAscArray.sort(function(a, b) {
+            return a.bidamount - b.bidamount
+        });
+        this.setState({
+            bids: afterSortAscArray
+        }, () => {
+            console.log("after ascending sort...", this.state.bids);
+        })
+    }
+
+    sortBidsDescending() {
+        var afterSortDescArray = [];
+        afterSortDescArray = this.state.bids;
+        afterSortDescArray.sort(function(a, b) {
+            return b.bidamount - a.bidamount
+        });
+        this.setState({
+            bids: afterSortDescArray
+        }, () => {
+            console.log("after descending sort...", this.state.bids);
         })
     }
 
@@ -95,10 +126,16 @@ class ListAllBids extends Component {
             <div className = 'ListAllBids'>
                 <div className = 'container-fluid'> 
                     <div id='divListHeader'>
-                        <h2> List of all bids on this project </h2>
+                        <h2> List of all bids on this project
+                            <div id="btnSortAsc" className="btn-group" role="group" aria-label="sort">
+                                <button type="button" onClick={ this.sortBidsAscending } className="btn btn-secondary">Sort by Bid Price(Asc)</button>
+                                <button type="button" onClick={ this.sortBidsDescending } className="btn btn-secondary">Sort by Bid Price(Desc)</button>
+                            </div>
+                        </h2>
+
                     </div>
                     <div id='divListAllBidsTable'>
-                        
+
                         <table className = 'table table-hover'>
                             <thead>
                                 <tr className = 'table-secondary'>
