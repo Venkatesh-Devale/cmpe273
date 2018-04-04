@@ -10,6 +10,9 @@ var getmypublishedprojects = require('./services/getmypublishedprojects');
 var insertBidAndUpdateNumberOfBids = require('./services/insertBidAndUpdateNumberOfBids');
 var getmybiddedprojects = require('./services/getmybiddedprojects');
 var getmyassignedprojects = require('./services/getmyassignedprojects');
+var getproject = require('./services/getproject');
+var getallbidsforthisproject = require('./services/getAllBidsForThisProject');
+var getspecificbidforproject = require('./services/getspecificbidforproject');
 
 var consumerLogin = connection.getConsumer('login_topic');
 var consumerSignup = connection.getConsumer('signup_topic');
@@ -22,6 +25,9 @@ var consumerGetMyPublishedProject = connection.getConsumer('getmypublished_topic
 var consumerinsertBidAndUpdateNumberOfBids = connection.getConsumer('insertBidAndUpdateNumberOfBids_topic');
 var consumergetmybiddedprojects = connection.getConsumer('getmybiddedprojects_topic');
 var consumergetmyassignedprojects = connection.getConsumer('getmyassignedprojects_topic');
+var consumerGetproject = connection.getConsumer('getproject_topic');
+var consumerGetAllBidsForThisProject = connection.getConsumer('getallbidsforthisproject_topic');
+var consumergetspecificbidforproject = connection.getConsumer('getspecificbidforproject');
 
 var producer = connection.getProducer();
 
@@ -280,3 +286,78 @@ consumergetmyassignedprojects.on('message', function (message) {
     });
 });
 
+//getproject
+consumerGetproject.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    getproject.handle_request(data.data, function(err,res){
+        console.log('after login handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+
+//get all bids for this project
+consumerGetAllBidsForThisProject.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    getallbidsforthisproject.handle_request(data.data, function(err,res){
+        console.log('after login handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+//get specific bid for a project
+consumergetspecificbidforproject.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    getspecificbidforproject.handle_request(data.data, function(err,res){
+        console.log('after login handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});

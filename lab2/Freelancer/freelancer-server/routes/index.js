@@ -650,337 +650,304 @@ router.post('/getmyassignedprojects', function(req, res, next) {
 
 router.post('/getproject', function(req, res, next) {
   console.log('In getproject', req.body);
-  const projectId = req.body.projectid;
-  // connectionPool.getConnection((err, connection) => {
-  //   if(err) {
-  //     res.json({
-  //       code : 100,
-  //       status : "Error in connecting to database"
-  //     });
-  //
-  //   } else {
-  //     var sql = 'select * from projects as p ' +
-  //     'left join ((select projectid, sum(bidamount)/count(projectid) as average ' +
-  //     'from bids ' +
-  //     'group by projectid) as t) ' +
-  //     'on p.id = t.projectid ' +
-  //     'where p.id = ' + mysql.escape(projectId);
-  //     connection.query(sql, (err, result) => {
-  //       if(err) {
-  //         res.json({
-  //           code : 100,
-  //           status : "Error retreiving project..."
-  //         });
-  //       } else {
-  //         res.json(result);
-  //       }
-  //     })
-  //   }
-  // })
-    mongoClient.connect(url, (err, db) => {
-        if(err) throw err;
-        else {
-            console.log("Connected to mongodb...");
-            var dbo = db.db("freelancer");
 
-            dbo.collection('projects').aggregate([
-                {
-                    $match: { "id" : projectId }
-                },
-                {
-                    $lookup:{
-                        "from":"bids",
-                        "localField":"id",
-                        "foreignField":"projectid",
-                        "as":"projectbids"
-                    }
-                },
-                {
-                    $unwind:{
-                        "path": "$projectbids",
-                        "preserveNullAndEmptyArrays": true
-                    }
-                },
-                {
-                    $group:{
-                        "_id":{"id" : "$id",
-                            "title" : "$title",
-                            "description" : "$description",
-                            "skills_required" : "$skills_required",
-                            "budgetrange" : "$budgetrange",
-                            "number_of_bids" : "$number_of_bids",
-                            "employer" : "$employer",
-                            "worker" : "$worker",
-                            "open" : "$open",
-                            "estimated_completion_date" : "$estimated_completion_date"},
-                        "average":{$avg:"$projectbids.bidamount"}
-                    }
-                },
-                {
-                    $project:{
-                        "_id" : 0,
-                        "id" : "$_id.id",
-                        "title" : "$_id.title",
-                        "description" : "$_id.description",
-                        "skills_required" : "$_id.skills_required",
-                        "budgetrange" : "$_id.budgetrange",
-                        "number_of_bids" :"$_id.number_of_bids",
-                        "employer" : "$_id.employer",
-                        "worker" : "$_id.worker",
-                        "open" : "$_id.open",
-                        "estimated_completion_date" : "$_id.estimated_completion_date",
-                        "average" :{$ifNull: [ "$average",0 ] }
-                    }
-                }
-            ]).toArray(function(err, result) {
-                if (err) {
-                    res.json('ERROR');
-                }
-                else {
-                    res.json(result);
-                }
-
-                db.close();
-            });
-        }
+    kafka.make_request('getproject_topic', req.body ,(err, result) => {
+        console.log(result);
+        res.json(result);
     });
+
+    // mongoClient.connect(url, (err, db) => {
+    //     if(err) throw err;
+    //     else {
+    //         console.log("Connected to mongodb...");
+    //         var dbo = db.db("freelancer");
+    //
+    //         dbo.collection('projects').aggregate([
+    //             {
+    //                 $match: { "id" : projectId }
+    //             },
+    //             {
+    //                 $lookup:{
+    //                     "from":"bids",
+    //                     "localField":"id",
+    //                     "foreignField":"projectid",
+    //                     "as":"projectbids"
+    //                 }
+    //             },
+    //             {
+    //                 $unwind:{
+    //                     "path": "$projectbids",
+    //                     "preserveNullAndEmptyArrays": true
+    //                 }
+    //             },
+    //             {
+    //                 $group:{
+    //                     "_id":{"id" : "$id",
+    //                         "title" : "$title",
+    //                         "description" : "$description",
+    //                         "skills_required" : "$skills_required",
+    //                         "budgetrange" : "$budgetrange",
+    //                         "number_of_bids" : "$number_of_bids",
+    //                         "employer" : "$employer",
+    //                         "worker" : "$worker",
+    //                         "open" : "$open",
+    //                         "estimated_completion_date" : "$estimated_completion_date"},
+    //                     "average":{$avg:"$projectbids.bidamount"}
+    //                 }
+    //             },
+    //             {
+    //                 $project:{
+    //                     "_id" : 0,
+    //                     "id" : "$_id.id",
+    //                     "title" : "$_id.title",
+    //                     "description" : "$_id.description",
+    //                     "skills_required" : "$_id.skills_required",
+    //                     "budgetrange" : "$_id.budgetrange",
+    //                     "number_of_bids" :"$_id.number_of_bids",
+    //                     "employer" : "$_id.employer",
+    //                     "worker" : "$_id.worker",
+    //                     "open" : "$_id.open",
+    //                     "estimated_completion_date" : "$_id.estimated_completion_date",
+    //                     "average" :{$ifNull: [ "$average",0 ] }
+    //                 }
+    //             }
+    //         ]).toArray(function(err, result) {
+    //             if (err) {
+    //                 res.json('ERROR');
+    //             }
+    //             else {
+    //                 res.json(result);
+    //             }
+    //
+    //             db.close();
+    //         });
+    //     }
+    // });
 
 })
 
 router.post('/getAllBidsForThisProject', (req, res, next) => {
   console.log('In getAllBidsForThisProject', req.body.projectid);
-  const projectId = req.body.projectid;
-  // connectionPool.getConnection((err, connection) => {
-  //   if(err) {
-  //     res.json({
-  //       code : 100,
-  //       status : "Error in connecting to database"
-  //     });
-  //
-  //   } else {
-  //     //var sql = 'SELECT * from bids inner join projects on bids.projectid = projects.id WHERE projectid = ' + mysql.escape(projectId);
-  //     var sql = 'select  t.freelancer, t.period, t.bidamount, users.image_name from users inner join ((SELECT bids.freelancer, bids.bidamount, bids.period from bids inner join projects on bids.projectid = projects.id WHERE projectid = ' + mysql.escape(projectId) + ') as t) on t.freelancer = users.username;'
-  //     connection.query(sql, (err, result) => {
-  //       if(err) {
-  //         res.json({
-  //           code : 100,
-  //           status : "Error retreiving bids..."
-  //         });
-  //       } else {
-  //         res.json(result);
-  //       }
-  //     })
-  //   }
-  // })
-    mongoClient.connect(url, (err, db) => {
-        if(err) throw err;
-        else {
-            console.log("Connected to mongodb...");
-            var dbo = db.db("freelancer");
-
-            dbo.collection('projects').aggregate([
-                {
-                    $match: { "id" : projectId }
-                },
-                {
-                    $lookup:{
-                        "from":"bids",
-                        "localField":"id",
-                        "foreignField":"projectid",
-                        "as":"projectbids"
-                    }
-                },
-                {
-                    $unwind:{
-                        "path": "$projectbids",
-                        "preserveNullAndEmptyArrays": false
-                    }
-                },
-                {
-                    $group:{
-                        "_id":{"id" : "$id",
-                            "title" : "$title",
-                            "description" : "$description",
-                            "skills_required" : "$skills_required",
-                            "budgetrange" : "$budgetrange",
-                            "number_of_bids" : "$number_of_bids",
-                            "employer" : "$employer",
-                            "worker" : "$worker",
-                            "open" : "$open",
-                            "estimated_completion_date" : "$estimated_completion_date"},
-                        "average":{$avg:"$projectbids.bidamount"}
-                    }
-                },
-                {
-                    $project:{
-                        "_id" : 0,
-                        "id" : "$_id.id",
-                        "title" : "$_id.title",
-                        "description" : "$_id.description",
-                        "skills_required" : "$_id.skills_required",
-                        "budgetrange" : "$_id.budgetrange",
-                        "number_of_bids" :"$_id.number_of_bids",
-                        "employer" : "$_id.employer",
-                        "worker" : "$_id.worker",
-                        "open" : "$_id.open",
-                        "estimated_completion_date" : "$_id.estimated_completion_date",
-                        "average" :{$ifNull: [ "$average",0 ] }
-                    }
-                },
-                {
-                    $lookup:
-                        {
-                            "from": "bids",
-                            "localField": "id",
-                            "foreignField": "projectid",
-                            "as": "mybiddedProjects"
-                        }
-                },
-                {
-                    $unwind:
-                        {
-                            "path": "$mybiddedProjects",
-                            "preserveNullAndEmptyArrays": true
-                        }
-                },
-                {
-                    $project:
-                        {
-                            "id" : 1,
-                            "title" : 1,
-                            "description" : 1,
-                            "skills_required" : 1,
-                            "budgetrange" : 1,
-                            "number_of_bids" : 1,
-                            "employer" : 1,
-                            "worker" : 1,
-                            "open" : 1,
-                            "estimated_completion_date" : 1,
-                            "average" : 1,
-                            "freelancer" : "$mybiddedProjects.freelancer",
-                            "period": "$mybiddedProjects.period",
-                            "bidamount" : "$mybiddedProjects.bidamount"
-                        }
-                },
-                {
-                    $lookup: {
-                        "from" : "users",
-                        "localField" : "employer",
-                        "foreignField" : "username",
-                        "as" : "projectbidsWithUserDetails"
-                    }
-                },
-                {
-                    $unwind:
-                        {
-                            "path": "$projectbidsWithUserDetails",
-                            "preserveNullAndEmptyArrays": true
-                        }
-                },
-                {
-                    $project: {
-                        "freelancer" : 1,
-                        "period" : 1,
-                        "bidamount" : 1,
-                        "image_name" : "$projectbidsWithUserDetails.image_name",
-                        "employer" : 1
-
-                    }
-                }
 
 
-
-            ]).toArray(function(err, result) {
-                if (err) {
-                    res.json('ERROR');
-                }
-                else {
-                    res.json(result);
-                }
-
-                db.close();
-            });
-        }
+    kafka.make_request('getallbidsforthisproject_topic', req.body ,(err, result) => {
+        console.log(result);
+        res.json(result);
     });
+
+    // mongoClient.connect(url, (err, db) => {
+    //     if(err) throw err;
+    //     else {
+    //         console.log("Connected to mongodb...");
+    //         var dbo = db.db("freelancer");
+    //
+    //         dbo.collection('projects').aggregate([
+    //             {
+    //                 $match: { "id" : projectId }
+    //             },
+    //             {
+    //                 $lookup:{
+    //                     "from":"bids",
+    //                     "localField":"id",
+    //                     "foreignField":"projectid",
+    //                     "as":"projectbids"
+    //                 }
+    //             },
+    //             {
+    //                 $unwind:{
+    //                     "path": "$projectbids",
+    //                     "preserveNullAndEmptyArrays": false
+    //                 }
+    //             },
+    //             {
+    //                 $group:{
+    //                     "_id":{"id" : "$id",
+    //                         "title" : "$title",
+    //                         "description" : "$description",
+    //                         "skills_required" : "$skills_required",
+    //                         "budgetrange" : "$budgetrange",
+    //                         "number_of_bids" : "$number_of_bids",
+    //                         "employer" : "$employer",
+    //                         "worker" : "$worker",
+    //                         "open" : "$open",
+    //                         "estimated_completion_date" : "$estimated_completion_date"},
+    //                     "average":{$avg:"$projectbids.bidamount"}
+    //                 }
+    //             },
+    //             {
+    //                 $project:{
+    //                     "_id" : 0,
+    //                     "id" : "$_id.id",
+    //                     "title" : "$_id.title",
+    //                     "description" : "$_id.description",
+    //                     "skills_required" : "$_id.skills_required",
+    //                     "budgetrange" : "$_id.budgetrange",
+    //                     "number_of_bids" :"$_id.number_of_bids",
+    //                     "employer" : "$_id.employer",
+    //                     "worker" : "$_id.worker",
+    //                     "open" : "$_id.open",
+    //                     "estimated_completion_date" : "$_id.estimated_completion_date",
+    //                     "average" :{$ifNull: [ "$average",0 ] }
+    //                 }
+    //             },
+    //             {
+    //                 $lookup:
+    //                     {
+    //                         "from": "bids",
+    //                         "localField": "id",
+    //                         "foreignField": "projectid",
+    //                         "as": "mybiddedProjects"
+    //                     }
+    //             },
+    //             {
+    //                 $unwind:
+    //                     {
+    //                         "path": "$mybiddedProjects",
+    //                         "preserveNullAndEmptyArrays": true
+    //                     }
+    //             },
+    //             {
+    //                 $project:
+    //                     {
+    //                         "id" : 1,
+    //                         "title" : 1,
+    //                         "description" : 1,
+    //                         "skills_required" : 1,
+    //                         "budgetrange" : 1,
+    //                         "number_of_bids" : 1,
+    //                         "employer" : 1,
+    //                         "worker" : 1,
+    //                         "open" : 1,
+    //                         "estimated_completion_date" : 1,
+    //                         "average" : 1,
+    //                         "freelancer" : "$mybiddedProjects.freelancer",
+    //                         "period": "$mybiddedProjects.period",
+    //                         "bidamount" : "$mybiddedProjects.bidamount"
+    //                     }
+    //             },
+    //             {
+    //                 $lookup: {
+    //                     "from" : "users",
+    //                     "localField" : "employer",
+    //                     "foreignField" : "username",
+    //                     "as" : "projectbidsWithUserDetails"
+    //                 }
+    //             },
+    //             {
+    //                 $unwind:
+    //                     {
+    //                         "path": "$projectbidsWithUserDetails",
+    //                         "preserveNullAndEmptyArrays": true
+    //                     }
+    //             },
+    //             {
+    //                 $project: {
+    //                     "freelancer" : 1,
+    //                     "period" : 1,
+    //                     "bidamount" : 1,
+    //                     "image_name" : "$projectbidsWithUserDetails.image_name",
+    //                     "employer" : 1
+    //
+    //                 }
+    //             }
+    //
+    //
+    //
+    //         ]).toArray(function(err, result) {
+    //             if (err) {
+    //                 res.json('ERROR');
+    //             }
+    //             else {
+    //                 res.json(result);
+    //             }
+    //
+    //             db.close();
+    //         });
+    //     }
+    // });
 })
 
 router.post('/getspecificbidforproject', (req, res, next) => {
    console.log('In getspecificbidforproject server side...', req.body.projectid);
 
-
-    mongoClient.connect(url, (err, db) => {
-        if(err) throw err;
-        else {
-            console.log("Connected to mongodb...");
-            var dbo = db.db("freelancer");
-
-
-
-            dbo.collection("projects").aggregate([
-                {
-                    $match: { "id": req.body.projectid}
-                },
-                {
-                    $project: {
-                        "id": 1,
-                        "worker":1,
-                        "employer": 1,
-                        "title": 1,
-                        "description" : 1,
-                        "estimated_completion_date": 1
-                    }
-                }
-                ,
-                {
-                    $lookup: {
-                        from: "bids",
-                        let: { pid: "$id", worker: "$worker" },
-                        pipeline: [
-                            { $match:
-                                    { $expr:
-                                            { $and:
-                                                    [
-                                                        { $eq: [ "$projectid",  "$$pid" ] },
-                                                        { $eq: [ "$freelancer", "$$worker" ] }
-                                                    ]
-                                            }
-                                    }
-                            }
-                        ],
-                        as: "projectspecificbid"
-                    }
-                },
-                {
-                    $unwind: {
-                        "path": "$projectspecificbid"
-                    }
-                },
-                {
-                    $project: {
-                        "_id": 0,
-                        "id" : 1,
-                        "employer" : 1,
-                        "worker" : 1,
-                        "title": 1,
-                        "description" : 1,
-                        "estimated_completion_date": 1,
-                        "bidperiod" : "$projectspecificbid.period",
-                        "bidamount" : "$projectspecificbid.bidamount"
-                    }
-                }
-            ]).toArray( (err, result) => {
-                if(err) {
-                    res.json('ERROR');
-                }
-
-                if(result.length > 0) {
-                    console.log(result);
-                    res.json(result);
-                    db.close();
-                }
-            });
-        }
+    kafka.make_request('getspecificbidforproject', req.body ,(err, result) => {
+        console.log(result);
+        res.json(result);
     });
+
+    // mongoClient.connect(url, (err, db) => {
+    //     if(err) throw err;
+    //     else {
+    //         console.log("Connected to mongodb...");
+    //         var dbo = db.db("freelancer");
+    //
+    //
+    //
+    //         dbo.collection("projects").aggregate([
+    //             {
+    //                 $match: { "id": req.body.projectid}
+    //             },
+    //             {
+    //                 $project: {
+    //                     "id": 1,
+    //                     "worker":1,
+    //                     "employer": 1,
+    //                     "title": 1,
+    //                     "description" : 1,
+    //                     "estimated_completion_date": 1
+    //                 }
+    //             }
+    //             ,
+    //             {
+    //                 $lookup: {
+    //                     from: "bids",
+    //                     let: { pid: "$id", worker: "$worker" },
+    //                     pipeline: [
+    //                         { $match:
+    //                                 { $expr:
+    //                                         { $and:
+    //                                                 [
+    //                                                     { $eq: [ "$projectid",  "$$pid" ] },
+    //                                                     { $eq: [ "$freelancer", "$$worker" ] }
+    //                                                 ]
+    //                                         }
+    //                                 }
+    //                         }
+    //                     ],
+    //                     as: "projectspecificbid"
+    //                 }
+    //             },
+    //             {
+    //                 $unwind: {
+    //                     "path": "$projectspecificbid"
+    //                 }
+    //             },
+    //             {
+    //                 $project: {
+    //                     "_id": 0,
+    //                     "id" : 1,
+    //                     "employer" : 1,
+    //                     "worker" : 1,
+    //                     "title": 1,
+    //                     "description" : 1,
+    //                     "estimated_completion_date": 1,
+    //                     "bidperiod" : "$projectspecificbid.period",
+    //                     "bidamount" : "$projectspecificbid.bidamount"
+    //                 }
+    //             }
+    //         ]).toArray( (err, result) => {
+    //             if(err) {
+    //                 res.json('ERROR');
+    //             }
+    //
+    //             if(result.length > 0) {
+    //                 console.log(result);
+    //                 res.json(result);
+    //                 db.close();
+    //             }
+    //         });
+    //     }
+    // });
 
 });
 
