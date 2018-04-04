@@ -12,6 +12,7 @@ var url = "mongodb://localhost:27017/";
 var passport = require('passport')
     , LocalStrategy = require('passport-local').Strategy;
 var nodemailer = require('nodemailer');
+var kafka = require('./kafka/client');
 
 var transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -70,150 +71,47 @@ router.post('/checkexistinguser', (req, res, next) => {
 router.post('/signup', function(req, res, next) {
   console.log(req.body);
 
-  const username = req.body.username;
-  let password = req.body.password;
-  const emailid = req.body.emailid;
-  
-  ////commented mysql part from lab1
-  // connectionPool.getConnection((err, connection) => {
-  //   if(err) {
-  //     res.json({
-  //       code : 100,
-  //       status : "Error in connecting to database"
-  //     });
-  //
-  //   } else {
-  //     bcrypt.hash(password, saltRounds, (err, hash) => {
-  //       console.log("In /signup....password hash is:" + hash);
-  //     console.log('Connected to database with thread '+ connection.threadId);
-  //     var sql = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
-  //     connection.query(sql,[username, emailid, hash], (err, result) => {
-  //       if(err) {
-  //         console.log(err.name);
-  //         console.log(err.message);
-  //         res.json('ERROR');
-  //       }
-  //       else {
-  //         console.log("New user signed up...");
-  //         res.json('SIGNUP_SUCCESS');
-  //       }
-  //     });
-  //
-  //     })
-  //
-  //   }
-  // });
-
-    //mongo from lab2
-    mongoClient.connect(url, (err, connection) => {
-        if(err) throw err;
-        else {
-
-            bcrypt.hash(password, saltRounds, (err, hash) => {
-                console.log("In /signup....password hash is:" + hash);
-
-                console.log("Connected to mongodb...");
-                var dbo = connection.db("freelancer");
-                dbo.collection('users').insertOne({
-                    username: req.body.username,
-                    password: hash,
-                    email: req.body.emailid,
-                    phone: '',
-                    aboutme: '',
-                    skills: '',
-                    image_name: 'default.png'
-                }).then( (result) => {
-                    console.log("Insertion Successfully");
-                    console.log(result.insertedId);
-                    connection.close();
-                    res.json('SIGNUP_SUCCESS');
-                })
+  kafka.make_request('signup_topic', req.body, (err, result) => {
+      if(err) {
+          console.log(err);
+          throw err;
+      } else {
+          console.log("After signup kakfa result", result);
+          res.json(result);
+      }
 
 
-            })
+  });
 
-
-
-        }
-    });
-  
 });
 
 
 
 //this will be called from authenticate function from passport in /login API call
 passport.use(new LocalStrategy( function(username, password, done) {
-        mongoClient.connect(url, (err, db) => {
-            if(err) throw err;
-            else
-                console.log("Connected to mongodb...");
-            var dbo = db.db("freelancer");
-            var query = {username: username};
-            dbo.collection("users").find(query).toArray( (err, result) => {
-                if(err) {
-                    return done(err, false);
-                }
 
-                if(result.length === 0) {
-                    return done(err, false);
-                }
+    kafka.make_request('login_topic',{username:username,password:password}, function(err,results){
+        console.log('in result');
+        console.log("After our result from kafka backend",results);
+        if(err) {
+            return done(err, {});
+        }
 
-                if(result.length > 0) {
-                    console.log(result[0].username);
-                    var hash = result[0].password;
-                    bcrypt.compare(password, hash, (err, doesMatch) => {
-                        if(doesMatch) {
-                            console.log("Inside result.length",result[0].username);
-                            return done(null, result[0]);
-                        } else {
-                            return done(null, false);
-                        }
-                        db.close();
-                    })
+        if(results.length > 0) {
 
-                }
-            });
-        });
+            console.log("Inside result.length",results[0].username);
+            return done(null, results[0]);
+        } else {
+            return done(null, false);
+        }
+    });
+
     }
 ));
 
 router.post('/login', function(req, res, next) {
   console.log(req.body);
 
-  //commented mysql part from lab1
-  // connectionPool.getConnection((err, connection) => {
-  //   if(err) {
-  //     res.json({
-  //       code : 100,
-  //       status : "Error in connecting to database"
-  //     });
-  //
-  //   } else {
-  //     console.log('Connected to database with thread '+ connection.threadId);
-  //     var sql = 'SELECT * from users WHERE username = ' + mysql.escape(req.body.username);
-  //
-  //     connection.query(sql, (err, result) => {
-  //
-  //
-  //     var hash = result[0].password;
-  //     console.log("This is hashed password from the db...." + hash);
-  //     bcrypt.compare(req.body.password, hash, (err, doesMatch) => {
-  //       if(doesMatch) {
-  //         console.log('Session started....');
-  //         req.session.username = result[0].username;
-  //         var jsonResponse = {"result" : result[0].username, "session": req.session.username};
-  //         res.send(jsonResponse);
-  //       } else {
-  //         console.log(err);
-  //         res.json('ERROR');
-  //       }
-  //     })
-  //     });
-  //
-  //   }
-  // })
-
- //mongo from lab2
     passport.authenticate('local', function(err, user) {
         if(err) {
             console.log("In authenticate....",err);
@@ -260,330 +158,294 @@ router.post('/updateprofile', function(req, res, next) {
   const aboutme = req.body.aboutme;
   const skills = req.body.skills;
 
-  // connectionPool.getConnection((err, connection) => {
-  //   if(err) {
-  //     console.log('Cannot connect to DB..');
-  //   } else {
-  //     console.log('Connected to database with thread '+ connection.threadId);
-  //     var sql = 'UPDATE users SET email = ' + mysql.escape(email) + ', phone = ' + mysql.escape(phone) + ', aboutme = ' + mysql.escape(aboutme) +
-  //                 ' WHERE username = ' + mysql.escape(username);
-  //     console.log(sql);
-  //     connection.query(sql,(err, result) => {
-  //       if(err) {
-  //         console.log(err.name);
-  //         console.log(err.message);
-  //         //res.json('ERROR');
-  //       }
-  //       else {
-  //         console.log("user updated...");
-  //         res.json('UPDATE_SUCCESS');
-  //       }
-  //     });
-  //   }
-  // })
-
-
-    mongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        else {
-            var dbo = db.db("freelancer");
-            var myquery = { username: username };
-            var newvalues = {$set: {email: email, phone: phone, aboutme: aboutme, skills: skills }} ;
-            dbo.collection("users").updateOne(myquery, newvalues, function(err, result) {
-                if (err) {
-                    res.json('ERROR');
-                }
-                else {
-                    console.log("1 document updated", result.result);
-                    res.json('UPDATE_SUCCESS');
-                    db.close();
-                }
-
-            });
-        }
+    kafka.make_request('update_topic', req.body, (err, result) => {
+       console.log(result);
+       res.json(result);
     });
+    // mongoClient.connect(url, function(err, db) {
+    //     if (err) throw err;
+    //     else {
+    //         var dbo = db.db("freelancer");
+    //         var myquery = { username: username };
+    //         var newvalues = {$set: {email: email, phone: phone, aboutme: aboutme, skills: skills }} ;
+    //         dbo.collection("users").updateOne(myquery, newvalues, function(err, result) {
+    //             if (err) {
+    //                 res.json('ERROR');
+    //             }
+    //             else {
+    //                 console.log("1 document updated", result.result);
+    //                 res.json('UPDATE_SUCCESS');
+    //                 db.close();
+    //             }
+    //
+    //         });
+    //     }
+    // });
 });
 
 router.post('/getprofile', function(req, res, next) {
   console.log(req.body);
   console.log('In getprofile node...' + req.session.username);
-  // connectionPool.getConnection((err, connection) => {
-  //   if(err) {
-  //     res.json({
-  //       code : 100,
-  //       status : "Error in connecting to database"
-  //     });
-  //
-  //   } else {
-  //     console.log('Connected to database with thread '+ connection.threadId);
-  //     var sql = 'SELECT * from users WHERE username = ' + mysql.escape(req.body.username);
-  //     connection.query(sql, (err, result) => {
-  //       if(result.length == 0) {
-  //         res.json('ERROR');
-  //       }
-  //       else {
-  //         console.log(result);
-  //         res.json(result);
-  //       }
-  //     });
-  //
-  //   }
-  // })
-
-    mongoClient.connect(url, (err, db) => {
-        if(err) throw err;
-        else {
-            console.log("Connected to mongodb...");
-            var dbo = db.db("freelancer");
-            var query = {username: req.body.username};
-            dbo.collection("users").find(query).toArray( (err, result) => {
-                if(err) {
-                    res.json('ERROR');
-                }
-
-                if(result.length > 0) {
-                    console.log(result);
-                    res.json(result);
-                    db.close();
-                }
-            });
-        }
+    kafka.make_request('getprofile_topic', req.body, (err, result) => {
+        console.log(result);
+        res.json(result);
     });
+
+    // mongoClient.connect(url, (err, db) => {
+    //     if(err) throw err;
+    //     else {
+    //         console.log("Connected to mongodb...");
+    //         var dbo = db.db("freelancer");
+    //         var query = {username: req.body.username};
+    //         dbo.collection("users").find(query).toArray( (err, result) => {
+    //             if(err) {
+    //                 res.json('ERROR');
+    //             }
+    //
+    //             if(result.length > 0) {
+    //                 console.log(result);
+    //                 res.json(result);
+    //                 db.close();
+    //             }
+    //         });
+    //     }
+    // });
 
 });
 
 
 router.post('/postproject', function(req, res, next) {
   console.log('In server side...', req.body);
-  const employer = req.body.owner;
-  const title = req.body.title;
-  const description = req.body.description;
-  const skills_required = req.body.skillsRequired;
-  const budgetrange = req.body.budgetrange;
-  const id = req.body.id;
+  // const employer = req.body.owner;
+  // const title = req.body.title;
+  // const description = req.body.description;
+  // const skills_required = req.body.skillsRequired;
+  // const budgetrange = req.body.budgetrange;
+  // const id = req.body.id;
 
-  // connectionPool.getConnection((err, connection) => {
-  //   if(err) {
-  //     res.json('DB Connection error');
-  //   } else {
-  //     var sql = 'INSERT INTO projects (id, title, description, skills_required, budgetrange, employer) VALUES (?, ?, ?, ?, ?, ?)';
-  //     connection.query(sql, [id, title, description, skills_required, budgetrange, employer], (err, result) => {
-  //         if(err) {
-  //           console.log(err);
-  //           res.json('ERROR');
-  //         } else {
-  //           console.log('Project inserted successfully...');
-  //           res.json('PROJECT_INSERTED_SUCCESS');
-  //         }
-  //       })
-  //   }
+    kafka.make_request('postproject_topic', req.body, (err, result) => {
+        console.log(result);
+        res.json(result);
+    });
+
+  // mongoClient.connect(url, function(err, db) {
+  //     if(err) throw err;
+  //     else {
+  //         var dbo = db.db('freelancer');
+  //         dbo.collection('projects').insertOne({
+  //             id: id,
+  //             title: title,
+  //             description: description,
+  //             skills_required: skills_required,
+  //             budgetrange: budgetrange,
+  //             employer: employer,
+  //             open: 'open',
+  //             worker: '',
+  //             number_of_bids: 0,
+  //             estimated_completion_date: null
+  //         }).then( (response) => {
+  //             console.log("Project Insertion Successfully");
+  //             console.log(response.insertedId);
+  //             db.close();
+  //             res.json('PROJECT_INSERTED_SUCCESS');
+  //         })
+  //     }
   // })
-
-  mongoClient.connect(url, function(err, db) {
-      if(err) throw err;
-      else {
-          var dbo = db.db('freelancer');
-          dbo.collection('projects').insertOne({
-              id: id,
-              title: title,
-              description: description,
-              skills_required: skills_required,
-              budgetrange: budgetrange,
-              employer: employer,
-              open: 'open',
-              worker: '',
-              number_of_bids: 0,
-              estimated_completion_date: null
-          }).then( (response) => {
-              console.log("Project Insertion Successfully");
-              console.log(response.insertedId);
-              db.close();
-              res.json('PROJECT_INSERTED_SUCCESS');
-          })
-      }
-  })
   
 });
 
 
 router.post('/getallprojects', function(req, res, next) {
     console.log('In getallprojects', req.body);
-    mongoClient.connect(url, (err, db) => {
-        if(err) {
-            db.close();
-            throw err;
-        }
-        else {
-            console.log("Connected to mongodb...");
-            var dbo = db.db("freelancer");
 
-            dbo.collection("projects").find({}).toArray( (err, result) => {
-                if(err) {
-                    db.close();
-                    res.json('ERROR');
-                }
-
-                if(result.length > 0) {
-                    console.log("In mongos get all open projects...",result);
-                    db.close();
-                    res.json(result);
-                }
-            });
-        }
+    kafka.make_request('getallprojects_topic', {} ,(err, result) => {
+        console.log(result);
+        res.json(result);
     });
+
+    // mongoClient.connect(url, (err, db) => {
+    //     if(err) {
+    //         db.close();
+    //         throw err;
+    //     }
+    //     else {
+    //         console.log("Connected to mongodb...");
+    //         var dbo = db.db("freelancer");
+    //
+    //         dbo.collection("projects").find({}).toArray( (err, result) => {
+    //             if(err) {
+    //                 db.close();
+    //                 res.json('ERROR');
+    //             }
+    //
+    //             if(result.length > 0) {
+    //                 console.log("In mongos get all open projects...",result);
+    //                 db.close();
+    //                 res.json(result);
+    //             }
+    //         });
+    //     }
+    // });
 
 });
 
 
 router.post('/getallrelevantopenprojects', function(req, res, next) {
-    var userSkills = null;
-    var userSkillsArray = null;
-    var allOpenProjectsArray = null;
-    var finalRelevantProjectsArray = [];
-    console.log("In /getallrelevantopenprojects", req.body.username);
+    // var userSkills = null;
+    // var userSkillsArray = null;
+    // var allOpenProjectsArray = null;
+    // var finalRelevantProjectsArray = [];
+    // console.log("In /getallrelevantopenprojects", req.body.username);
+    //
+    // mongoClient.connect(url, (err, db) => {
+    //     if(err) throw err;
+    //     else {
+    //         console.log("Connected to mongodb...");
+    //         var dbo = db.db("freelancer");
+    //         var query = {username: req.body.username};
+    //         dbo.collection("users").find(query).toArray( (err, result) => {
+    //             if(err) {
+    //                 console.log('ERROR');
+    //                 res.json('ERROR');
+    //             }
+    //
+    //             if(result.length > 0) {
+    //                 userSkills = result[0].skills;
+    //                 if(userSkills === null) {
+    //                     console.log("User has not updated any skills...");
+    //                     res.json({"finalRelevantProjectsArray": finalRelevantProjectsArray});
+    //
+    //                 }
+    //
+    //             else {
+    //                     userSkillsArray = userSkills.split(",");
+    //                     console.log("User Skills Array...", userSkillsArray);
+    //                     dbo.collection("projects").find({open:'open'}).toArray( (err, result) => {
+    //                         if(err) {
+    //                             console.log(err);
+    //                             res.json('ERROR');
+    //
+    //                         }
+    //
+    //                         if(result.length > 0) {
+    //                             allOpenProjectsArray = result;
+    //                             var count = 0;
+    //                             for(var i = 0; i < allOpenProjectsArray.length; i++) {
+    //                                 count = 0;
+    //                                 var projectRequiredSkillsArray = allOpenProjectsArray[i].skills_required.split(',');
+    //                                 console.log("projectRequiredSkillsArray",projectRequiredSkillsArray);
+    //                                 for(var j = 0; j < userSkillsArray.length; j++) {
+    //                                     for(var k = 0; k < projectRequiredSkillsArray.length; k++) {
+    //                                         if(userSkillsArray[j].toLowerCase() === projectRequiredSkillsArray[k].toLocaleLowerCase()) {
+    //                                             count++;
+    //                                         }
+    //                                     }
+    //                                 }
+    //                                 console.log("Final Skills matched count...", count);
+    //                                 if(count >= 2) {
+    //                                     finalRelevantProjectsArray.push(allOpenProjectsArray[i]);
+    //                                 }
+    //                             }
+    //                             console.log("Matched final skills projects...", finalRelevantProjectsArray);
+    //                             db.close();
+    //                             res.json({"finalRelevantProjectsArray" : finalRelevantProjectsArray});
+    //                         }
+    //
+    //                     });
+    //                 }
+    //
+    //             }
+    //         });
+    //
+    //
+    //
+    //     }
+    //
+    // });
+    //
+    //
+    //
 
-    mongoClient.connect(url, (err, db) => {
-        if(err) throw err;
-        else {
-            console.log("Connected to mongodb...");
-            var dbo = db.db("freelancer");
-            var query = {username: req.body.username};
-            dbo.collection("users").find(query).toArray( (err, result) => {
-                if(err) {
-                    console.log('ERROR');
-                    res.json('ERROR');
-                }
-
-                if(result.length > 0) {
-                    userSkills = result[0].skills;
-                    if(userSkills === null) {
-                        console.log("User has not updated any skills...");
-                        res.json({"finalRelevantProjectsArray": finalRelevantProjectsArray});
-
-                    }
-
-                else {
-                        userSkillsArray = userSkills.split(",");
-                        console.log("User Skills Array...", userSkillsArray);
-                        dbo.collection("projects").find({open:'open'}).toArray( (err, result) => {
-                            if(err) {
-                                console.log(err);
-                                res.json('ERROR');
-
-                            }
-
-                            if(result.length > 0) {
-                                allOpenProjectsArray = result;
-                                var count = 0;
-                                for(var i = 0; i < allOpenProjectsArray.length; i++) {
-                                    count = 0;
-                                    var projectRequiredSkillsArray = allOpenProjectsArray[i].skills_required.split(',');
-                                    console.log("projectRequiredSkillsArray",projectRequiredSkillsArray);
-                                    for(var j = 0; j < userSkillsArray.length; j++) {
-                                        for(var k = 0; k < projectRequiredSkillsArray.length; k++) {
-                                            if(userSkillsArray[j].toLowerCase() === projectRequiredSkillsArray[k].toLocaleLowerCase()) {
-                                                count++;
-                                            }
-                                        }
-                                    }
-                                    console.log("Final Skills matched count...", count);
-                                    if(count >= 2) {
-                                        finalRelevantProjectsArray.push(allOpenProjectsArray[i]);
-                                    }
-                                }
-                                console.log("Matched final skills projects...", finalRelevantProjectsArray);
-                                db.close();
-                                res.json({"finalRelevantProjectsArray" : finalRelevantProjectsArray});
-                            }
-
-                        });
-                    }
-
-                }
-            });
-
-
-
-        }
-
+    kafka.make_request('getallrelevantprojects_topic', req.body ,(err, result) => {
+        console.log(result);
+        res.json(result);
     });
-
-
-
-
-
 });
 
 
 
 router.post('/getmypublishedprojects', function(req, res, next) {
   console.log('In getmypublishedprojects');
-    mongoClient.connect(url, (err, db) => {
-        if(err) throw err;
-        else {
-            console.log("Connected to mongodb...");
-            var dbo = db.db("freelancer");
-
-            dbo.collection('projects').aggregate([
-                { $match: { "employer" : req.body.username } },
-                {
-                $lookup:{
-                    "from":"bids",
-                    "localField":"id",
-                    "foreignField":"projectid",
-                    "as":"projectbids"
-                    }
-                },
-                {
-                $unwind:{
-                    "path": "$projectbids",
-                    "preserveNullAndEmptyArrays": true
-                    }
-                },
-                {
-                $group:{
-                        "_id":{"id" : "$id",
-                        "title" : "$title",
-                        "description" : "$description",
-                        "skills_required" : "$skills_required",
-                        "budgetrange" : "$budgetrange",
-                        "number_of_bids" : "$number_of_bids",
-                        "employer" : "$employer",
-                        "worker" : "$worker",
-                        "open" : "$open",
-                        "estimated_completion_date" : "$estimated_completion_date"},
-                        "average":{$avg:"$projectbids.bidamount"}
-                    }
-                },
-                {
-                $project:{
-                    "id" : "$_id.id",
-                    "title" : "$_id.title",
-                    "description" : "$_id.description",
-                    "skills_required" : "$_id.skills_required",
-                    "budgetrange" : "$_id.budgetrange",
-                    "number_of_bids" :"$_id.number_of_bids",
-                    "employer" : "$_id.employer",
-                    "worker" : "$_id.worker",
-                    "open" : "$_id.open",
-                    "estimated_completion_date" : "$_id.estimated_completion_date",
-                    "average" :{$ifNull: [ "$average",0 ] }
-                    }
-                }
-
-
-        ]).toArray(function(err, result) {
-                if (err) {
-                    res.json('ERROR');
-                }
-                else {
-                    res.json(result);
-                }
-
-                db.close();
-            });
-        }
+    kafka.make_request('getmypublished_topic', req.body ,(err, result) => {
+        console.log(result);
+        res.json(result);
     });
+    // mongoClient.connect(url, (err, db) => {
+    //     if(err) throw err;
+    //     else {
+    //         console.log("Connected to mongodb...");
+    //         var dbo = db.db("freelancer");
+    //
+    //         dbo.collection('projects').aggregate([
+    //             { $match: { "employer" : req.body.username } },
+    //             {
+    //             $lookup:{
+    //                 "from":"bids",
+    //                 "localField":"id",
+    //                 "foreignField":"projectid",
+    //                 "as":"projectbids"
+    //                 }
+    //             },
+    //             {
+    //             $unwind:{
+    //                 "path": "$projectbids",
+    //                 "preserveNullAndEmptyArrays": true
+    //                 }
+    //             },
+    //             {
+    //             $group:{
+    //                     "_id":{"id" : "$id",
+    //                     "title" : "$title",
+    //                     "description" : "$description",
+    //                     "skills_required" : "$skills_required",
+    //                     "budgetrange" : "$budgetrange",
+    //                     "number_of_bids" : "$number_of_bids",
+    //                     "employer" : "$employer",
+    //                     "worker" : "$worker",
+    //                     "open" : "$open",
+    //                     "estimated_completion_date" : "$estimated_completion_date"},
+    //                     "average":{$avg:"$projectbids.bidamount"}
+    //                 }
+    //             },
+    //             {
+    //             $project:{
+    //                 "id" : "$_id.id",
+    //                 "title" : "$_id.title",
+    //                 "description" : "$_id.description",
+    //                 "skills_required" : "$_id.skills_required",
+    //                 "budgetrange" : "$_id.budgetrange",
+    //                 "number_of_bids" :"$_id.number_of_bids",
+    //                 "employer" : "$_id.employer",
+    //                 "worker" : "$_id.worker",
+    //                 "open" : "$_id.open",
+    //                 "estimated_completion_date" : "$_id.estimated_completion_date",
+    //                 "average" :{$ifNull: [ "$average",0 ] }
+    //                 }
+    //             }
+    //
+    //
+    //     ]).toArray(function(err, result) {
+    //             if (err) {
+    //                 res.json('ERROR');
+    //             }
+    //             else {
+    //                 res.json(result);
+    //             }
+    //
+    //             db.close();
+    //         });
+    //     }
+    // });
 
 
 
@@ -592,117 +454,61 @@ router.post('/getmypublishedprojects', function(req, res, next) {
 
 
 router.post('/insertBidAndUpdateNumberOfBids', function(req, res, next) {
-  console.log(req.body);
-  const pid = req.body.project_id;
-  const bidAmount = parseInt(req.body.bid);
-  const days = parseInt(req.body.deliveryDays);
-  const freelancer = req.body.freelancer;
-  let bids = 0;
-  // connectionPool.getConnection((err, connection) => {
-  //   if(err) {
-  //     res.json({
-  //       code : 100,
-  //       status : "Error in connecting to database"
-  //     });
-  //
-  //   } else {
-  //
-  //     console.log('Connected to database with thread '+ connection.threadId);
-  //     var sqltemp = 'SELECT * FROM bids WHERE freelancer = ' + mysql.escape(freelancer) + ' AND projectid = ' + mysql.escape(pid);
-  //     connection.query(sqltemp, (err, result) => {
-  //       if(result.length == 0) {
-  //         var sqlInsert = 'INSERT INTO bids (projectid, freelancer, period, bidamount) VALUES (?, ?, ?, ?)';
-  //         connection.query(sqlInsert,[pid, freelancer, days, bidAmount], (err, result) => {
-  //           if(err) {
-  //             //console.log(err.name);
-  //             //console.log(err.message);
-  //             res.json('ERROR');
-  //           }
-  //           else {
-  //             console.log("Bid inserted Successfully...");
-  //             res.json('BID INSERTED SUCCESS');
-  //           }
-  //         });
-  //       } else {
-  //         res.json('ERROR');
-  //       }
-  //     })
-  //
-  //
-  //     var getNumberOfBids = 'SELECT number_of_bids from projects WHERE id = ' + mysql.escape(pid);
-  //     connection.query(getNumberOfBids, (err, result) => {
-  //       if(err)
-  //         console.log(err);
-  //       else {
-  //         bids = result[0].number_of_bids;
-  //       console.log('After getNumberOfBids...'+bids);
-  //       var ubids = bids + 1;
-  //       var updateBids = 'UPDATE projects SET number_of_bids = ' + ubids + ' WHERE id = ' + mysql.escape(pid);
-  //         connection.query(updateBids, (err, result) => {
-  //           if(err)
-  //             console.log(err);
-  //           else
-  //             console.log('After updateBids...',result);
-  //
-  //       });
-  //       }
-  //
-  //     });
-  //
-  //
-  //
-  //   }
-  // })
-
-    mongoClient.connect(url, (err, db) => {
-        if(err) throw err;
-        else {
-            console.log("Connected to mongodb...");
-            var dbo = db.db("freelancer");
-
-            dbo.collection("bids").find({
-                freelancer: freelancer,
-                projectid: pid
-            }).toArray( (err, result) => {
-
-                if(result.length == 0) {
-                    dbo.collection("bids").insertOne({
-                        projectid: pid,
-                        freelancer: freelancer,
-                        period: days,
-                        bidamount: bidAmount
-                    }).
-                    then((result) => {
-                        console.log("Bid inserted Successfully...");
-                        dbo.collection("projects").find({
-                            id: pid
-                        }).toArray((err, result1) => {
-                            console.log("After inserting bid..getting the number_of_bids for that project", result1[0].number_of_bids);
-                            bids = result1[0].number_of_bids;
-                            var ubids = bids + 1;
-                            dbo.collection("projects").updateOne({id: pid}, {$set: {number_of_bids: ubids} }, function(err, result2) {
-                                if (err) {
-                                    console.log('ERROR in updating bids...');
-                                }
-                                else {
-                                    console.log("1 document updated", result2.result);
-                                    db.close();
-                                }
-
-                            });
-                        });
-                        //db.close();
-                        res.json('BID INSERTED SUCCESS');
-                    })
-                } else {
-                    db.close();
-                    res.json('ERROR');
-                }
-            });
-
-
-        }
+    kafka.make_request('insertBidAndUpdateNumberOfBids_topic', req.body ,(err, result) => {
+        console.log(result);
+        res.json(result);
     });
+
+
+    // mongoClient.connect(url, (err, db) => {
+    //     if(err) throw err;
+    //     else {
+    //         console.log("Connected to mongodb...");
+    //         var dbo = db.db("freelancer");
+    //
+    //         dbo.collection("bids").find({
+    //             freelancer: freelancer,
+    //             projectid: pid
+    //         }).toArray( (err, result) => {
+    //
+    //             if(result.length == 0) {
+    //                 dbo.collection("bids").insertOne({
+    //                     projectid: pid,
+    //                     freelancer: freelancer,
+    //                     period: days,
+    //                     bidamount: bidAmount
+    //                 }).
+    //                 then((result) => {
+    //                     console.log("Bid inserted Successfully...");
+    //                     dbo.collection("projects").find({
+    //                         id: pid
+    //                     }).toArray((err, result1) => {
+    //                         console.log("After inserting bid..getting the number_of_bids for that project", result1[0].number_of_bids);
+    //                         bids = result1[0].number_of_bids;
+    //                         var ubids = bids + 1;
+    //                         dbo.collection("projects").updateOne({id: pid}, {$set: {number_of_bids: ubids} }, function(err, result2) {
+    //                             if (err) {
+    //                                 console.log('ERROR in updating bids...');
+    //                             }
+    //                             else {
+    //                                 console.log("1 document updated", result2.result);
+    //                                 db.close();
+    //                             }
+    //
+    //                         });
+    //                     });
+    //                     //db.close();
+    //                     res.json('BID INSERTED SUCCESS');
+    //                 })
+    //             } else {
+    //                 db.close();
+    //                 res.json('ERROR');
+    //             }
+    //         });
+    //
+    //
+    //     }
+    // });
   
 });
 
@@ -710,132 +516,111 @@ router.post('/insertBidAndUpdateNumberOfBids', function(req, res, next) {
 router.post('/getmybiddedprojects', function(req, res, next) {
   
   console.log(req.body);
-  // connectionPool.getConnection((err, connection) => {
-  //   if(err) {
-  //     res.json({
-  //       code : 100,
-  //       status : 'Error in connecting to database'
-  //     })
-  //   } else {
-  //     let sql = 'select * from projects as p ' +
-  //     'inner join ((select b.projectid, b.freelancer, b.bidamount, b.period, t1.average from bids as b ' +
-  //     'inner join (select projectid, sum(bidamount)/count(projectid) as average from bids ' +
-  //     'group by projectid) as t1 ' +
-  //     'on b.projectid = t1.projectid ' +
-  //     'where b.freelancer = ' + mysql.escape(req.body.username) + ') as t2 )' +
-  //     'on p.id = t2.projectid';
-  //     connection.query(sql, (err, result) => {
-  //       if(err)
-  //         console.log(err);
-  //       else {
-  //         console.log(result);
-  //         res.json(result);
-  //       }
-  //     })
-  //   }
-  // })
-
-    mongoClient.connect(url, (err, db) => {
-        if(err) throw err;
-        else {
-            console.log("Connected to mongodb...");
-            var dbo = db.db("freelancer");
-            dbo.collection('projects').aggregate([
-
-                {
-                    $lookup:{
-                        "from":"bids",
-                        "localField":"id",
-                        "foreignField":"projectid",
-                        "as":"projectbids"
-                    }
-                },
-                {
-                    $unwind:{
-                        "path": "$projectbids",
-                        "preserveNullAndEmptyArrays": true
-                    }
-                },
-                {
-                    $group:{
-                        "_id":{"id" : "$id",
-                            "title" : "$title",
-                            "description" : "$description",
-                            "skills_required" : "$skills_required",
-                            "budgetrange" : "$budgetrange",
-                            "number_of_bids" : "$number_of_bids",
-                            "employer" : "$employer",
-                            "worker" : "$worker",
-                            "open" : "$open",
-                            "estimated_completion_date" : "$estimated_completion_date"},
-                        "average":{$avg:"$projectbids.bidamount"}
-                    }
-                },
-                {
-                    $project:{
-                        "_id" : 0,
-                        "id" : "$_id.id",
-                        "title" : "$_id.title",
-                        "description" : "$_id.description",
-                        "skills_required" : "$_id.skills_required",
-                        "budgetrange" : "$_id.budgetrange",
-                        "number_of_bids" :"$_id.number_of_bids",
-                        "employer" : "$_id.employer",
-                        "worker" : "$_id.worker",
-                        "open" : "$_id.open",
-                        "estimated_completion_date" : "$_id.estimated_completion_date",
-                        "average" :{$ifNull: [ "$average",0 ] }
-                    }
-                },
-                {
-                    $lookup:
-                        {
-                            "from": "bids",
-                            "localField": "id",
-                            "foreignField": "projectid",
-                            "as": "mybiddedProjects"
-                        }
-                },
-                {
-                    $unwind:
-                        {
-                            "path": "$mybiddedProjects",
-                            "preserveNullAndEmptyArrays": true
-                        }
-                },
-                { $match: { "mybiddedProjects.freelancer" : req.body.username } },
-                {
-                    $project:
-                        {
-                            "id" : 1,
-                            "title" : 1,
-                            "description" : 1,
-                            "skills_required" : 1,
-                            "budgetrange" : 1,
-                            "number_of_bids" : 1,
-                            "employer" : 1,
-                            "worker" : 1,
-                            "open" : 1,
-                            "estimated_completion_date" : 1,
-                            "average" : 1,
-                            "freelancer" : "$mybiddedProjects.freelancer",
-                            "period": "$mybiddedProjects.period",
-                            "bidamount" : "$mybiddedProjects.bidamount"
-                        }
-                }
-
-            ]).toArray(function(err, result) {
-                if (err) {
-                    res.json('ERROR');
-                }
-                else {
-                    res.json(result);
-                }
-
-                db.close();
-            });
-        }
+    kafka.make_request('getmybiddedprojects_topic', req.body ,(err, result) => {
+        console.log(result);
+        res.json(result);
     });
+    // mongoClient.connect(url, (err, db) => {
+    //     if(err) throw err;
+    //     else {
+    //         console.log("Connected to mongodb...");
+    //         var dbo = db.db("freelancer");
+    //         dbo.collection('projects').aggregate([
+    //
+    //             {
+    //                 $lookup:{
+    //                     "from":"bids",
+    //                     "localField":"id",
+    //                     "foreignField":"projectid",
+    //                     "as":"projectbids"
+    //                 }
+    //             },
+    //             {
+    //                 $unwind:{
+    //                     "path": "$projectbids",
+    //                     "preserveNullAndEmptyArrays": true
+    //                 }
+    //             },
+    //             {
+    //                 $group:{
+    //                     "_id":{"id" : "$id",
+    //                         "title" : "$title",
+    //                         "description" : "$description",
+    //                         "skills_required" : "$skills_required",
+    //                         "budgetrange" : "$budgetrange",
+    //                         "number_of_bids" : "$number_of_bids",
+    //                         "employer" : "$employer",
+    //                         "worker" : "$worker",
+    //                         "open" : "$open",
+    //                         "estimated_completion_date" : "$estimated_completion_date"},
+    //                     "average":{$avg:"$projectbids.bidamount"}
+    //                 }
+    //             },
+    //             {
+    //                 $project:{
+    //                     "_id" : 0,
+    //                     "id" : "$_id.id",
+    //                     "title" : "$_id.title",
+    //                     "description" : "$_id.description",
+    //                     "skills_required" : "$_id.skills_required",
+    //                     "budgetrange" : "$_id.budgetrange",
+    //                     "number_of_bids" :"$_id.number_of_bids",
+    //                     "employer" : "$_id.employer",
+    //                     "worker" : "$_id.worker",
+    //                     "open" : "$_id.open",
+    //                     "estimated_completion_date" : "$_id.estimated_completion_date",
+    //                     "average" :{$ifNull: [ "$average",0 ] }
+    //                 }
+    //             },
+    //             {
+    //                 $lookup:
+    //                     {
+    //                         "from": "bids",
+    //                         "localField": "id",
+    //                         "foreignField": "projectid",
+    //                         "as": "mybiddedProjects"
+    //                     }
+    //             },
+    //             {
+    //                 $unwind:
+    //                     {
+    //                         "path": "$mybiddedProjects",
+    //                         "preserveNullAndEmptyArrays": true
+    //                     }
+    //             },
+    //             { $match: { "mybiddedProjects.freelancer" : req.body.username } },
+    //             {
+    //                 $project:
+    //                     {
+    //                         "id" : 1,
+    //                         "title" : 1,
+    //                         "description" : 1,
+    //                         "skills_required" : 1,
+    //                         "budgetrange" : 1,
+    //                         "number_of_bids" : 1,
+    //                         "employer" : 1,
+    //                         "worker" : 1,
+    //                         "open" : 1,
+    //                         "estimated_completion_date" : 1,
+    //                         "average" : 1,
+    //                         "freelancer" : "$mybiddedProjects.freelancer",
+    //                         "period": "$mybiddedProjects.period",
+    //                         "bidamount" : "$mybiddedProjects.bidamount"
+    //                     }
+    //             }
+    //
+    //         ]).toArray(function(err, result) {
+    //             if (err) {
+    //                 res.json('ERROR');
+    //             }
+    //             else {
+    //                 res.json(result);
+    //             }
+    //
+    //             db.close();
+    //         });
+    //     }
+    // });
 
 
 
@@ -843,19 +628,23 @@ router.post('/getmybiddedprojects', function(req, res, next) {
 
 router.post('/getmyassignedprojects', function(req, res, next) {
    console.log(req.body.username);
-   mongoClient.connect(url, function(err, db) {
-       if(err) throw err;
-       else {
-           var dbo = db.db('freelancer');
-           dbo.collection('projects').find({worker: req.body.username}).toArray(function (err, result) {
-               if(result.length > 0) {
-                   res.json({'myassignedprojectsArray': result});
-               } else {
-                   res.json({'myassignedprojectsArray': []});
-               }
-           });
-       }
-   })
+    kafka.make_request('getmyassignedprojects_topic', req.body ,(err, result) => {
+        console.log(result);
+        res.json(result);
+    });
+   // mongoClient.connect(url, function(err, db) {
+   //     if(err) throw err;
+   //     else {
+   //         var dbo = db.db('freelancer');
+   //         dbo.collection('projects').find({worker: req.body.username}).toArray(function (err, result) {
+   //             if(result.length > 0) {
+   //                 res.json({'myassignedprojectsArray': result});
+   //             } else {
+   //                 res.json({'myassignedprojectsArray': []});
+   //             }
+   //         });
+   //     }
+   // })
 });
 
 
@@ -1764,15 +1553,38 @@ router.post('/saveimage', (req, res) => {
 });
 
 router.get('/getuserimage', (req, res) => {
-    connectionPool.getConnection(function(err, connection){
-        var sql = "select image_name from users where username='" + req.query.username + "'";
-        connection.query(sql,function(err,rows){
-            if(err) throw err;
-            connection.release();
-            console.log(rows);
-            res.json({image_name: rows[0]})
-        });
+
+    mongoClient.connect(url, (err, db) => {
+        if(err) {
+            console.log(err);
+            db.close();
+            throw err;
+        } else {
+            var dbo = db.db('freelancer');
+            dbo.collection('users').find({username: req.query.username}).toArray((err, result) => {
+                if(err) {
+                    console.log(err);
+                    db.close();
+                    res.json('No Image found');
+                } else {
+                    db.close();
+                    console.log(result);
+                    res.json({image_name: result[0]});
+                }
+
+            })
+        }
     })
+
+    // connectionPool.getConnection(function(err, connection){
+    //     var sql = "select image_name from users where username='" + req.query.username + "'";
+    //     connection.query(sql,function(err,rows){
+    //         if(err) throw err;
+    //         connection.release();
+    //         console.log(rows);
+    //         res.json({image_name: rows[0]})
+    //     });
+    // })
 });
 
 

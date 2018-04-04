@@ -21,10 +21,11 @@ class Imageuploader extends Component {
     }
 
     loadUserImage(){
-        
+
         var self = this;
         axios.get("http://localhost:3001/getuserimage?username=" + localStorage.getItem('username'), {withCredentials: true} )
         .then( (response) => {
+            console.log('In imageupload', response.data);
             self.setState({
                 filename: response.data.image_name.image_name
             })
