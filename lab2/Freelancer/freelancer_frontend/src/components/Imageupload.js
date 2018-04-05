@@ -118,7 +118,10 @@ function mapDispatchToProps(dispatch) {
             //console.log("In mapDispatch" + imageDetails + "......" + imageName);
             axios.post('http://localhost:3001/saveImage', image)
             .then( (response) => {
-                
+                if(response.data.message === 'Image Uploaded')
+                    alert(response.data.message);
+                else
+                    alert('Error in updating image...try again later');
             })
         }
     }

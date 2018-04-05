@@ -13,6 +13,19 @@ var getmyassignedprojects = require('./services/getmyassignedprojects');
 var getproject = require('./services/getproject');
 var getallbidsforthisproject = require('./services/getAllBidsForThisProject');
 var getspecificbidforproject = require('./services/getspecificbidforproject');
+var setworkerforproject = require('./services/setworkerforproject');
+var getuseraccountbalance = require('./services/getuseraccountbalance');
+var transact = require('./services/transact');
+var getsearchcriteria = require('./services/getSearchCriteria');
+var getsearchcriteriafordashboard = require('./services/getSearchCriteriaForDashBoard');
+var getsearchcriteriafordashboardfreelancer = require('./services/getSearchCriteriaForFreelancerDashboard');
+var gettransactionhistory = require('./services/gettransactionhistory');
+var updateuserbalance = require('./services/updateuserbalance');
+var insertworkercomment = require('./services/insertworkercomment');
+var getworkercomment = require('./services/getworkercomment');
+var getuserimage = require('./services/getuserimage');
+var checkexistinguser =require('./services/checkexistinguser');
+
 
 var consumerLogin = connection.getConsumer('login_topic');
 var consumerSignup = connection.getConsumer('signup_topic');
@@ -28,6 +41,18 @@ var consumergetmyassignedprojects = connection.getConsumer('getmyassignedproject
 var consumerGetproject = connection.getConsumer('getproject_topic');
 var consumerGetAllBidsForThisProject = connection.getConsumer('getallbidsforthisproject_topic');
 var consumergetspecificbidforproject = connection.getConsumer('getspecificbidforproject');
+var consumersetworkerforproject = connection.getConsumer('setworkerforproject_topic');
+var consumergetuseraccountbalance = connection.getConsumer('getuseraccountbalance_topic');
+var consumertransact = connection.getConsumer('transact_topic');
+var consumergetsearchcriteria = connection.getConsumer('getsearchcriteria_topic');
+var consumergetsearchcriteriafordashboard = connection.getConsumer('getsearchcriteriafordashboard_topic');
+var consumergetsearchcriteriafordashboardfreelancer = connection.getConsumer('getsearchcriteriafordashboardfreelancer_topic');
+var consumergettransactionhistory = connection.getConsumer('gettransactionhistory_topic');
+var consumerupdateuserbalance = connection.getConsumer('updateuserbalance_topic');
+var consumerinsertworkercomment = connection.getConsumer('insertworkercomment_topic');
+var consumergetworkercomment = connection.getConsumer('getworkercomment_topic');
+var consumergetuserimage = connection.getConsumer('getuserimage_topic');
+var consumercheckexistinguser = connection.getConsumer('checkexistinguser_topic');
 
 var producer = connection.getProducer();
 
@@ -58,6 +83,30 @@ consumerLogin.on('message', function (message) {
     });
 });
 
+//checking existing user
+consumercheckexistinguser.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    checkexistinguser.handle_request(data.data, function(err,res){
+        console.log('after get worker comment handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
 
 //Signup
 consumerSignup.on('message', function (message) {
@@ -168,6 +217,32 @@ consumerGetAllRelevantProjects.on('message', function (message) {
     console.log('Data after parsing priting data only', data.data);
     getallrelevantprojects.handle_request(data.data, function(err,res){
         console.log('after login handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+
+//post a project
+consumerPostProject.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    postproject.handle_request(data.data, function(err,res){
+        console.log('after post project handle',res);
         var payloads = [
             { topic: data.replyTo,
                 messages:JSON.stringify({
@@ -361,3 +436,284 @@ consumergetspecificbidforproject.on('message', function (message) {
         return;
     });
 });
+
+
+//set worker for the project
+consumersetworkerforproject.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    setworkerforproject.handle_request(data.data, function(err,res){
+        console.log('after set worker project handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+//get user account balance
+consumergetuseraccountbalance.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    getuseraccountbalance.handle_request(data.data, function(err,res){
+        console.log('after set worker project handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+//transaction
+consumertransact.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    transact.handle_request(data.data, function(err,res){
+        console.log('after set worker project handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+//get search criteria
+consumergetsearchcriteria.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    getsearchcriteria.handle_request(data.data, function(err,res){
+        console.log('after set worker project handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+//get search criteria for dashboard
+consumergetsearchcriteriafordashboard.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    getsearchcriteriafordashboard.handle_request(data.data, function(err,res){
+        console.log('after set worker project handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+//get search criteria for freelancer dashboard
+consumergetsearchcriteriafordashboardfreelancer.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    getsearchcriteriafordashboardfreelancer.handle_request(data.data, function(err,res){
+        console.log('after set worker project handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+//get transaction history for a user
+consumergettransactionhistory.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    gettransactionhistory.handle_request(data.data, function(err,res){
+        console.log('after set worker project handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+//update user balance
+consumerupdateuserbalance.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    updateuserbalance.handle_request(data.data, function(err,res){
+        console.log('after set worker project handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+//insert worker comment
+consumerinsertworkercomment.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    insertworkercomment.handle_request(data.data, function(err,res){
+        console.log('after insert worker comment handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+//get worker comment
+consumergetworkercomment.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    getworkercomment.handle_request(data.data, function(err,res){
+        console.log('after get worker comment handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+//get user image
+consumergetuserimage.on('message', function (message) {
+    console.log('message received');
+    console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    console.log('Data after parsing', data);
+    console.log('Data after parsing priting data only', data.data);
+    getuserimage.handle_request(data.data, function(err,res){
+        console.log('after get worker comment handle',res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+
+
+
+

@@ -10,9 +10,13 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^1.0.3",
+    "fs": "0.0.1-security",
     "kafka-node": "^2.2.3",
     "mongodb": "^2.2.35",
+    "multiparty": "^4.1.3",
+    "nodemailer": "^4.6.4",
     "passport": "^0.4.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "util": "^0.10.3"
   }
 }

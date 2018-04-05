@@ -14,7 +14,8 @@ function handle_request(msg, callback){
            open: 'open',
            worker: '',
            number_of_bids: 0,
-           estimated_completion_date: null
+           estimated_completion_date: null,
+           comment: ''
        }).then( (response) => {
            console.log("Project Insertion Successfully");
            console.log(response.insertedId);
