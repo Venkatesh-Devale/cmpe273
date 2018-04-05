@@ -44,7 +44,7 @@ function handle_request(msg, callback) {
                                     console.log("projectRequiredSkillsArray",projectRequiredSkillsArray);
                                     for(var j = 0; j < userSkillsArray.length; j++) {
                                         for(var k = 0; k < projectRequiredSkillsArray.length; k++) {
-                                            if(userSkillsArray[j].toLowerCase() === projectRequiredSkillsArray[k].toLocaleLowerCase()) {
+                                            if(userSkillsArray[j].toLowerCase().trim() === projectRequiredSkillsArray[k].toLocaleLowerCase().trim()) {
                                                 count++;
                                             }
                                         }

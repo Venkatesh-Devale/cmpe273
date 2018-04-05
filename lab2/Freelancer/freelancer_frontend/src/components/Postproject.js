@@ -35,6 +35,7 @@ class Postproject extends Component {
 
     submitProject(e) {
         e.preventDefault();
+
         const project = {
             id: uuid.v4(),
             owner: localStorage.getItem('username'),
@@ -98,11 +99,12 @@ class Postproject extends Component {
                             </div>
                             <div className="form-group">
                                 <p>
-                                    Freelancers will use these skills to find projects they are most interested and experienced in.
+                                    Freelancers will use these skills to find projects they are most interested and experienced in. If you are entering hardware programming enter hardware,programming.
+                                    Try to be as specific as possible.
                                 </p>
                             </div>
                             <div className="form-group">
-                                <input type="text" ref="skillsRequired"  onChange={this.handleChange} className="form-control" id="txtskillsRequired" placeholder="What skills are required?" name="skillsRequired" required/>
+                                <input type="text" ref="skillsRequired"  onChange={this.handleChange} className="form-control" id="txtskillsRequired"  pattern="^([a-zA-Z]+[,]?)+[a-zA-Z]+$" title="Enter comma separated skills as one word without spaces if you are entering multiple composite skills" placeholder="What skills are required?" name="skillsRequired" required/>
                             </div>
                             <br/>
                             <div className="form-group">

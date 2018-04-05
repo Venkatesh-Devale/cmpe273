@@ -34,6 +34,8 @@ class Myrelevantprojects extends Component {
                                 }, () => {
                                     console.log("Printing relevant projects on react side", this.state.relevantProjects);
                                 })
+                            } else {
+                                alert('Please update atleast 3 skills in your profile to get relevant projects');
                             }
                         })
                 }

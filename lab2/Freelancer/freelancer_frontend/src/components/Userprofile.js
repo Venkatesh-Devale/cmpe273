@@ -61,8 +61,7 @@ class Userprofile extends Component {
 
     saveUpdatedUser(e) {
         e.preventDefault();
-
-
+        var flag = 0;
         const newUser = {
             username: this.state.username,
             email: this.state.email,
@@ -70,14 +69,33 @@ class Userprofile extends Component {
             aboutme: this.state.aboutme,
             skills: this.state.skills,
         }
+        //final regex for validating if only one skill entered
+        var pattern1 = /^([a-zA-Z]+)+[a-zA-Z]+$/g;
+        //final regex for validating if comma separated skills entered
+        var pattern2 = /^([a-zA-Z]+,)+[a-zA-Z]+$/g;
+        if(pattern1.test(this.state.skills)) {
+            console.log('Only single word in user skills');
+            flag = 1;
+        }
 
-        this.setState({
-            editing: false,
-            disabled: true
-        })
+        else if(pattern2.test(this.state.skills)) {
+            console.log('Comma separated skills');
+            flag = 2;
+        }
 
-        console.log(newUser);
-        this.props.saveUpdatedUser(newUser);
+        if(flag === 1 || flag === 2) {
+            this.setState({
+                editing: false,
+                disabled: true
+            })
+
+            console.log(newUser);
+            this.props.saveUpdatedUser(newUser);
+
+        } else {
+            alert('Enter comma separated skills without spaces if you are entering multiple skills')
+        }
+
     }
 
 
@@ -115,7 +133,7 @@ class Userprofile extends Component {
                 <div className="form-group">
                                 <div className="btn-group btn-group-justified">
                                     <div className="btn-group">
-                                        <button type="button" onClick={this.saveUpdatedUser.bind(this)} className="btn btn-primary form-control"><label>Save</label></button>
+                                        <button type="submit" onClick={this.saveUpdatedUser.bind(this)} className="btn btn-primary form-control"><label>Save</label></button>
                                     </div>
                                     <div className="btn-group">
                                         <button type="button" onClick={this.cancel.bind(this)} className="btn btn-primary form-control"><label>Cancel</label></button>
@@ -160,10 +178,13 @@ class Userprofile extends Component {
                         <div id='profileSkillsAndEditButton'>
                             {buttons}
                             <div id = 'profileSkills'>
-                                <div className="form-group">
-                                    <label>Skills:  <span className="glyphicon glyphicon-edit"></span></label>
-                                    <textarea id="txtskills" ref="skills" onChange={this.handleChange}  value={this.state.skills} className="form-control" rows="5" name='skills' disabled={this.state.disabled}></textarea>
-                                </div>
+                                <form>
+                                    <div className="form-group">
+                                        <label>Skills:  <span className="glyphicon glyphicon-edit"></span></label>
+                                        <textarea id="txtskills" ref="skills" onChange={this.handleChange}  value={this.state.skills} className="form-control" rows="5" name='skills' placeholder="Enter comma separated skills without spaces if you are entering multiple skills" disabled={this.state.disabled}></textarea>
+                                    </div>
+                                </form>
+
                             </div>
                         </div>
                     </div>

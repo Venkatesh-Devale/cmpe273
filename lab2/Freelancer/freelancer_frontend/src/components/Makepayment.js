@@ -94,7 +94,7 @@ class Makepayment extends Component {
                 .then((response) => {
                     console.log('In handlePayment submission', response.data);
                     if(response.data === '200') {
-                        alert('Tranasaction Successful,now the project is closed for bidding. Redirecting you to your dashboard. ');
+                        alert('Tranasaction Successful,now the project is closed for bidding. Redirecting you to project. ');
                         this.props.history.push(`/projectdetails/${ this.state.projectid }`);
                     } else {
                         alert('Error in transaction.');

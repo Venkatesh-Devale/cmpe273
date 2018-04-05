@@ -7,6 +7,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 //var session = require('client-sessions');
 var session = require('express-session');
+var mongoSessionURL = "mongodb://localhost:27017/sessions";
+var mongoStore = require("connect-mongo")(session);
 var passport  = require('passport');
 var localStrategy = require('passport-local').Strategy;
 var index = require('./routes/index');
@@ -38,11 +40,14 @@ app.use(session({
   duration : 30 * 60 * 1000,
   activeDuration : 5 * 60 * 1000,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: new mongoStore({
+      url: mongoSessionURL
+  })
 }));
 
 app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.session());
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
