@@ -189,21 +189,21 @@ class Transactionmanager extends Component {
                                                 <form onSubmit={this.handleAddMoney}>
                                                     <div className='form-group'>
                                                         <label htmlFor="txtamount">Amount:</label>
-                                                        <input type='text' onChange={this.handleChange} className='form-control col-lg-2' id='txtamount' name='amount' required/>
+                                                        <input type='text' onChange={this.handleChange} className='form-control col-lg-2' id='txtamount' name='amount' pattern="[0-9]+" title="Enter valid digits only" required/>
                                                     </div>
                                                     <div className="form-group">
                                                         <label htmlFor="nameOnCard">Name on Card</label>
-                                                        <input type="text" className="form-control" id="nameOnCard"  />
+                                                        <input type="text" className="form-control" id="nameOnCard" pattern="[a-zA-Z]+[\s]?[a-zA-Z]*" title="Enter valid characters only for name" required/>
                                                     </div>
 
                                                     <div className="form-group">
                                                         <label htmlFor="crediCardNum">Credit Card Number</label>
-                                                        <input type="text" className="form-control" id="crediCardNum" />
+                                                        <input type="text" className="form-control" id="crediCardNum" pattern="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" title="Enter 16 digits valid credit card number" required/>
                                                     </div>
 
                                                     <div className="form-group">
                                                         <label htmlFor="cvv">CVV:</label>
-                                                        <input type="text" className="form-control col-sm-1" id="cvv" />
+                                                        <input type="text" className="form-control col-sm-2" id="cvv" pattern="[0-9][0-9][0-9]" title="Enter 3 digits valid CVV" required/>
                                                     </div>
 
                                                     <div className="form-group">
@@ -269,7 +269,7 @@ class Transactionmanager extends Component {
                                                 <form onSubmit={this.handleWithdrawMoney}>
                                                     <div className='form-group'>
                                                         <label htmlFor="txtamount">Amount:</label>
-                                                        <input type='text' onChange={this.handleChange} className='form-control col-lg-2' id='txtamount' name='amount' required/>
+                                                        <input type='text' onChange={this.handleChange} className='form-control col-lg-2' id='txtamount' name='amount' pattern="[0-9]+" title="Enter valid digits only" required/>
                                                     </div>
 
                                                     <div className='form-group'>

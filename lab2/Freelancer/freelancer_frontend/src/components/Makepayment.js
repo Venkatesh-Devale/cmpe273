@@ -74,33 +74,36 @@ class Makepayment extends Component {
 
     handlePaymentSubmission(e) {
         e.preventDefault();
-        console.log("In payment submission printing the state...", this.state);
-        if(this.state.bidamount > this.state.employerbalance) {
-            alert("Please add money to your account...");
-        } else {
-            //deducting money from employer account and adding to freelancer account after that insert this transaction in transaction history table
-            var transactionDetails = {
-                projectid: this.state.projectid,
-                worker: this.state.worker,
-                employer: this.state.employer,
-                projectname: this.state.projectname,
-                transactionidemployer: uuid.v4(),
-                transactionidworker: uuid.v4(),
-                employerbalance: this.state.employerbalance,
-                workerbalance: this.state.workerbalance,
-                bidamount: this.state.bidamount
+
+            console.log("In payment submission printing the state...", this.state);
+            if(this.state.bidamount > this.state.employerbalance) {
+                alert("Please add money to your account...");
+            } else {
+                //deducting money from employer account and adding to freelancer account after that insert this transaction in transaction history table
+                var transactionDetails = {
+                    projectid: this.state.projectid,
+                    worker: this.state.worker,
+                    employer: this.state.employer,
+                    projectname: this.state.projectname,
+                    transactionidemployer: uuid.v4(),
+                    transactionidworker: uuid.v4(),
+                    employerbalance: this.state.employerbalance,
+                    workerbalance: this.state.workerbalance,
+                    bidamount: this.state.bidamount
+                }
+                axios.post('http://localhost:3001/transact', transactionDetails, {withCredentials: true})
+                    .then((response) => {
+                        console.log('In handlePayment submission', response.data);
+                        if(response.data === '200') {
+                            alert('Tranasaction Successful,now the project is closed for bidding. Redirecting you to project. ');
+                            this.props.history.push(`/projectdetails/${ this.state.projectid }`);
+                        } else {
+                            alert('Error in transaction.');
+                        }
+                    })
             }
-            axios.post('http://localhost:3001/transact', transactionDetails, {withCredentials: true})
-                .then((response) => {
-                    console.log('In handlePayment submission', response.data);
-                    if(response.data === '200') {
-                        alert('Tranasaction Successful,now the project is closed for bidding. Redirecting you to project. ');
-                        this.props.history.push(`/projectdetails/${ this.state.projectid }`);
-                    } else {
-                        alert('Error in transaction.');
-                    }
-                })
-        }
+
+
     }
 
 
@@ -119,17 +122,17 @@ class Makepayment extends Component {
 
                         <div className="form-group">
                             <label htmlFor="nameOnCard">Name on Card</label>
-                            <input type="text" className="form-control col-lg-5" id="nameOnCard"  />
+                            <input type="text" className="form-control col-lg-5" id="nameOnCard" required/>
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="crediCardNum">Credit Card Number</label>
-                            <input type="text" className="form-control col-lg-5" id="crediCardNum" />
+                            <input type="text" className="form-control col-lg-5" id="crediCardNum" pattern="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" title="Enter 16 digits valid credit card number" required/>
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="cvv">CVV:</label>
-                            <input type="text" className="form-control col-sm-1" id="cvv" />
+                            <input type="text" className="form-control col-sm-1" id="cvv" pattern="[0-9][0-9][0-9]" title="Enter 3 digits valid CVV" required/>
                         </div>
 
                         <div className="form-group">
