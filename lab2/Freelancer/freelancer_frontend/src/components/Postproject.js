@@ -77,7 +77,7 @@ class Postproject extends Component {
                                 <h3>Choose a name for your project</h3>
                             </div>
                             <div className="form-group">
-                                <input type="text" ref="title"  onChange={this.handleChange} className="form-control" id="txtTitle" placeholder="e.g. Build me a website" name="title" required/>
+                                <input type="text" ref="title"  onChange={this.handleChange} className="form-control" id="txtTitle" pattern="([a-zA-Z]+\s?[a-zA-Z]*)+" title="Enter valid project name" placeholder="e.g. Build me a website" name="title" required/>
                             </div>
                             <br/>
                             <div className="form-group">

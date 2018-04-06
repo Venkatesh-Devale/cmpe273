@@ -122,7 +122,7 @@ class Makepayment extends Component {
 
                         <div className="form-group">
                             <label htmlFor="nameOnCard">Name on Card</label>
-                            <input type="text" className="form-control col-lg-5" id="nameOnCard" required/>
+                            <input type="text" className="form-control col-lg-5" id="nameOnCard" pattern="[a-zA-Z]+[\s]?[a-zA-Z]*" title="Enter valid characters only for name" required/>
                         </div>
 
                         <div className="form-group">

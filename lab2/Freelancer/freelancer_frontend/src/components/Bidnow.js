@@ -93,11 +93,11 @@ class Bidnow extends Component {
                             <form onSubmit={this.handleBidSubmit.bind(this)}>
                                 <div className='form-group'>
                                     Bid(USD):
-                                    <input type='text' onChange={this.handleChange} className='form-control' id='txtBid' name='bid' required/>
+                                    <input type='text' onChange={this.handleChange} className='form-control' id='txtBid' name='bid' pattern = "[0-9]+" title="Enter valid digits only" required/>
                                 </div>
                                 <div className='form-group'>
                                     Deliver in(Days):
-                                    <input type='text' onChange={this.handleChange} className='form-control' id='txtDays' name='deliveryDays' required/>
+                                    <input type='text' onChange={this.handleChange} className='form-control' id='txtDays' name='deliveryDays' pattern = "[0-9]+" title="Enter valid digits only" required/>
                                 </div>
                                 <div className='form-group'>
                                     <input type='submit' value='Place Bid' className='form-control btn btn-primary' id='btnSubmitBid' name='submitBid'/>
