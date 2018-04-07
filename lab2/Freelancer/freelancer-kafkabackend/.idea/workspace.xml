@@ -14,11 +14,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="server.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-306">
-              <caret line="9" column="53" lean-forward="false" selection-start-line="9" selection-start-column="53" selection-end-line="9" selection-end-column="53" />
+            <state relative-caret-position="918">
+              <caret line="54" column="79" lean-forward="false" selection-start-line="54" selection-start-column="56" selection-end-line="54" selection-end-column="79" />
               <folding>
                 <element signature="e#4124#4851#0" expanded="false" />
                 <element signature="e#4939#5691#0" expanded="false" />
@@ -51,10 +51,42 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="mongo.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/services/mongo.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="getspecificbidforproject.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/services/getspecificbidforproject.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="356">
+              <caret line="101" column="61" lean-forward="false" selection-start-line="101" selection-start-column="61" selection-end-line="101" selection-end-column="61" />
+              <folding>
+                <element signature="e#146#177#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="login.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/services/login.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="816">
+              <caret line="48" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="48" selection-end-column="40" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="getallrelevantopenprojects.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/services/getallrelevantopenprojects.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="132">
+            <state relative-caret-position="782">
               <caret line="46" column="147" lean-forward="false" selection-start-line="46" selection-start-column="147" selection-end-line="46" selection-end-column="147" />
               <folding />
             </state>
@@ -75,7 +107,6 @@
       <list>
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/kafka/Connection.js" />
-        <option value="$PROJECT_DIR$/services/mongo.js" />
         <option value="$PROJECT_DIR$/services/signup.js" />
         <option value="$PROJECT_DIR$/services/login.js" />
         <option value="$PROJECT_DIR$/services/getuserprofile.js" />
@@ -86,7 +117,6 @@
         <option value="$PROJECT_DIR$/services/getmyassignedprojects.js" />
         <option value="$PROJECT_DIR$/services/getproject.js" />
         <option value="$PROJECT_DIR$/services/getAllBidsForThisProject.js" />
-        <option value="$PROJECT_DIR$/services/getspecificbidforproject.js" />
         <option value="$PROJECT_DIR$/services/getallprojects.js" />
         <option value="$PROJECT_DIR$/services/setworkerforproject.js" />
         <option value="$PROJECT_DIR$/services/getuseraccountbalance.js" />
@@ -104,6 +134,8 @@
         <option value="$PROJECT_DIR$/services/saveimage.js" />
         <option value="$PROJECT_DIR$/server.js" />
         <option value="$PROJECT_DIR$/services/getallrelevantopenprojects.js" />
+        <option value="$PROJECT_DIR$/services/mongo.js" />
+        <option value="$PROJECT_DIR$/services/getspecificbidforproject.js" />
       </list>
     </option>
   </component>
@@ -145,7 +177,6 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -167,6 +198,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -211,11 +243,15 @@
       <workItem from="1522817264432" duration="7644000" />
       <workItem from="1522870751179" duration="16712000" />
       <workItem from="1522954044593" duration="5918000" />
+      <workItem from="1523061467870" duration="523000" />
+      <workItem from="1523062165149" duration="3215000" />
+      <workItem from="1523073415069" duration="280000" />
+      <workItem from="1523073879685" duration="39000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43656000" />
+    <option name="totallyTimeSpent" value="47713000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
@@ -224,11 +260,11 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="1.0" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25882354" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -253,6 +289,187 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/services/getspecificbidforproject.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="101" column="61" lean-forward="false" selection-start-line="101" selection-start-column="61" selection-end-line="101" selection-end-column="61" />
+          <folding>
+            <element signature="e#146#177#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="918">
+          <caret line="54" column="79" lean-forward="false" selection-start-line="54" selection-start-column="56" selection-end-line="54" selection-end-column="79" />
+          <folding>
+            <element signature="e#4124#4851#0" expanded="false" />
+            <element signature="e#4939#5691#0" expanded="false" />
+            <element signature="e#5752#6481#0" expanded="false" />
+            <element signature="e#6566#7295#0" expanded="false" />
+            <element signature="e#7374#8107#0" expanded="false" />
+            <element signature="e#8186#8923#0" expanded="false" />
+            <element signature="e#9019#9763#0" expanded="false" />
+            <element signature="e#9838#10578#0" expanded="false" />
+            <element signature="e#10674#11418#0" expanded="false" />
+            <element signature="e#11511#12263#0" expanded="false" />
+            <element signature="e#12354#13095#0" expanded="false" />
+            <element signature="e#13189#13932#0" expanded="false" />
+            <element signature="e#14001#14733#0" expanded="false" />
+            <element signature="e#14836#15582#0" expanded="false" />
+            <element signature="e#15685#16431#0" expanded="false" />
+            <element signature="e#16526#17280#0" expanded="false" />
+            <element signature="e#17374#18130#0" expanded="false" />
+            <element signature="e#18198#18941#0" expanded="false" />
+            <element signature="e#19026#19778#0" expanded="false" />
+            <element signature="e#19889#20653#0" expanded="false" />
+            <element signature="e#20785#21559#0" expanded="false" />
+            <element signature="e#21663#22419#0" expanded="false" />
+            <element signature="e#22504#23256#0" expanded="false" />
+            <element signature="e#23345#24102#0" expanded="false" />
+            <element signature="e#24185#24936#0" expanded="false" />
+            <element signature="e#25011#25758#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/mongo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/login.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="816">
+          <caret line="48" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="48" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/getallrelevantopenprojects.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="46" column="147" lean-forward="false" selection-start-line="46" selection-start-column="147" selection-end-line="46" selection-end-column="147" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/getspecificbidforproject.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="101" column="61" lean-forward="true" selection-start-line="101" selection-start-column="61" selection-end-line="101" selection-end-column="61" />
+          <folding>
+            <element signature="e#146#177#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="918">
+          <caret line="54" column="79" lean-forward="false" selection-start-line="54" selection-start-column="56" selection-end-line="54" selection-end-column="79" />
+          <folding>
+            <element signature="e#4124#4851#0" expanded="false" />
+            <element signature="e#4939#5691#0" expanded="false" />
+            <element signature="e#5752#6481#0" expanded="false" />
+            <element signature="e#6566#7295#0" expanded="false" />
+            <element signature="e#7374#8107#0" expanded="false" />
+            <element signature="e#8186#8923#0" expanded="false" />
+            <element signature="e#9019#9763#0" expanded="false" />
+            <element signature="e#9838#10578#0" expanded="false" />
+            <element signature="e#10674#11418#0" expanded="false" />
+            <element signature="e#11511#12263#0" expanded="false" />
+            <element signature="e#12354#13095#0" expanded="false" />
+            <element signature="e#13189#13932#0" expanded="false" />
+            <element signature="e#14001#14733#0" expanded="false" />
+            <element signature="e#14836#15582#0" expanded="false" />
+            <element signature="e#15685#16431#0" expanded="false" />
+            <element signature="e#16526#17280#0" expanded="false" />
+            <element signature="e#17374#18130#0" expanded="false" />
+            <element signature="e#18198#18941#0" expanded="false" />
+            <element signature="e#19026#19778#0" expanded="false" />
+            <element signature="e#19889#20653#0" expanded="false" />
+            <element signature="e#20785#21559#0" expanded="false" />
+            <element signature="e#21663#22419#0" expanded="false" />
+            <element signature="e#22504#23256#0" expanded="false" />
+            <element signature="e#23345#24102#0" expanded="false" />
+            <element signature="e#24185#24936#0" expanded="false" />
+            <element signature="e#25011#25758#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/login.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="816">
+          <caret line="48" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="48" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/getallrelevantopenprojects.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="46" column="147" lean-forward="false" selection-start-line="46" selection-start-column="147" selection-end-line="46" selection-end-column="147" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/mongo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#4124#4851#0" expanded="false" />
+            <element signature="e#4939#5691#0" expanded="false" />
+            <element signature="e#5752#6481#0" expanded="false" />
+            <element signature="e#6566#7295#0" expanded="false" />
+            <element signature="e#7374#8107#0" expanded="false" />
+            <element signature="e#8186#8923#0" expanded="false" />
+            <element signature="e#9019#9763#0" expanded="false" />
+            <element signature="e#9838#10578#0" expanded="false" />
+            <element signature="e#10674#11418#0" expanded="false" />
+            <element signature="e#11511#12263#0" expanded="false" />
+            <element signature="e#12354#13095#0" expanded="false" />
+            <element signature="e#13189#13932#0" expanded="false" />
+            <element signature="e#14001#14733#0" expanded="false" />
+            <element signature="e#14836#15582#0" expanded="false" />
+            <element signature="e#15685#16431#0" expanded="false" />
+            <element signature="e#16526#17280#0" expanded="false" />
+            <element signature="e#17374#18130#0" expanded="false" />
+            <element signature="e#18198#18941#0" expanded="false" />
+            <element signature="e#19026#19778#0" expanded="false" />
+            <element signature="e#19889#20653#0" expanded="false" />
+            <element signature="e#20785#21559#0" expanded="false" />
+            <element signature="e#21663#22419#0" expanded="false" />
+            <element signature="e#22504#23256#0" expanded="false" />
+            <element signature="e#23345#24102#0" expanded="false" />
+            <element signature="e#24185#24936#0" expanded="false" />
+            <element signature="e#25011#25758#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/getallrelevantopenprojects.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="46" column="147" lean-forward="false" selection-start-line="46" selection-start-column="147" selection-end-line="46" selection-end-column="147" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/server.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -415,13 +632,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/services/mongo.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/services/getmypublishedprojects.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="459">
@@ -513,13 +723,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/services/getspecificbidforproject.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="407">
-          <caret line="68" column="43" lean-forward="false" selection-start-line="68" selection-start-column="43" selection-end-line="68" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/services/updateuserbalance.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="442">
@@ -555,13 +758,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/services/login.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="548">
-          <caret line="48" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="48" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/services/checkexistinguser.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
@@ -591,18 +787,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/services/getallrelevantopenprojects.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="46" column="147" lean-forward="false" selection-start-line="46" selection-start-column="147" selection-end-line="46" selection-end-column="147" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-306">
-          <caret line="9" column="53" lean-forward="false" selection-start-line="9" selection-start-column="53" selection-end-line="9" selection-end-column="53" />
+        <state relative-caret-position="918">
+          <caret line="54" column="79" lean-forward="false" selection-start-line="54" selection-start-column="56" selection-end-line="54" selection-end-column="79" />
           <folding>
             <element signature="e#4124#4851#0" expanded="false" />
             <element signature="e#4939#5691#0" expanded="false" />
@@ -630,6 +818,40 @@
             <element signature="e#23345#24102#0" expanded="false" />
             <element signature="e#24185#24936#0" expanded="false" />
             <element signature="e#25011#25758#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/login.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="816">
+          <caret line="48" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="48" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/mongo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/getallrelevantopenprojects.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="46" column="147" lean-forward="false" selection-start-line="46" selection-start-column="147" selection-end-line="46" selection-end-column="147" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/getspecificbidforproject.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="356">
+          <caret line="101" column="61" lean-forward="false" selection-start-line="101" selection-start-column="61" selection-end-line="101" selection-end-column="61" />
+          <folding>
+            <element signature="e#146#177#0" expanded="false" />
           </folding>
         </state>
       </provider>

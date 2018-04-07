@@ -1,5 +1,7 @@
 var mongoClient = require('mongodb').MongoClient;
-var url = 'mongodb://localhost:27017/freelancer';
+//var url = 'mongodb://localhost:27017/freelancer';
+
+var url = "mongodb://root:root@ds149495.mlab.com:49495/cmpe273venkateshfreelancer";
 
 
 exports.connect = (callback) => {
