@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
+import url from '../serverurl';
 
 class Myassignedprojects extends Component {
 
@@ -16,7 +17,7 @@ class Myassignedprojects extends Component {
 
     componentWillMount() {
         console.log('In my Myassignedprojects');
-        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        axios.get(url + '/checksession', { withCredentials: true })
             .then( (response) => {
                 console.log("In render userhome myassignedprojects component will mount...", response.data.session.username);
 
@@ -24,7 +25,7 @@ class Myassignedprojects extends Component {
                     var user = {
                         username: response.data.session.username
                     }
-                    axios.post('http://localhost:3001/getmyassignedprojects', user, {withCredentials: true})
+                    axios.post(url + '/getmyassignedprojects', user, {withCredentials: true})
                         .then((response) => {
                             console.log(response.data);
                             if(response.data.myassignedprojectsArray.length !== 0) {

@@ -16,6 +16,7 @@ function handle_request(msg, callback) {
 
             var myquery = { id: msg.pid };
             var date = new Date();
+
             date.setDate(msg.period);
             var newvalues = {$set: {worker: msg.freelancer , estimated_completion_date: date}} ;
 

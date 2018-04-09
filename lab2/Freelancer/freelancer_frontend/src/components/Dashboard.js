@@ -5,6 +5,7 @@ import UserNavbar from './UserNavbar';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Pagination from './Pagination';
+import url from '../serverurl';
 
 
 class Dashboard extends Component {
@@ -27,7 +28,7 @@ class Dashboard extends Component {
     }
 
     componentWillMount() {
-        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        axios.get(url + '/checksession', { withCredentials: true })
             .then( (response) => {
                 console.log("In render dashboard component will mount...", response.data.session.username);
                 if(response.data.session === "ERROR") {
@@ -54,7 +55,7 @@ class Dashboard extends Component {
         const userDetails = {
             username: this.state.username
         }
-        axios.post('http://localhost:3001/getmypublishedprojects', userDetails, {withCredentials: true})
+        axios.post(url + '/getmypublishedprojects', userDetails, {withCredentials: true})
             .then((response) => {
                 console.log("After getting my published projects",response.data);
                 if(response.data === 'ERROR') {
@@ -130,7 +131,7 @@ class Dashboard extends Component {
             search: this.state.searchText,
             username: this.state.username
         }
-        axios.post("http://localhost:3001/getSearchCriteriaForDashBoard", search, { withCredentials: true})
+        axios.post(url + "/getSearchCriteriaForDashBoard", search, { withCredentials: true})
             .then((response) => {
                 console.log(response.data);
                 if(response.data.length !== 0) {

@@ -7,6 +7,7 @@ import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
+import url from '../serverurl';
 
 class Postproject extends Component {
     constructor() {
@@ -144,7 +145,7 @@ function mapDispatchToProps(dispatch) {
     return {
         postProject: (project) => {
             console.log('In postProjectDispatch of Postproject...', project);
-            axios.post('http://localhost:3001/postproject', project, {withCredentials: true})
+            axios.post(url+'/postproject', project, {withCredentials: true})
             .then((response) => {
                 console.log(response);
                 alert('Project created successfully...');

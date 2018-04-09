@@ -6,6 +6,7 @@ import Imageupload from './Imageupload';
 import '../css/style.css';
 import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
+import url from '../serverurl';
 
 class Userprofile extends Component {
     constructor() {
@@ -31,7 +32,7 @@ class Userprofile extends Component {
         const usernameJSON = {
             username: usernameFromSession
         }
-        axios.post('http://localhost:3001/getprofile', usernameJSON, {withCredentials: true})
+        axios.post(url+'/getprofile', usernameJSON, {withCredentials: true})
         .then((response) => {
             console.log('Userdetails retrieved from username in userprofile  ', response.data[0])
             this.setState({
@@ -206,7 +207,7 @@ function mapDispatchToProps(dispatch) {
     return {
         saveUpdatedUser: (user) => {
             console.log("In saveUpdatedUser:",user);
-            axios.post('http://localhost:3001/updateprofile', user, {withCredentials: true})
+            axios.post(url+'/updateprofile', user, {withCredentials: true})
             .then((response) => {
                 console.log(response);
                 dispatch({

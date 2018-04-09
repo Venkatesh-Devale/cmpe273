@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import url from '../serverurl';
 
 class UserNavbar extends Component {
 
@@ -11,7 +12,7 @@ class UserNavbar extends Component {
     }
 
     componentWillMount() {
-        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        axios.get(url+'/checksession', { withCredentials: true })
         .then( (response) => {
             console.log("In user navbar component will mount...", response.data.session.username);
             if(response.data.session !== "ERROR") {

@@ -5,6 +5,7 @@ import UserNavbar from './UserNavbar';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Pagination from './Pagination';
+import url from '../serverurl';
 
 class Dashboardfreelancer extends Component {
 
@@ -25,7 +26,7 @@ class Dashboardfreelancer extends Component {
     }
 
     componentWillMount() {
-        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        axios.get(url + '/checksession', { withCredentials: true })
             .then( (response) => {
                 console.log("In render dashboardfreelancer component will mount...", response.data.session.username);
                 if(response.data.session === "ERROR") {
@@ -48,7 +49,7 @@ class Dashboardfreelancer extends Component {
             const userDetails = {
                 username: this.state.username
             }
-            axios.post('http://localhost:3001/getmybiddedprojects', userDetails, {withCredentials: true})
+            axios.post(url + '/getmybiddedprojects', userDetails, {withCredentials: true})
                 .then((response) => {
                     console.log('Showing all bidded projects',response.data);
                     if(response.data === 'ERROR') {
@@ -132,7 +133,7 @@ class Dashboardfreelancer extends Component {
             search: this.state.searchText,
             username: localStorage.getItem('username')
         }
-        axios.post("http://localhost:3001/getSearchCriteriaForFreelancerDashboard", search, { withCredentials: true})
+        axios.post(url + "/getSearchCriteriaForFreelancerDashboard", search, { withCredentials: true})
             .then((response) => {
                 console.log(response.data);
                 if(response.data.length !== 0) {

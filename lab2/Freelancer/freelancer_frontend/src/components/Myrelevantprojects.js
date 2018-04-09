@@ -5,6 +5,7 @@ import UserNavbar from './UserNavbar';
 import Bidnow from './Bidnow';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
+import url from '../serverurl';
 
 class Myrelevantprojects extends Component {
 
@@ -17,7 +18,7 @@ class Myrelevantprojects extends Component {
 
     componentWillMount() {
         console.log('In my Myrelevantprojects');
-        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        axios.get(url+'/checksession', { withCredentials: true })
             .then( (response) => {
                 console.log("In render userhome component will mount...", response.data.session.username);
 
@@ -25,7 +26,7 @@ class Myrelevantprojects extends Component {
                     var user = {
                         username: response.data.session.username
                     }
-                    axios.post('http://localhost:3001/getallrelevantopenprojects', user, {withCredentials: true})
+                    axios.post(url+'/getallrelevantopenprojects', user, {withCredentials: true})
                         .then((response) => {
                             console.log(response.data);
                             if(response.data.finalRelevantProjectsArray.length !== 0) {

@@ -4,6 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import image from '../images/freelancerlogo.png';
 import '../css/style.css';
 import axios from 'axios';
+import url from '../serverurl';
 
 class Navbar extends Component {
 
@@ -16,7 +17,7 @@ class Navbar extends Component {
     }
 
     componentWillMount() {
-        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        axios.get(url+'/checksession', { withCredentials: true })
         .then( (response) => {
             console.log("In navbar component will mount..."+ response.data.session.username);
             if(response.data.session !== "ERROR") {
@@ -36,7 +37,7 @@ class Navbar extends Component {
         //alert(sessionStorage.getItem('username'));
          localStorage.removeItem('username');
         // 
-        axios.post('http://localhost:3001/logout', null, {withCredentials: true})
+        axios.post(url+'/logout', null, {withCredentials: true})
         .then((response) => {
             console.log(response.data);
             if(response.data.result === "Session destoryed..please login") {

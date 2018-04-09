@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Navbar from './Navbar';
 import axios from 'axios';
 import uuid from 'uuid';
+import url from '../serverurl';
 
 class Makepayment extends Component {
 
@@ -26,7 +27,7 @@ class Makepayment extends Component {
         const project = {
             projectid: this.props.match.params.value
         }
-        axios.post('http://localhost:3001/getspecificbidforproject', project, {withCredentials: true})
+        axios.post(url + '/getspecificbidforproject', project, {withCredentials: true})
             .then((response) => {
                 console.log('In getspecificbidforproject in makepayment axios: ', response.data);
                 this.setState({
@@ -41,7 +42,7 @@ class Makepayment extends Component {
                     var user = {
                         user: this.state.worker
                     }
-                    axios.post('http://localhost:3001/getuseraccountbalance', user, {withCredentials: true})
+                    axios.post(url + '/getuseraccountbalance', user, {withCredentials: true})
                         .then((response) => {
                             console.log('In getworkeraccountbalance in makepayment axios: ', response.data);
                             this.setState({
@@ -54,7 +55,7 @@ class Makepayment extends Component {
                      user = {
                         user: this.state.employer
                     }
-                    axios.post('http://localhost:3001/getuseraccountbalance', user, {withCredentials: true})
+                    axios.post(url + '/getuseraccountbalance', user, {withCredentials: true})
                         .then((response) => {
                             console.log('In getemployeraccountbalance in makepayment axios: ', response.data);
                             this.setState({
@@ -91,7 +92,7 @@ class Makepayment extends Component {
                     workerbalance: this.state.workerbalance,
                     bidamount: this.state.bidamount
                 }
-                axios.post('http://localhost:3001/transact', transactionDetails, {withCredentials: true})
+                axios.post(url + '/transact', transactionDetails, {withCredentials: true})
                     .then((response) => {
                         console.log('In handlePayment submission', response.data);
                         if(response.data === '200') {

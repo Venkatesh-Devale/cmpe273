@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Navbar from './Navbar';
 import '../css/style.css';
 import axios from 'axios';
+import url from '../serverurl';
 
 class Home extends Component {
 
@@ -12,7 +13,7 @@ class Home extends Component {
         // if(localStorage.getItem("username") !== null) {
         //     redirect = <Redirect to="/userhome" />
         // }
-        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        axios.get(url + '/checksession', { withCredentials: true })
         .then( (response) => {
             console.log("In render home component will mount...", response.data.session.username);
             if(response.data.session !== "ERROR") {

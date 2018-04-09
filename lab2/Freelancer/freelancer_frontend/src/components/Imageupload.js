@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import '../css/style.css';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import url from '../serverurl';
 //import image from '../images/freelancerlogo.png';
 
 class Imageuploader extends Component {
@@ -23,7 +24,7 @@ class Imageuploader extends Component {
     loadUserImage(){
 
         var self = this;
-        axios.get("http://localhost:3001/getuserimage?username=" + localStorage.getItem('username'), {withCredentials: true} )
+        axios.get(url + "/getuserimage?username=" + localStorage.getItem('username'), {withCredentials: true} )
         .then( (response) => {
             console.log('In imageupload', response.data);
             self.setState({
@@ -61,7 +62,7 @@ class Imageuploader extends Component {
         }
         if(this.state.fileSelected !== ""){
             var self =this;
-            axios.post('http://localhost:3001/saveimage', form_data, { withCredentials: true}, config)
+            axios.post(url + '/saveimage', form_data, { withCredentials: true}, config)
             .then( (response) => {
                 debugger
                 self.setState({
@@ -92,7 +93,8 @@ class Imageuploader extends Component {
         let $imagePreviewFinal = null;
         if (this.state.filename) {
             
-            $imagePreviewFinal = (<img src = { require('/Users/venkateshdevale/Desktop/private git/cmpe273/lab2/Freelancer/freelancer-server/images/' + this.state.filename) } alt = "This is user's display pic"/>);
+             // $imagePreviewFinal = (<img src = { require('/Users/venkateshdevale/Desktop/private git/cmpe273/lab2/Freelancer/freelancer-server/images/' + this.state.filename) } alt = "This is user's display pic"/>);
+            $imagePreviewFinal = (<img src = { require('/home/ec2-user/cmpe273/freelancer/freelancer-server/images/' + this.state.filename) } alt = "This is user's display pic"/>);
           }
         const style ={
             display : this.state.display
@@ -116,7 +118,7 @@ function mapDispatchToProps(dispatch) {
     return {
         saveImage : (image) => {
             //console.log("In mapDispatch" + imageDetails + "......" + imageName);
-            axios.post('http://localhost:3001/saveImage', image)
+            axios.post(url + '/saveImage', image)
             .then( (response) => {
                 if(response.data.message === 'Image Uploaded')
                     alert(response.data.message);

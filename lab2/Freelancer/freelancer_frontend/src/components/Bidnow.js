@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import '../css/style.css';
+import url from '../serverurl';
 
 class Bidnow extends Component {
     constructor() {
@@ -15,7 +16,7 @@ class Bidnow extends Component {
     }
 
     checkSession() {
-        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        axios.get(url + '/checksession', { withCredentials: true })
             .then( (response) => {
                 console.log("In render login component will mount...", response.data.session.username);
                 if(response.data.session !== "ERROR") {
@@ -123,7 +124,7 @@ function mapDispatchToProps(dispatch) {
     return {
         insertBid : (bid) => {
             console.log("In insertBid dispatcher actions", bid);
-            axios.post('http://localhost:3001/insertBidAndUpdateNumberOfBids', bid, {withCredentials: true})
+            axios.post(url + '/insertBidAndUpdateNumberOfBids', bid, {withCredentials: true})
             .then((response) => {
                 console.log(response.data);
                 if(response.data === 'BID INSERTED SUCCESS') {

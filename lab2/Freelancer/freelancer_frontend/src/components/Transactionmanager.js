@@ -5,6 +5,7 @@ import axios from 'axios';
 import uuid from 'uuid';
 import Pagination from './Pagination';
 import Piechart from './Piechart';
+import url from '../serverurl';
 
 class Transactionmanager extends Component {
 
@@ -26,7 +27,7 @@ class Transactionmanager extends Component {
     }
 
     componentWillMount() {
-        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        axios.get(url+'/checksession', { withCredentials: true })
             .then( (response) => {
                 console.log("In transactionmanager component will mount...", response.data.session.username);
                 if(response.data.session === "ERROR") {
@@ -38,14 +39,14 @@ class Transactionmanager extends Component {
                         var user = {
                             user: this.state.username
                         }
-                        axios.post('http://localhost:3001/getuseraccountbalance', user, {withCredentials: true})
+                        axios.post(url+'/getuseraccountbalance', user, {withCredentials: true})
                             .then((response) => {
                                 console.log('In getuseraccountbalance in makepayment axios: ', response.data);
                                 this.setState({
                                     userbalance: response.data[0].balance
                                 }, () => {
                                     console.log("User balance", this.state.userbalance);
-                                    axios.post('http://localhost:3001/gettransactionhistory', user, {withCredentials: true})
+                                    axios.post(url+'/gettransactionhistory', user, {withCredentials: true})
                                         .then((response) => {
                                             console.log('Getting all transaction history...', response.data);
                                             if(response.data === 'No transaction history for this user') {
@@ -88,7 +89,7 @@ class Transactionmanager extends Component {
             transactiontype: 'credit',
             projectname: 'Money Added'
         }
-        axios.post("http://localhost:3001/updateuserbalance", user, {withCredentials: true})
+        axios.post(url+"/updateuserbalance", user, {withCredentials: true})
             .then((response) => {
                 console.log(response);
                 alert("Amount credited Successfully...");
@@ -113,7 +114,7 @@ class Transactionmanager extends Component {
                 transactiontype: 'debit',
                 projectname: 'Money Withdrawn'
             }
-            axios.post("http://localhost:3001/updateuserbalance", user, {withCredentials: true})
+            axios.post(url+"/updateuserbalance", user, {withCredentials: true})
                 .then((response) => {
                     console.log(response);
                     alert("Amount debited Successfully...");

@@ -7,6 +7,7 @@ import Bidnow from './Bidnow';
 import ListAllBids from './ListAllBids';
 import Submissionpanelworker from "./Submissionpanelworker";
 import Submissionpanelemployer from "./Submissionpanelemployer";
+import url from '../serverurl';
 
 
 
@@ -31,7 +32,7 @@ class Projectdetailspage extends Component {
     }
 
     checkSession() {
-        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        axios.get(url+'/checksession', { withCredentials: true })
             .then( (response) => {
                 console.log("In projectdetails Component will mount checksession...", response.data.session.username);
                 if(response.data.session !== "ERROR") {
@@ -58,7 +59,7 @@ class Projectdetailspage extends Component {
             const projectId = {
                 projectid: this.state.projectId
             }
-            axios.post('http://localhost:3001/getproject', projectId, {withCredentials: true})
+            axios.post(url+'/getproject', projectId, {withCredentials: true})
             .then( (response) => {
                 console.log('In projectdetails Component will mount', response.data);
                 this.setState({

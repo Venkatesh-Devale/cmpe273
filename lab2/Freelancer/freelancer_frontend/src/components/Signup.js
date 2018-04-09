@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import image from '../images/freelancerlogo.png';
 import axios from 'axios';
-
+import url from '../serverurl';
 import '../css/style.css';
 
 
@@ -40,7 +40,7 @@ class Signup extends Component {
             emailid: this.state.emailid
 
         }
-        axios.post('http://localhost:3001/checkexistinguser', userDetails, {withCredentials: true})
+        axios.post(url+'/checkexistinguser', userDetails, {withCredentials: true})
             .then((response) => {
                 if(response.data === 'Username already exists') {
                     alert(response.data + " Please try different username");
@@ -123,7 +123,7 @@ function mapDispatchToProps(dispatch) {
    return {
     insertUser: (newUser) => {
         console.log(newUser);
-        axios.post('http://localhost:3001/signup', newUser, {withCredentials: true})
+        axios.post(url+'/signup', newUser, {withCredentials: true})
             .then((response) => {
             console.log(response);
             alert("Registered Successfully");

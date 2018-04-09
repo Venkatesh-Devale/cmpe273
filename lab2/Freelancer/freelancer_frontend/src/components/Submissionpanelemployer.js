@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import url from '../serverurl';
 
 class Submissionpanelemployer extends Component {
 
@@ -16,7 +17,7 @@ class Submissionpanelemployer extends Component {
         var projectdetails = {
             projectid: this.props.projectid
         }
-        axios.post('http://localhost:3001/getworkercomment', projectdetails, {withCredentials: true})
+        axios.post(url+'/getworkercomment', projectdetails, {withCredentials: true})
             .then((response) => {
                 console.log('Worker posted the comment', response.data);
                 if(response.data.comment !== null || response.data.comment !== '') {

@@ -3,6 +3,7 @@ import '../css/style.css';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import image from '../images/freelancerlogo.png';
+import url from '../serverurl';
 
 class Login extends Component {
     constructor() {
@@ -37,7 +38,7 @@ class Login extends Component {
     }
    
     render() {
-        axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        axios.get(url + '/checksession', { withCredentials: true })
         .then( (response) => {
             console.log("In render login component will mount...", response.data.session.username);
             if(response.data.session !== "ERROR") {
@@ -97,7 +98,7 @@ function mapDispatchToProps(dispatch) {
     return {
      loginUser: (userDetails) => {
          console.log("In Login dispatch",userDetails);
-         axios.post('http://localhost:3001/login', userDetails, { withCredentials: true })
+         axios.post(url + '/login', userDetails, { withCredentials: true })
              .then((response) => {
                  console.log("After login dispatch", response.data);
              if(response.data === 'ERROR') {

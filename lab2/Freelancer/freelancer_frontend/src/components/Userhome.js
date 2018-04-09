@@ -6,6 +6,7 @@ import axios from 'axios';
 import Pagination from './Pagination';
 import { Link } from 'react-router-dom';
 import '../css/style.css';
+import url from '../serverurl';
 
 
 class Userhome extends Component {
@@ -38,7 +39,7 @@ class Userhome extends Component {
     }
 
     getAllProjects() {
-        axios.post('http://localhost:3001/getallprojects', null, {withCredentials: true})
+        axios.post(url+'/getallprojects', null, {withCredentials: true})
             .then((response) => {
                 //console.log('In allopenprojects',response.data);
                 if(response.data === 'ERROR') {
@@ -106,7 +107,7 @@ class Userhome extends Component {
         const search = {
             search: this.state.searchText
         }
-        axios.post("http://localhost:3001/getSearchCriteria", search, { withCredentials: true})
+        axios.post(url+"/getSearchCriteria", search, { withCredentials: true})
             .then((response) => {
                 console.log(response.data);
                 if(response.data.length !== 0) {

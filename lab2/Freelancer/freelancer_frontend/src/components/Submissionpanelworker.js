@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import '../css/style.css';
 import axios from 'axios';
+import url from '../serverurl';
 
 class Submissionpanelworker extends Component {
 
@@ -20,7 +21,7 @@ class Submissionpanelworker extends Component {
             projectid: this.props.projectid,
             comment: this.state.comment
         }
-        axios.post('http://localhost:3001/insertworkercomment', projectComment, {withCredentials: true})
+        axios.post(url+'/insertworkercomment', projectComment, {withCredentials: true})
             .then((response) => {
                 console.log(response.data);
                 if(response.data === 'Comment Updated Successfully') {

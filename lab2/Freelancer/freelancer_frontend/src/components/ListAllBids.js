@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import '../css/style.css';
+import url from '../serverurl';
 
 class ListAllBids extends Component {
     constructor() {
@@ -21,7 +22,7 @@ class ListAllBids extends Component {
         const pid = {
             projectid : this.props.id
         }
-        axios.post('http://localhost:3001/getAllBidsForThisProject', pid, {withCredentials: true})
+        axios.post(url + '/getAllBidsForThisProject', pid, {withCredentials: true})
         .then( (response) => {
             console.log('In getAllBidsForThis project:',response.data);
             if(response.data.length === 0) {
@@ -76,7 +77,7 @@ class ListAllBids extends Component {
             freelancer : freelancer,
             period: period
         }
-        axios.post('http://localhost:3001/setworkerforproject', details, {withCredentials: true})
+        axios.post(url + '/setworkerforproject', details, {withCredentials: true})
         .then( (response) => {
             console.log("In hire button handle click", response.data);
             alert('Freelancer hired...check in your dashboard now...thanks');
@@ -97,7 +98,8 @@ class ListAllBids extends Component {
             return (
                 <tr key={k++}>
                 <td>
-                <img src = { require('/Users/venkateshdevale/Desktop/private git/cmpe273/lab2/Freelancer/freelancer-server/images/' + b.image_name) } alt = "" width= {'100px'} height={'100px'}/>
+                {/*<img src = { require('/Users/venkateshdevale/Desktop/private git/cmpe273/lab2/Freelancer/freelancer-server/images/' + b.image_name) } alt = "" width= {'100px'} height={'100px'}/>*/}
+                <img src = { require('/home/ec2-user/cmpe273/freelancer/freelancer-server/images/' + b.image_name) } alt = "" width= {'100px'} height={'100px'}/>
                 </td>
                 <td>
                     <div>
