@@ -8,7 +8,7 @@ var multiparty = require('multiparty');
 var util = require('util');
 var mongo = require('mongodb');
 var mongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
+var url = "mongodb://root:root@ds149495.mlab.com:49495/cmpe273venkateshfreelancer";
 var passport = require('passport')
     , LocalStrategy = require('passport-local').Strategy;
 var nodemailer = require('nodemailer');
@@ -1552,7 +1552,7 @@ router.post('/saveimage', (req, res) => {
                     if(err) throw err;
                     else {
                         console.log('Connected to mongodb');
-                        var dbo = db.db('freelancer');
+                        var dbo = db.db('cmpe273venkateshfreelancer');
                         dbo.collection('users').updateOne(
                             { username: fields.username[0] },
                             { $set: { image_name: fields.username[0] + "." + fileType[fileType.length - 1] } },

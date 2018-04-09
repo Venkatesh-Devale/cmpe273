@@ -85,6 +85,7 @@ function handle_request(msg, callback) {
 
                             };
                         });
+
                     });
                     callback(null, 'UPDATE_SUCCESS');
 

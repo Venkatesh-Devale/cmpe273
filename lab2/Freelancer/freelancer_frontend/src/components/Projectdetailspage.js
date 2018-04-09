@@ -70,7 +70,7 @@ class Projectdetailspage extends Component {
                     worker: response.data[0].worker,
                     budgetrange: response.data[0].budgetrange,
                     number_of_bids: response.data[0].number_of_bids,
-                    average : response.data[0].average,
+                    average : response.data[0].average.toFixed(2),
                     open: response.data[0].open
                 }, () => {
                     console.log('In projectdetails Component will mount showing state of employer',this.state.employer);

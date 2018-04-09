@@ -166,7 +166,7 @@ class Dashboardfreelancer extends Component {
                 </td>
                 <td>
                     <div>
-                        <p> { p.average } </p>
+                        <p> { p.average.toFixed(2) } </p>
                     </div>
                 </td>
                 <td>
