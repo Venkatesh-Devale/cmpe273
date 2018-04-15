@@ -64,7 +64,7 @@ class Imageuploader extends Component {
             var self =this;
             axios.post(url + '/saveimage', form_data, { withCredentials: true}, config)
             .then( (response) => {
-                debugger
+
                 self.setState({
                 filename: "" + localStorage.getItem('username') + "." + response.data.fileType
                     

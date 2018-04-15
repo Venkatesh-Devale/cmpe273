@@ -22,13 +22,7 @@ var kafka = require('./kafka/client');
 //     }
 // });
 
-// var connectionPool = mysql.createPool({
-//   connectionLimit : 1000,
-//   host : 'localhost',
-//   user : 'root',
-//   password : 'root',
-//   database : 'freelancer'
-// })
+
 
 
 
