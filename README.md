@@ -1,5 +1,21 @@
 # cmpe273
 
+LAB 2:
+
+1) Connect to AWS via given credentials in the report. Also check and start the instance if stopped.
+2) All folders like freelancer-frontend, freelancer-server and freelancer-kafkabackend reside in /home/ec2-            user/cmpe273/freelancer
+3) Get the public DNS and change the URL in serverurl.js in freelancer-frontend to get the change to current public DNS as it keeps on changing.
+4) Change the origin in CORS in freelancer-backend to point to current public DNS: 3000
+5) Goto cmpe273->Lab2->freelancer->freelancer-frontend.
+6) Do execute command 'npm install' to get all node_modules
+7) similarly do it for freelancer-backend and freelancer-kafkabackend from their directories.
+8) After getting node_modules, start the zookeeper and kafka from /home/ec2-user/kafka/kafka_2.11.1.0/kafka_2.11.1.0
+9) Once started properly, do 'npm start' in frontend, backend and kafkabackend respectively.
+10) Everything should run properly.
+
+
+LAB 1:
+
 1) For Calculator:
 
 
