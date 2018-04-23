@@ -26,7 +26,7 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 
 app.use(cors({
-  origin: 'http://ec2-54-67-33-238.us-west-1.compute.amazonaws.com:3000',
+  origin: 'http://ec2-54-153-5-232.us-west-1.compute.amazonaws.com:3000',
   credentials: true
 }));
 

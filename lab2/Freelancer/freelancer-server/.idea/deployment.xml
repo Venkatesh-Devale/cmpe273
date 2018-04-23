@@ -2,7 +2,7 @@
 <project version="4">
   <component name="PublishConfigData">
     <serverData>
-      <paths name="awsfreelancer">
+      <paths name="awsweserve">
         <serverdata>
           <mappings>
             <mapping deploy="/cmpe273/freelancer/freelancer-server" local="$PROJECT_DIR$" web="/" />
