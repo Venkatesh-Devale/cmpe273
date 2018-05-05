@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="b10f7d65-2ece-4469-8793-f2a62119523f" name="awsfandango" url="http://ec2-18-144-21-18.us-west-1.compute.amazonaws.com">
+        <fileTransfer host="ec2-18-144-21-18.us-west-1.compute.amazonaws.com" port="22" privateKey="$USER_HOME$/Downloads/vajid_awskey/freelance-ec2-instance.pem" rootFolder="/home/ec2-user" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="bf2e20d3-c1ab-41bf-9527-65e4ba5c43a4" name="awsfandangoreact" url="http://ec2-13-57-176-22.us-west-1.compute.amazonaws.com">
+        <fileTransfer host="ec2-13-57-176-22.us-west-1.compute.amazonaws.com" port="22" privateKey="$USER_HOME$/Downloads/vajid_awskey/freelance-ec2-instance.pem" rootFolder="/home/ec2-user" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
