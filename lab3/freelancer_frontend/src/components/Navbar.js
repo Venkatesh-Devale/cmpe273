@@ -15,34 +15,41 @@ class Navbar extends Component {
     }
 
     componentWillMount() {
-        axios.get('http://localhost:3001/checksession', { withCredentials: true })
-        .then( (response) => {
-            console.log("In navbar component will mount..."+ response.data.session.username);
-            if(response.data.session !== "ERROR") {
-                this.setState({
-                    isLoggedIn: true
-                })
-            } else {
-                this.setState({
-                    isLoggedIn: false
-                })
-            }
-        })
+        // axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        // .then( (response) => {
+        //     console.log("In navbar component will mount..."+ response.data.session.username);
+        //     if(response.data.session !== "ERROR") {
+        //         this.setState({
+        //             isLoggedIn: true
+        //         })
+        //     } else {
+        //         this.setState({
+        //             isLoggedIn: false
+        //         })
+        //     }
+        // })
+
+        if(localStorage.getItem("username") !== null) {
+            this.setState({
+                isLoggedIn: true
+            })
+        }
     }
     
     handleLogout() {
         //alert(sessionStorage.getItem('username'));
          localStorage.removeItem('username');
+         this.props.history.push('/');
         // 
-        axios.post('http://localhost:3001/logout', null, {withCredentials: true})
-        .then((response) => {
-            console.log(response.data);
-            if(response.data.result === "Session destoryed..please login") {
-               
-               this.props.history.push('/');
-            }
-            
-        })
+        // axios.post('http://localhost:3001/logout', null, {withCredentials: true})
+        // .then((response) => {
+        //     console.log(response.data);
+        //     if(response.data.result === "Session destoryed..please login") {
+        //
+        //        this.props.history.push('/');
+        //     }
+        //
+        // })
     }
 
     render() {

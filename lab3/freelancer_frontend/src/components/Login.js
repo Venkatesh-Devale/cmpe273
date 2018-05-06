@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import '../css/style.css';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-//import cookie from 'react-cookies';
+import { withRouter } from 'react-router';
 import axios from 'axios';
 
 class Login extends Component {
@@ -33,18 +32,24 @@ class Login extends Component {
             password : this.state.password
         }
         console.log(userDetails);
-        this.props.loginUser(userDetails);
+
+        axios.post('http://localhost:3001/user/login', userDetails, { withCredentials: true })
+            .then((response) => {
+                console.log("After login dispatch", response.data);
+                if(response.data.length === 0) {
+                    alert('Error in logging in..check username and password.')
+                }
+                else {
+                    localStorage.setItem('username', response.data[0].username);
+                    this.props.history.push('/userhome');
+                }
+
+            });
         
     }
    
     render() {
-        axios.get('http://localhost:3001/checksession', { withCredentials: true })
-        .then( (response) => {
-            console.log("In render login component will mount...", response.data.session.username);
-            if(response.data.session !== "ERROR") {
-                this.props.history.push('/userhome');
-            }
-        })
+
         return(
             <div className="Login"> 
             
@@ -75,35 +80,8 @@ class Login extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        username: state.username,
-        password: state.password,
-        loginData: state.login_data
-    }
-}
 
-function mapDispatchToProps(dispatch) {
-    return {
-     loginUser: (userDetails) => {
-         console.log("In Login dispatch",userDetails);
-         axios.post('http://localhost:3001/login', userDetails, { withCredentials: true })
-             .then((response) => {
-                 console.log("After login dispatch", response.data);
-             if(response.data === 'ERROR') {
-                alert('Error in logging in..check username and password.')
-                dispatch({type: 'ERROR',payload : response})
-             }
-             else {
-                console.log("In login...", response.data.session); 
-                localStorage.setItem('username', response.data.result);
-                dispatch({type: 'LOGIN_SUCCESS',payload : response})
-                
-             }
-               
-         });
-     }
-    }
- }
 
- export default connect(mapStateToProps, mapDispatchToProps)(Login);
+
+
+ export default withRouter(Login);

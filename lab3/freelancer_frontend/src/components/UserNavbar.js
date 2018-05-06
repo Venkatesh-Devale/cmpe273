@@ -11,15 +11,20 @@ class UserNavbar extends Component {
     }
 
     componentWillMount() {
-        axios.get('http://localhost:3001/checksession', { withCredentials: true })
-        .then( (response) => {
-            console.log("In user navbar component will mount...", response.data.session.username);
-            if(response.data.session !== "ERROR") {
-                this.setState({
-                    isLoggedIn: true
-                })
-            }
-        })
+        // axios.get('http://localhost:3001/checksession', { withCredentials: true })
+        // .then( (response) => {
+        //     console.log("In user navbar component will mount...", response.data.session.username);
+        //     if(response.data.session !== "ERROR") {
+        //         this.setState({
+        //             isLoggedIn: true
+        //         })
+        //     }
+        // })
+        if(localStorage.getItem("username") !== null) {
+            this.setState({
+                isLoggedIn: true
+            })
+        }
     }
 
     render() {
