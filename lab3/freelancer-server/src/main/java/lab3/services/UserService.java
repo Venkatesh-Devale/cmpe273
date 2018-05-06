@@ -22,4 +22,19 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public List<Users> getProfile(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public String updateUserProfile(String username, Users user) {
+        String response = "";
+        if(userRepository.save(user).getUsername().equals(username)) {
+            response = "success";
+        } else {
+            System.out.println("Error is updating userprofile");
+            response = "error";
+        }
+        return response;
+    }
+
 }

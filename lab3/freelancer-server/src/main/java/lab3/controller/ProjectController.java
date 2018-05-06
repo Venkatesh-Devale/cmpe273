@@ -19,12 +19,17 @@ public class ProjectController{
     @GetMapping(value = "/getallopenprojects", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Projects> getAllOpenProjects() {
         return new ResponseEntity(projectService.findAll(), HttpStatus.OK);
-
     }
 
     @PostMapping(value = "/postproject", consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody String postProject(@RequestBody Projects project) {
-        //System.out.println("AFter postproject in ProjectController" + projectService.save(project));
         return projectService.save(project);
+    }
+
+    @PostMapping(value = "/getproject", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Projects> getproject(@RequestBody Projects project) {
+        String projectid = project.getId();
+        System.out.println("In Project Controller" + projectid);
+        return new ResponseEntity(projectService.getproject(projectid), HttpStatus.OK);
     }
 }

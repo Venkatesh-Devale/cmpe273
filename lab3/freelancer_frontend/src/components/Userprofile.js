@@ -6,6 +6,7 @@ import Imageupload from './Imageupload';
 import '../css/style.css';
 import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
+import swal from 'sweetalert';
 
 class Userprofile extends Component {
     constructor() {
@@ -29,7 +30,7 @@ class Userprofile extends Component {
         const usernameJSON = {
             username: usernameFromSession
         }
-        axios.post('http://localhost:3001/getprofile', usernameJSON, {withCredentials: true})
+        axios.post('http://localhost:3001/user/getprofile', usernameJSON, {withCredentials: true})
         .then((response) => {
             console.log('Userdetails retrieved from username in userprofile  ', response.data[0])
             this.setState({
@@ -58,29 +59,35 @@ class Userprofile extends Component {
 
     saveUpdatedUser(e) {
         e.preventDefault();
-        
-        let newUser = {};
-        this.setState({
-            username: this.state.username,
-            email: this.state.email,
-            phone: this.state.phone,
-            aboutme: this.state.aboutme,
-            editing: false,
-            disabled: true
-        }, function() {
-            newUser.username = this.state.username;
-            newUser.email = this.state.email;
-            newUser.phone = this.state.phone;
-            newUser.aboutme = this.state.aboutme;    
-        })
+
+       var newUser = {
+           username : this.state.username,
+           email : this.state.email,
+           phone : this.state.phone,
+           aboutme : this.state.aboutme,
+       };
         console.log(newUser);
-        this.props.saveUpdatedUser(newUser);
+        axios.post('http://localhost:3001/user/updateprofile', newUser, {withCredentials: true})
+            .then((response) => {
+                console.log("After updating the user profile",response.data);
+                if(response.data === "success") {
+                    this.setState({
+                        editing: false,
+                        disabled: true
+                    }, () => {
+                        swal("User profile updated successfully","","success");
+                    })
+                }
+                else {
+                    swal("Error in updating profile, please check later","","warning");
+                }
+            })
     }
 
 
     handleChange = (event) => {
         this.setState({
-            [event.target.name] : [event.target.value]
+            [event.target.name] : event.target.value
         })
     }
 
@@ -170,28 +177,6 @@ class Userprofile extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        success: state.userprofileupdate_success,
-        logindata: state.login_data,
-        employerNameClicked: state.employerNameClicked
-    }
-}
 
-function mapDispatchToProps(dispatch) {
-    return {
-        saveUpdatedUser: (user) => {
-            console.log("In saveUpdatedUser:",user);
-            axios.post('http://localhost:3001/updateprofile', user, {withCredentials: true})
-            .then((response) => {
-                console.log(response);
-                dispatch({
-                    type:'UPDATE_PROFILE_SUCCESS',
-                    payload: response
-                })
-            })
-        }
-    }
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(Userprofile);
+export default Userprofile;

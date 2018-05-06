@@ -1,16 +1,12 @@
 package lab3.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity // This tells Hibernate to make a table out of this class
 public class Users {
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer id;
 
+    @Id
     private String username;
 
     private String email;
@@ -45,14 +41,6 @@ public class Users {
 
     public void setImage_name(String image_name) {
         this.image_name = image_name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getUsername() {

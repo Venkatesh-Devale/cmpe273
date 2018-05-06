@@ -33,4 +33,22 @@ public class UserController {
         return new ResponseEntity(userService.login(username, password), HttpStatus.OK);
     }
 
+
+    @PostMapping(path="/getprofile", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Users> getProfile (@RequestBody Users user  ){
+        System.out.println("User in getprofile" + user.getUsername());
+        String username = user.getUsername();
+        return new ResponseEntity(userService.getProfile(username), HttpStatus.OK);
+    }
+
+    @PostMapping(path="/updateprofile", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody String updateProfile (@RequestBody Users user  ){
+        System.out.println("Usercontroller in updateProfile");
+        String username = user.getUsername();
+        String response = userService.updateUserProfile(username, user);
+        return response;
+    }
+
+
+
 }

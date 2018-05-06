@@ -5,6 +5,8 @@ import lab3.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProjectService {
 
@@ -24,6 +26,10 @@ public class ProjectService {
             System.out.println("There are some error in post project save");
         }
         return response;
+    }
+
+    public List<Projects> getproject(String projectid) {
+        return projectRepository.getproject(projectid);
     }
 
 }

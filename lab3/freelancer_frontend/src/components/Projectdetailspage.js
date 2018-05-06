@@ -35,9 +35,9 @@ class Projectdetailspage extends Component {
             projectId: this.props.match.params.value
         }, () => {
             const projectId = {
-                projectid: this.state.projectId
+                id: this.state.projectId
             }
-            axios.post('http://localhost:3001/getproject', projectId, {withCredentials: true})
+            axios.post('http://localhost:3001/project/getproject', projectId, {withCredentials: true})
             .then( (response) => {
                 console.log('In projectdetails Component will mount', response.data);
                 this.setState({
@@ -110,7 +110,7 @@ class Projectdetailspage extends Component {
                         
                     </div>
                     
-                    <ListAllBids id = { this.state.projectId } owner = { this.state.employer } />
+                    {/*<ListAllBids id = { this.state.projectId } owner = { this.state.employer } />*/}
                 </div>
                 
             </div>
