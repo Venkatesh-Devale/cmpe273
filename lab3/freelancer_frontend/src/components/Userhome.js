@@ -16,18 +16,10 @@ class Userhome extends Component {
     }
     
     componentWillMount() {
-        
-        let param = null;
-        axios.post('http://localhost:3001/getallopenprojects', param, {withCredentials: true})
+        axios.get('http://localhost:3001/project/getallopenprojects', {withCredentials: true})
         .then((response) => {
-            //console.log('In allopenprojects',response.data);
-            if(response.data === 'ERROR') {
-                let emptyProject = [];
-                //emptyProject.push('No projects to show');
-                this.setState({
-                    projects: emptyProject
-                })
-            } else {
+            console.log('In allopenprojects',response.data);
+            if(response.data.length !== 0) {
                 this.setState({
                     projects: response.data
                 })
@@ -44,6 +36,9 @@ class Userhome extends Component {
             projectsToShow = []
         } else {
             projectsToShow = this.state.projects.map(p => {
+                if(p.number_of_bids == null) {
+                    p.number_of_bids = 0;
+                }
                 return (
                     <tr key={p.id}>
                     <td>

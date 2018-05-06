@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import image from '../images/freelancerlogo.png';
-import { connect } from 'react-redux';
-//import Login from './Login';
 import '../css/style.css';
 import uuid from 'uuid';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import Navbar from './Navbar';
 import UserNavbar from './UserNavbar';
+import swal from 'sweetalert';
+
 
 class Postproject extends Component {
     constructor() {
@@ -38,14 +38,21 @@ class Postproject extends Component {
         e.preventDefault();
         const project = {
             id: uuid.v4(),
-            owner: localStorage.getItem('username'),
+            employer: localStorage.getItem('username'),
             title: this.state.title,
             description: this.state.description,
-            skillsRequired: this.state.skillsRequired,
+            skills_required: this.state.skillsRequired,
             budgetrange: this.state.budgetrange
         }
         console.log('In submitProject of Postproject...', project);
-        this.props.postProject(project);
+        axios.post('http://localhost:3001/project/postproject', project, {withCredentials: true})
+            .then((response) => {
+                console.log(response.data);
+                if(response.data === "success")
+                    swal('Project created successfully...', "", "success");
+                else
+                    swal('Check backend there was an error',"", "warning");
+            })
     
     
     }
@@ -134,29 +141,6 @@ class Postproject extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        logindata: state.login_data,
-        projectInserted: state.projectInserted
-    }
-}
 
-function mapDispatchToProps(dispatch) {
-    return {
-        postProject: (project) => {
-            console.log('In postProjectDispatch of Postproject...', project);
-            axios.post('http://localhost:3001/postproject', project, {withCredentials: true})
-            .then((response) => {
-                console.log(response);
-                alert('Project created successfully...');
-                dispatch({
-                    type:'PROJECT_INSERTED_SUCCESS',
-                    payload: response
-                })
-            })
-        }
-    }
-    
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(Postproject);
+export default Postproject;
