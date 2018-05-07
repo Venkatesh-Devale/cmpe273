@@ -24,10 +24,10 @@ class Dashboardfreelancer extends Component {
             const userDetails = {
                 username: localStorage.getItem('username')
             }
-            axios.post('http://localhost:3001/getmybiddedprojects', userDetails, {withCredentials: true})
+            axios.post('http://localhost:3001/project/getmybiddedprojects', userDetails, {withCredentials: true})
             .then((response) => {
                 console.log('Showing all bidded projects',response.data);
-                if(response.data === 'ERROR') {
+                if(response.data.length === 0) {
                     let emptyProject = [];
                     emptyProject.push('No projects to show');
                     this.setState({
@@ -52,10 +52,18 @@ class Dashboardfreelancer extends Component {
     }
 
     render() {
+        let averageToShow;
+
         if(this.state.employerButtonClicked === true)
             this.props.history.push('/dashboard');
         let projectsToShow = [];
         projectsToShow = this.state.projects.map(p => {
+            if(p.averagebid === null) {
+                averageToShow = 0;
+            }
+            else {
+                averageToShow = p.averagebid;
+            }
             return (
                 <tr key={p.id}>
                 <td>
@@ -65,7 +73,7 @@ class Dashboardfreelancer extends Component {
                 </td>
                 <td>
                     <div>
-                        <p> { p.average } </p>
+                        <p> { averageToShow } </p>
                     </div>
                 </td>
                 <td>

@@ -1,13 +1,16 @@
 package lab3.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 
-
 @Entity
-public class Projects {
+public class ProjectsBidsDTO {
     @Id
     private String id;
+    private String freelancer;
+    private int period;
+    private int bidamount;
     private String title;
     private String description;
     private String skills_required;
@@ -19,30 +22,36 @@ public class Projects {
     private Double averagebid;
     private String open;
 
-
-
-    public String getOpen() {
-        return open;
-    }
-
-    public void setOpen(String open) {
-        this.open = open;
-    }
-
-    public Double getAveragebid() {
-        return averagebid;
-    }
-
-    public void setAveragebid(Double averagebid) {
-        this.averagebid = averagebid;
-    }
-
-    public String getId() {
+    public String getProjectid() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setProjectid(String projectid) {
+        this.id = projectid;
+    }
+
+    public String getFreelancer() {
+        return freelancer;
+    }
+
+    public void setFreelancer(String freelancer) {
+        this.freelancer = freelancer;
+    }
+
+    public int getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(int period) {
+        this.period = period;
+    }
+
+    public int getBidamount() {
+        return bidamount;
+    }
+
+    public void setBidamount(int bidamount) {
+        this.bidamount = bidamount;
     }
 
     public String getTitle() {
@@ -107,5 +116,21 @@ public class Projects {
 
     public void setEstimated_completion_date(Date estimated_completion_date) {
         this.estimated_completion_date = estimated_completion_date;
+    }
+
+    public Double getAveragebid() {
+        return averagebid;
+    }
+
+    public void setAveragebid(Double averagebid) {
+        this.averagebid = averagebid;
+    }
+
+    public String getOpen() {
+        return open;
+    }
+
+    public void setOpen(String open) {
+        this.open = open;
     }
 }

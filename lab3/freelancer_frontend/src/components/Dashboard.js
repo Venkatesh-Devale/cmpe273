@@ -20,10 +20,10 @@ class Dashboard extends Component {
             const userDetails = {
                 username: localStorage.getItem('username')
             }
-            axios.post('http://localhost:3001/getmypublishedprojects', userDetails, {withCredentials: true})
+            axios.post('http://localhost:3001/project/getmypublishedprojects', userDetails, {withCredentials: true})
             .then((response) => {
-                console.log(response.data);
-                if(response.data === 'ERROR') {
+                console.log("After getting my published projects:",response.data);
+                if(response.data.length === 0) {
                     let emptyProject = [];
                     //emptyProject.push('No projects to show');
                     this.setState({
@@ -45,6 +45,8 @@ class Dashboard extends Component {
 
     render() {
         let redirect = null;
+        var averageToShow;
+        var numberOfBidsToShow;
         if(localStorage.getItem("username") === null) {
             redirect = <Redirect to="/login" />
         }
@@ -60,6 +62,15 @@ class Dashboard extends Component {
                 if( p.estimated_completion_date !== null) {
                     finalDate = p.estimated_completion_date.slice(0,10);
                 }
+                if(p.averagebid === null)
+                    averageToShow = 0;
+                else
+                    averageToShow = p.averagebid;
+                if(p.number_of_bids === null)
+                    numberOfBidsToShow = 0;
+                else
+                    numberOfBidsToShow = p.number_of_bids;
+
                 return (
                     <tr key={p.id}>
                     <td>
@@ -69,7 +80,7 @@ class Dashboard extends Component {
                     </td>
                     <td>
                         <div>
-                            <p> { p.average } </p>
+                            <p> { averageToShow } </p>
                         </div>
                     </td>
                     <td>
@@ -84,7 +95,7 @@ class Dashboard extends Component {
                     </td>
                     <td>
                         <div>
-                            <p>{p.number_of_bids}</p>
+                            <p>{numberOfBidsToShow}</p>
                         </div>
                     </td>
                     <td>

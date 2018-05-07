@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import '../css/style.css';
+import defaultImage from '../images/default.png';
 
 class ListAllBids extends Component {
     constructor() {
@@ -14,9 +15,9 @@ class ListAllBids extends Component {
     componentWillMount() {
         console.log('In ListAllBids Component:' + this.props.id);
         const pid = {
-            projectid : this.props.id
+            id : this.props.id
         }
-        axios.post('http://localhost:3001/getAllBidsForThisProject', pid, {withCredentials: true})
+        axios.post('http://localhost:3001/bids/getAllBidsForThisProject', pid, {withCredentials: true})
         .then( (response) => {
             console.log('In getAllBidsForThis project:',response.data);
             if(response.data.length === 0) {
@@ -64,7 +65,8 @@ class ListAllBids extends Component {
             return (
                 <tr key={k++}>
                 <td>
-                <img src = { require('/Users/venkateshdevale/Desktop/private git/cmpe273/lab1/Freelancer/freelancer-server/images/' + b.image_name) } alt = "" width= {'100px'} height={'100px'}/>
+                {/*<img src = { require('/Users/venkateshdevale/Desktop/private git/cmpe273/lab1/Freelancer/freelancer-server/images/' + b.image_name) } alt = "" width= {'100px'} height={'100px'}/>*/}
+                    <img src = { defaultImage } alt = "" width= {'100px'} height={'100px'}/>
                 </td>
                 <td>
                     <div>
@@ -73,12 +75,12 @@ class ListAllBids extends Component {
                 </td>
                 <td>
                     <div>
-                        <p>{ b.period }</p>
+                        <p>{ b.bidamount }</p>
                     </div>
                 </td>
                 <td>
                     <div>
-                        <p>{ b.bidamount }</p>
+                        <p>{ b.period }</p>
                     </div>
                 </td>
                 <td>

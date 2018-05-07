@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import '../css/style.css';
+import swal from 'sweetalert';
 
 class Bidnow extends Component {
     constructor() {
@@ -22,18 +23,28 @@ class Bidnow extends Component {
     handleBidSubmit = (events) => {
         events.preventDefault();
         if(localStorage.getItem('username') === null) {
-            alert('Login First...');
+            swal('Login First...');
         } else {
             let pid = localStorage.getItem('project_id');
         let uname = localStorage.getItem('username');
         const bid = {
-            project_id: pid,
-            bid: this.state.bid,
-            deliveryDays: this.state.deliveryDays,
+            projectid: pid,
+            bidamount: this.state.bid,
+            period: this.state.deliveryDays,
             freelancer: uname
         }
-        
-        this.props.insertBid(bid);
+        console.log(bid);
+            axios.post('http://localhost:3001/bids/insertBidAndUpdateNumberOfBids', bid, {withCredentials: true})
+            .then((response) => {
+                    console.log(response.data);
+                    if(response.data === 'success') {
+                        swal('Your bid is placed successfully...');
+                        window.location.reload(true);
+                    } else {
+                        swal('You can bid only once for one project');
+                    }
+
+            })
         }
         
         
@@ -41,7 +52,7 @@ class Bidnow extends Component {
 
     handleClick(e){
         if(localStorage.getItem('username') === null) {
-            alert('Login First...');
+            swal('Login First...');
         } else {
             localStorage.setItem("project_id", e.target.dataset.id);
         }
@@ -91,29 +102,5 @@ class Bidnow extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
 
-    }
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        insertBid : (bid) => {
-            console.log("In insertBid dispatcher actions", bid);
-            axios.post('http://localhost:3001/insertBidAndUpdateNumberOfBids', bid, {withCredentials: true})
-            .then((response) => {
-                console.log(response.data);
-                if(response.data === 'BID INSERTED SUCCESS') {
-                    alert('Your bid is placed successfully...');
-                    window.location.reload(true);                    
-                } else {
-                    alert('You can bid only once for one project');
-                }
-                    
-            })
-        }
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Bidnow);
+export default Bidnow;

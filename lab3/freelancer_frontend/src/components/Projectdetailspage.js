@@ -48,7 +48,7 @@ class Projectdetailspage extends Component {
                     worker: response.data[0].worker,
                     budgetrange: response.data[0].budgetrange,
                     number_of_bids: response.data[0].number_of_bids,
-                    average : response.data[0].average
+                    average : response.data[0].averagebid
                 }, () => {
                     console.log('In projectdetails Component will mount showing state',this.state.employer);
                 })
@@ -64,6 +64,13 @@ class Projectdetailspage extends Component {
             //redirect = <Redirect to="/login" />
             redirect = <UserNavbar />;
         }
+        var averageToShow = this.state.average;
+        var bids = this.state.number_of_bids;
+        if(this.state.average == null) {
+            averageToShow = 0;
+        }
+        if(this.state.number_of_bids == null)
+            bids = 0;
         return(
             <div className="Projectdetailspage">
             <Navbar />
@@ -95,13 +102,14 @@ class Projectdetailspage extends Component {
                             <div id = 'div1' >
                                 <h4>Bids</h4>
                                 <p>
-                                    {this.state.number_of_bids}
+                                    {bids}
                                 </p>
                             </div>
                             <div id = 'div1' >
                                 <h4>Average Bid</h4>
                                 <p>
-                                    {this.state.average}
+                                    {/*{this.state.average}*/}
+                                    { averageToShow }
                                 </p>
                             </div>
                             <div id = 'div1' >
@@ -110,7 +118,7 @@ class Projectdetailspage extends Component {
                         
                     </div>
                     
-                    {/*<ListAllBids id = { this.state.projectId } owner = { this.state.employer } />*/}
+                    <ListAllBids id = { this.state.projectId } owner = { this.state.employer } />
                 </div>
                 
             </div>
