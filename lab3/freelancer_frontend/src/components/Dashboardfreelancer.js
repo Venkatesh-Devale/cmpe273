@@ -62,7 +62,7 @@ class Dashboardfreelancer extends Component {
                 averageToShow = 0;
             }
             else {
-                averageToShow = p.averagebid;
+                averageToShow = p.averagebid.toFixed(2);
             }
             return (
                 <tr key={p.id}>

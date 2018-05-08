@@ -19,6 +19,16 @@ public class Users {
 
     private String image_name;
 
+    private String skills_required;
+
+    public String getSkills_required() {
+        return skills_required;
+    }
+
+    public void setSkills_required(String skills_required) {
+        this.skills_required = skills_required;
+    }
+
     public String getPhone() {
         return phone;
     }

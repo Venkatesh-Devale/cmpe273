@@ -11,7 +11,7 @@ public interface ProjectsBidsDTORepository extends Repository<ProjectsBidsDTO, S
     @Query(
             value=  "select t2.id, t2.title, t2.description, t2.skills_required, t2.budgetrange, t2.number_of_bids, b.bidamount, b.period, " +
                     "t2.employer, t2.worker, t2.estimated_completion_date, t2.open, " +
-                    "t2.average, b.freelancer from bids as b join (select * from projects as p join (select projectid, avg(bidamount) as average from bids group by projectid) as t " +
+                    "t2.average as averagebid, b.freelancer from bids as b join (select * from projects as p join (select projectid, avg(bidamount) as average from bids group by projectid) as t " +
                     "on p.id = t.projectid) as t2 on b.projectid = t2.id where b.freelancer = :freelancer",
             nativeQuery = true
     )

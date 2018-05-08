@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import image from '../images/freelancerlogo.png';
 import axios from 'axios';
-
+import swal from 'sweetalert';
 import '../css/style.css';
 
 
@@ -35,18 +35,21 @@ class Signup extends Component {
         const userDetails = {
             username: this.state.username,
             password: this.state.password,
-            emailid: this.state.emailid,
-            radioHireOrEmployer: this.state.radioHireOrEmployer
-        }
-        this.props.insertUser(userDetails);
+            email: this.state.emailid
+        };
+        axios.post('http://localhost:3001/user/signup', userDetails, {withCredentials: true})
+            .then((response) => {
+                console.log(response);
+                if(response.data === "success") {
+                    swal("User Created Successfully");
+                    //this.props.history.push("/login");
+                }
+            });
     }
 
     render() {
         let authRedirect = null;
-        if (this.props.signupSuccess === 'SIGNUP_SUCCESS') {
-            authRedirect = <Redirect to='/login'/>
-        }
-    
+
         return(
             
             <div className="Signup">
@@ -85,27 +88,6 @@ class Signup extends Component {
 
 
 
-function mapStateToProps(state) {
-    return {
-        username: state.username,
-        password: state.password,
-        emailid: state.emailid,
-        radioHireOrEmployer: state.radioHireOrEmployer,
-        signupSuccess: state.signup_success
-    }
-}
 
-function mapDispatchToProps(dispatch) {
-   return {
-    insertUser: (newUser) => {
-        console.log(newUser);
-        axios.post('http://localhost:3001/user/signup', newUser, {withCredentials: true})
-            .then((response) => {
-            console.log(response);
-            dispatch({type: 'SIGNUP_SUCCESS',payload : response})
-        });
-    }
-   }
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+export default Signup;

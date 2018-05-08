@@ -80,7 +80,7 @@ class Dashboard extends Component {
                     </td>
                     <td>
                         <div>
-                            <p> { averageToShow } </p>
+                            <p> { averageToShow.toFixed(2) } </p>
                         </div>
                     </td>
                     <td>

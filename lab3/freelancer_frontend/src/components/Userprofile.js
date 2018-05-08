@@ -19,7 +19,7 @@ class Userprofile extends Component {
             editing: false,
             file:'',
             image:'',
-            skills:'',
+            skills_required:'',
             disabled: true,
         }
     }
@@ -37,7 +37,8 @@ class Userprofile extends Component {
                 username: response.data[0].username,
                 email: response.data[0].email,
                 phone: response.data[0].phone,
-                aboutme: response.data[0].aboutme
+                aboutme: response.data[0].aboutme,
+                skills_required: response.data[0].skills_required
             })
         })
     }
@@ -65,6 +66,7 @@ class Userprofile extends Component {
            email : this.state.email,
            phone : this.state.phone,
            aboutme : this.state.aboutme,
+           skills_required : this.state.skills_required
        };
         console.log(newUser);
         axios.post('http://localhost:3001/user/updateprofile', newUser, {withCredentials: true})
@@ -166,7 +168,7 @@ class Userprofile extends Component {
                             <div id = 'profileSkills'>
                                 <div className="form-group">
                                     <label>Skills:  <span className="glyphicon glyphicon-edit"></span></label>
-                                    <textarea id="txtskills"  className="form-control" rows="5" name='skills' disabled={this.state.disabled}></textarea>
+                                    <textarea id="txtskills"  className="form-control" rows="5" value={this.state.skills_required} name='skills_required' disabled={this.state.disabled}  onChange={this.handleChange}></textarea>
                                 </div>
                             </div>
                         </div>

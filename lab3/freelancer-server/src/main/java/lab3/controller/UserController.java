@@ -22,7 +22,7 @@ public class UserController {
     public @ResponseBody String addNewUser (@RequestBody Users user){
         System.out.println("User in addNewUser" + user.getUsername());
         userService.save(user);
-        return "Saved";
+        return "success";
     }
 
     @PostMapping(path="/login", consumes = MediaType.APPLICATION_JSON_VALUE)

@@ -64,10 +64,14 @@ class Projectdetailspage extends Component {
             //redirect = <Redirect to="/login" />
             redirect = <UserNavbar />;
         }
-        var averageToShow = this.state.average;
+        var averageToShow;
         var bids = this.state.number_of_bids;
         if(this.state.average == null) {
             averageToShow = 0;
+        }
+        else {
+            averageToShow = this.state.average;
+            averageToShow =  Number(averageToShow).toFixed(2);
         }
         if(this.state.number_of_bids == null)
             bids = 0;
