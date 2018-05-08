@@ -37,13 +37,5 @@ public interface ProjectRepository extends CrudRepository<Projects, String> {
     List<Projects> findMyPublishedProjects(@Param("employer") String employer);
 
 
-//    @Query(
-//            value=  "select p.id, p.title, p.description, p.skills_required, p.budgetrange, p.number_of_bids, p.employer, p.worker, p.estimated_completion_date, t.averagebid, p.open, t.freelancer, t.period, t.bidamount " +
-//                    "from projects as p join (select projectid, period, bidamount, freelancer, avg(bidamount) as averagebid from bids where freelancer = :freelancer group by projectid, period, bidamount, freelancer) " +
-//                    "as t on p.id = t.projectid",
-//            nativeQuery = true
-//    )
-//    List<Projects> findMyBiddedProjects(@Param("freelancer") String freelancer);
-
 
 }
