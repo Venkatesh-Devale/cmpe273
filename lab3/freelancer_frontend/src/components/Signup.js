@@ -42,7 +42,7 @@ class Signup extends Component {
                 console.log(response);
                 if(response.data === "success") {
                     swal("User Created Successfully");
-                    //this.props.history.push("/login");
+                    this.props.history.push("/login");
                 }
             });
     }

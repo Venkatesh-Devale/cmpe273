@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-
-
 @Controller    // This means that this class is a Controller
 @RequestMapping(path="/user") // This means URL's start with /demo (after Application path)
 public class UserController {
@@ -32,7 +30,6 @@ public class UserController {
         String password = user.getPassword();
         return new ResponseEntity(userService.login(username, password), HttpStatus.OK);
     }
-
 
     @PostMapping(path="/getprofile", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Users> getProfile (@RequestBody Users user  ){

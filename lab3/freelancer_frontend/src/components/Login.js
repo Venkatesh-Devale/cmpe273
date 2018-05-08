@@ -3,6 +3,7 @@ import '../css/style.css';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import axios from 'axios';
+import swal from 'sweetalert';
 
 class Login extends Component {
     constructor() {
@@ -36,11 +37,12 @@ class Login extends Component {
         axios.post('http://localhost:3001/user/login', userDetails, { withCredentials: true })
             .then((response) => {
                 console.log("After login dispatch", response.data);
-                if(response.data.length === 0) {
-                    alert('Error in logging in..check username and password.')
+                if(response.data === "") {
+                    swal('Error in logging in..check username or password.')
                 }
                 else {
                     localStorage.setItem('username', response.data[0].username);
+                    swal("Login Successfull");
                     this.props.history.push('/userhome');
                 }
 
