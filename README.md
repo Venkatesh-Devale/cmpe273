@@ -1,4 +1,14 @@
 # cmpe273
+LAB 3:
+1) Clone the repository and then go into lab3.
+2) There are two folders - freelancer_frontend and freelancer-server
+3) Go into freelancer_frontend and do npm install.
+4) Now execute npm start, to start the frontend on localhost: 3000
+5) No Open the freelancer-server in IntelliJ IDE or any preferred IDE. Now Go to pom.xml and right click -> maven-> reimport.
+This should get all your dependencies required.
+6) Now run the Application.java where Main class resides. Your server should start on 3001 and connect to MySQL DB.
+7) You are up and running now.
+
 
 LAB 2:
 
