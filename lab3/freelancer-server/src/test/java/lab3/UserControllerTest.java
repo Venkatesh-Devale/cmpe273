@@ -46,5 +46,21 @@ public class UserControllerTest {
         Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
+    @Test
+    public void testLoginUser() throws Exception {
+        String URI = "/user/login";
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .post(URI)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\": \"venkatesh\", \"password\":\"123\"}");
+
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        MockHttpServletResponse response = result.getResponse();
+        System.out.println("Printing in user login"+result.getResponse().getContentAsString());
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
 
 }
